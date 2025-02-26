@@ -141,7 +141,7 @@ MINIO_STORAGE_SECRET_KEY = env("MINIO_SECRET_KEY", default=None)
 MINIO_STORAGE_USE_HTTPS = env("MINIO_USE_HTTPS", default=False)
 
 MINIO_STORAGE_MEDIA_BUCKET_NAME = env(
-    "MINIO_MEDIA_BUCKET_NAME", default="project_name-media"
+    "MINIO_MEDIA_BUCKET_NAME", default="projectname-media"
 )
 
 MINIO_STORAGE_AUTO_CREATE_MEDIA_BUCKET = True
