@@ -5,5 +5,16 @@ import tsconfigPaths from "vite-tsconfig-paths";
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [tsconfigPaths(), react(), tailwindcss()],
+  build: {
+    outDir: 'dist',
+    assetsDir: 'assets', 
+    emptyOutDir: true, 
+  },
+  plugins: [
+    tsconfigPaths(),
+    react(),
+    tailwindcss()
+  ],
+  assetsInclude: ['**/*.png', '**/*.jpg', '**/*.jpeg', '**/*.svg'],
+  publicDir: 'public',
 });
