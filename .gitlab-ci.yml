@@ -54,9 +54,9 @@ deploy:
   rules:
     - if: $CI_COMMIT_REF_NAME == "master"
   variables:
-    SSH_USER: $ENV_SSH_USER
-    SSH_HOST: $ENV_SSH_HOST
-    SSH_PRIVATE_KEY_BASE64: $ENV_PRIVATE_KEY_BASE64
+    SSH_USER: "$ENV_SSH_USER"
+    SSH_HOST: "$ENV_SSH_HOST"
+    SSH_PRIVATE_KEY_BASE64: "$ENV_PRIVATE_KEY_BASE64"
   before_script:
     - apk add --no-cache openssh-client
   script:
