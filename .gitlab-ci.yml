@@ -13,7 +13,6 @@ services:
   - docker:27.5.1-dind
 
 build_images:
-  image: docker:27.5.1
   stage: build
   rules:
     - if: $CI_COMMIT_REF_NAME == "master"
