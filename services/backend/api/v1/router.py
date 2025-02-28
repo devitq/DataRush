@@ -4,6 +4,7 @@ from ninja import NinjaAPI
 
 from api.v1 import handlers
 from api.v1.ping.views import router as ping_router
+from api.v1.users.views import router as users_router
 
 router = NinjaAPI(
     title="DataRush API",
