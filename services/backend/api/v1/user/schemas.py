@@ -1,7 +1,6 @@
-from ninja import Schema, ModelSchema
+from ninja import ModelSchema, Schema
 
-
-from apps.users.models import User
+from apps.user.models import User
 
 
 class TokenSchema(Schema):

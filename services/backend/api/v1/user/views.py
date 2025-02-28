@@ -1,11 +1,14 @@
 from ninja import Router
 
-from api.v1.users.schemas import LoginSchema, RegisterSchema, TokenSchema, UserSchema
 from api.v1.schemas import BadRequestError, ForbiddenError, NotFoundError
-from apps.users.models import User
+from api.v1.user.schemas import (
+    LoginSchema,
+    RegisterSchema,
+    TokenSchema,
+    UserSchema,
+)
 
-
-router = Router(tags=["users"])
+router = Router(tags=["user"])
 
 
 @router.post(
@@ -13,10 +16,9 @@ router = Router(tags=["users"])
     response={
         201: TokenSchema,
         400: BadRequestError,
-    }
+    },
 )
-def sign_up(data: RegisterSchema):
-    ...
+def sign_up(data: RegisterSchema): ...
 
 
 @router.post(
@@ -25,10 +27,9 @@ def sign_up(data: RegisterSchema):
         200: TokenSchema,
         400: BadRequestError,
         403: ForbiddenError,
-    }
+    },
 )
-def sign_in(data: LoginSchema):
-    ...
+def sign_in(data: LoginSchema): ...
 
 
 @router.get(
@@ -37,7 +38,6 @@ def sign_in(data: LoginSchema):
         200: UserSchema,
         400: BadRequestError,
         404: NotFoundError,
-    }
+    },
 )
-def get_user(user_id: str):
-    ...
+def get_user(user_id: str): ...

@@ -3,8 +3,9 @@ from functools import partial
 from ninja import NinjaAPI
 
 from api.v1 import handlers
+from api.v1.competition.views import router as competition_router
 from api.v1.ping.views import router as ping_router
-from api.v1.users.views import router as users_router
+from api.v1.user.views import router as user_router
 
 router = NinjaAPI(
     title="project_name API",
@@ -20,7 +21,11 @@ router.add_router(
 )
 router.add_router(
     "",
-    users_router,
+    user_router,
+)
+router.add_router(
+    "",
+    competition_router,
 )
 
 
