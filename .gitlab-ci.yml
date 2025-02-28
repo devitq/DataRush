@@ -1,6 +1,6 @@
 stages:
   - build
-  - trigger
+  - deploy
 
 variables:
   DOCKER_TLS_CERTDIR: /certs
@@ -41,15 +41,25 @@ build_backend:
     DOCKERFILE_PATH: "Dockerfile"
     IMAGE_NAME: "$CI_REGISTRY_IMAGE/backend"
 
-trigger_deployment:
-  stage: trigger
-  image: curlimages/curl:8.5.0
+deploy:
+  image: alpine:latest
+  stage: deploy
   rules:
     - if: $CI_COMMIT_REF_NAME == "master"
+  variables:
+    SSH_USER: $ENV_SSH_USER
+    SSH_HOST: $ENV_SSH_HOST
+    SSH_PRIVATE_KEY_BASE64: $ENV_PRIVATE_KEY_BASE64
+  before_script:
+    - apk add --no-cache openssh-client
   script:
-    - |
-      curl --request POST \
-        --header "PRIVATE-TOKEN: prod-16cwBKYHzqqZaRzywCCG" \
-        --form "variables[FRONTEND_TAG]=$CI_COMMIT_SHORT_SHA" \
-        --form "variables[BACKEND_TAG]=$CI_COMMIT_SHORT_SHA" \
-        "https://gitlab.com/api/v4/projects/289/trigger/pipeline"
+    - mkdir -p ~/.ssh
+    - echo "$SSH_PRIVATE_KEY_BASE64" | base64 -d > ~/.ssh/id_rsa
+    - chmod 600 ~/.ssh/id_rsa
+    - scp -o StrictHostKeyChecking=no -r infrastructure/ compose.yaml ${SSH_USER}@${SSH_HOST}:~/deploy/
+    - ssh -o StrictHostKeyChecking=no ${SSH_USER}@${SSH_HOST} "
+      cd ~/deploy &&
+      docker compose pull &&
+      docker compose down &&
+      docker compose up -d --remove-orphans
+      "
