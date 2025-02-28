@@ -17,6 +17,10 @@ router.add_router(
     "ping",
     ping_router,
 )
+router.add_router(
+    "",
+    users_router,
+)
 
 
 for exception, handler in handlers.exception_handlers:
