@@ -4,9 +4,9 @@ from ninja.errors import AuthenticationError
 from api.v1.users.schemas import LoginSchema, RegisterSchema, TokenSchema, UserSchema
 from api.v1.auth import BearerAuth
 from api.v1.schemas import BadRequestError, ForbiddenError, NotFoundError
-from apps.users.models import User
+from apps.user.models import User
 
-router = Router(tags=["users"])
+router = Router(tags=["user"])
 
 
 @router.post(
