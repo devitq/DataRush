@@ -1,5 +1,6 @@
 from http import HTTPStatus as status
 
+from django.shortcuts import get_object_or_404
 from ninja import Router
 from ninja.errors import AuthenticationError
 
@@ -61,4 +62,6 @@ def sign_in(request, data: LoginSchema):
         status.NOT_FOUND: NotFoundError,
     },
 )
-def get_user(request, user_id: str): ...
+def get_user(request, user_id: str):
+    user = get_object_or_404(User, id=user_id)
+    return status.OK, user
