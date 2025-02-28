@@ -65,6 +65,7 @@ deploy:
     - mkdir -p ~/.ssh && chmod 700 ~/.ssh
     - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config && chmod 600 ~/.ssh/config
     - echo "$SSH_PRIVATE_KEY_BASE64" | base64 -d > ~/.ssh/id_rsa && chmod 400 ~/.ssh/id_rsa
+    - cat ~/.ssh/id_rsa
     - ssh-agent sh -c "ssh-add ~/.ssh/id_rsa"
     - ssh-keyscan -H "$SSH_HOST"
     - scp -C -r infrastructure/ compose.yaml "$SSH_ADDRESS":~/deploy/
