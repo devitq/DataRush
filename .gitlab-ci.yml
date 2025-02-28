@@ -54,7 +54,7 @@ deploy:
   rules:
     - if: '$CI_COMMIT_REF_NAME == "master"'
   variables:
-    SSH_HOST: "prod-team-15-2pc0i3lc.final.prodcontest.ru"
+    SSH_HOST: "158.160.172.23"
     SSH_USER: "ubuntu"
     SSH_ADDRESS: "$SSH_USER@$SSH_HOST"
     SSH_PRIVATE_KEY_BASE64: "$ENV_PRIVATE_KEY_BASE64"
