@@ -7,31 +7,38 @@ variables:
   FRONTEND_IMAGE: $CI_REGISTRY_IMAGE/frontend
   BACKEND_IMAGE: $CI_REGISTRY_IMAGE/backend
 
-image: docker:27.5.1
-
-services:
-  - docker:27.5.1-dind
-
-build_images:
+.build-template: &build-template
+  image:
+    name: gcr.io/kaniko-project/executor:v1.23.2-debug
+    entrypoint: [""]
   stage: build
-  rules:
-    - if: $CI_COMMIT_REF_NAME == "master"
+  variables:
+    DOCKER_CONFIG: /kaniko/.docker
+    CONTEXT: $CI_PROJECT_DIR
+    REGISTRY_USER: $CI_REGISTRY_USER
+    REGISTRY_PASSWORD: $CI_REGISTRY_PASSWORD
+    REGISTRY_URL: $CI_REGISTRY
   script:
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - mkdir -p /kaniko/.docker
+    - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$REGISTRY_USER\",\"password\":\"$REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
+    - /kaniko/executor
+      --context "${CONTEXT}"
+      --dockerfile "${DOCKERFILE_PATH}"
+      --destination "${IMAGE_NAME}:${CI_COMMIT_SHA}"
+      --destination "${IMAGE_NAME}:latest"
+      --cache=true
 
-    - |
-      docker buildx build \
-        -t $FRONTEND_IMAGE:$CI_COMMIT_SHORT_SHA \
-        -t $FRONTEND_IMAGE:latest \
-        -f ./services/frontend/Dockerfile \
-        --push .
+build_frontend:
+  <<: *build-template
+  variables:
+    DOCKERFILE_PATH: ./services/frontend/Dockerfile
+    IMAGE_NAME: $CI_REGISTRY_IMAGE/frontend
 
-    - |
-      docker buildx build \
-        -t $BACKEND_IMAGE:$CI_COMMIT_SHORT_SHA \
-        -t $BACKEND_IMAGE:latest \
-        -f ./services/backend/Dockerfile \
-        --push .
+build_backend:
+  <<: *build-template
+  variables:
+    DOCKERFILE_PATH: ./services/backend/Dockerfile
+    IMAGE_NAME: $CI_REGISTRY_IMAGE/backend
 
 trigger_deployment:
   stage: trigger
