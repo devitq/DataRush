@@ -16,7 +16,8 @@ router = Router(tags=["user"])
     response={
         status.CREATED: TokenSchema,
         status.BAD_REQUEST: BadRequestError,
-    }
+    },
+    auth=None,
 )
 def sign_up(request, data: RegisterSchema):
     user = User(**data.dict())
@@ -33,7 +34,8 @@ def sign_up(request, data: RegisterSchema):
         status.OK: TokenSchema,
         status.BAD_REQUEST: BadRequestError,
         status.UNAUTHORIZED: ForbiddenError,
-    }
+    },
+    auth=None,
 )
 def sign_in(request, data: LoginSchema):
     user = User.objects.filter(email=data.email).first()
@@ -52,7 +54,7 @@ def sign_in(request, data: LoginSchema):
         status.OK: UserSchema,
         status.BAD_REQUEST: BadRequestError,
         status.NOT_FOUND: NotFoundError,
-    }
+    },
 )
 def get_user(request, user_id: str):
     ...
