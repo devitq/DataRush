@@ -1,4 +1,5 @@
 from ninja import Router
+from ninja.errors import AuthenticationError
 
 from api.v1.users.schemas import LoginSchema, RegisterSchema, TokenSchema, UserSchema
 from api.v1.auth import BearerAuth
@@ -29,11 +30,18 @@ def sign_up(request, data: RegisterSchema):
     response={
         200: TokenSchema,
         400: BadRequestError,
-        403: ForbiddenError,
+        401: ForbiddenError,
     }
 )
 def sign_in(request, data: LoginSchema):
-    ...
+    user = User.objects.filter(email=data.email).first()
+    if not user:
+        raise AuthenticationError
+    if user.password != data.password:
+        raise AuthenticationError
+
+    token = BearerAuth.generate_jwt(user)
+    return 200, TokenSchema(token=token)
 
 
 @router.get(
