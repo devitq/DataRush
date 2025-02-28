@@ -13,9 +13,11 @@ class User(BaseModel):
     username = models.SlugField(unique=True, verbose_name="Юзернейм")
     password = models.TextField(verbose_name="Пароль")
 
-    status = models.CharField(max_length=10, choices=UserRole.choices, default=UserRole.STUDENT)
+    status = models.CharField(
+        max_length=10, choices=UserRole.choices, default=UserRole.STUDENT
+    )
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.username
 
     class Meta:
