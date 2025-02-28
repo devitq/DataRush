@@ -18,3 +18,9 @@ class LoginSchema(ModelSchema):
     class Meta:
         model = User
         fields = ["email", "password"]
+
+
+class UserSchema(ModelSchema):
+    class Meta:
+        model = User
+        fields = ["email", "username"]

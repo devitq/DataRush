@@ -1,7 +1,7 @@
 from ninja import Router
 
-from api.v1.users.schemas import LoginSchema, RegisterSchema, TokenSchema
-from api.v1.schemas import BadRequestError, ForbiddenError
+from api.v1.users.schemas import LoginSchema, RegisterSchema, TokenSchema, UserSchema
+from api.v1.schemas import BadRequestError, ForbiddenError, NotFoundError
 from apps.users.models import User
 
 
@@ -28,4 +28,16 @@ def sign_up(data: RegisterSchema):
     }
 )
 def sign_in(data: LoginSchema):
+    ...
+
+
+@router.get(
+    path="/user/{user_id}",
+    response={
+        200: UserSchema,
+        400: BadRequestError,
+        404: NotFoundError,
+    }
+)
+def get_user(user_id: str):
     ...
