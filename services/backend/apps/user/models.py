@@ -14,7 +14,7 @@ class User(BaseModel):
     password = models.TextField(verbose_name="Пароль")
 
     status = models.CharField(
-        max_length=10, choices=UserRole.choices, default=UserRole.STUDENT
+        max_length=10, choices=UserRole, default="student"
     )
 
     def __str__(self) -> str:
