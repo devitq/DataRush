@@ -2,9 +2,7 @@ name: project_name
 
 services:
   backend:
-    build:
-      context: ./services/backend
-      dockerfile: Dockerfile
+    image: gitlab.prodcontest.ru:5050/team-15/project/backend:latest
     depends_on:
       backend-initdb:
         restart: false
@@ -36,7 +34,7 @@ services:
     restart: unless-stopped
 
   backend-initdb:
-    image: 
+    image: gitlab.prodcontest.ru:5050/team-15/project/backend:latest
     command: ./scripts/initdb
     depends_on:
       postgres:
@@ -58,9 +56,7 @@ services:
         required: false
 
   backend-staticfiles:
-    build:
-      context: ./services/backend
-      dockerfile: Dockerfile.staticfiles
+    image: gitlab.prodcontest.ru:5050/team-15/project/backend-staticfiles:latest
     env_file:
       - path: ./infrastructure/backend/.env.template
         required: true
@@ -82,9 +78,7 @@ services:
     restart: unless-stopped
 
   backend-celery-worker:
-    build:
-      context: ./services/backend
-      dockerfile: Dockerfile
+    image: gitlab.prodcontest.ru:5050/team-15/project/backend:latest
     command: celery -A config worker -l INFO
     depends_on:
       redis:
@@ -120,9 +114,7 @@ services:
     restart: unless-stopped
 
   frontend:
-    build:
-      context: ./services/frontend
-      dockerfile: Dockerfile
+    image: gitlab.prodcontest.ru:5050/team-15/project/frontend:latest
     env_file:
       - path: ./infrastructure/frontend/.env.template
         required: true
