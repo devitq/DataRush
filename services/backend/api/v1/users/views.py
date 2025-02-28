@@ -1,3 +1,5 @@
+from http import HTTPStatus as status
+
 from ninja import Router
 from ninja.errors import AuthenticationError
 
@@ -12,8 +14,8 @@ router = Router(tags=["user"])
 @router.post(
     path="/sign-up",
     response={
-        201: TokenSchema,
-        400: BadRequestError,
+        status.CREATED: TokenSchema,
+        status.BAD_REQUEST: BadRequestError,
     }
 )
 def sign_up(request, data: RegisterSchema):
@@ -22,15 +24,15 @@ def sign_up(request, data: RegisterSchema):
     user.save()
 
     token = BearerAuth.generate_jwt(user)
-    return 201, TokenSchema(token=token)
+    return status.CREATED, TokenSchema(token=token)
 
 
 @router.post(
     path="/sign-in",
     response={
-        200: TokenSchema,
-        400: BadRequestError,
-        401: ForbiddenError,
+        status.OK: TokenSchema,
+        status.BAD_REQUEST: BadRequestError,
+        status.UNAUTHORIZED: ForbiddenError,
     }
 )
 def sign_in(request, data: LoginSchema):
@@ -41,15 +43,15 @@ def sign_in(request, data: LoginSchema):
         raise AuthenticationError
 
     token = BearerAuth.generate_jwt(user)
-    return 200, TokenSchema(token=token)
+    return status.OK, TokenSchema(token=token)
 
 
 @router.get(
     path="/user/{user_id}",
     response={
-        200: UserSchema,
-        400: BadRequestError,
-        404: NotFoundError,
+        status.OK: UserSchema,
+        status.BAD_REQUEST: BadRequestError,
+        status.NOT_FOUND: NotFoundError,
     }
 )
 def get_user(request, user_id: str):
