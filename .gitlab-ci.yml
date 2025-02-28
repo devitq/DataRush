@@ -41,6 +41,13 @@ build_backend:
     DOCKERFILE_PATH: "Dockerfile"
     IMAGE_NAME: "$CI_REGISTRY_IMAGE/backend"
 
+build_backend-staticfiles:
+  <<: *build-template
+  variables:
+    CONTEXT: "${CI_PROJECT_DIR}/services/backend-staticfiles"
+    DOCKERFILE_PATH: "Dockerfile"
+    IMAGE_NAME: "$CI_REGISTRY_IMAGE/backend-staticfiles"
+
 deploy:
   image: alpine:latest
   stage: deploy
