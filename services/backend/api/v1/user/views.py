@@ -3,9 +3,14 @@ from http import HTTPStatus as status
 from ninja import Router
 from ninja.errors import AuthenticationError
 
-from api.v1.user.schemas import LoginSchema, RegisterSchema, TokenSchema, UserSchema
 from api.v1.auth import BearerAuth
 from api.v1.schemas import BadRequestError, ForbiddenError, NotFoundError
+from api.v1.user.schemas import (
+    LoginSchema,
+    RegisterSchema,
+    TokenSchema,
+    UserSchema,
+)
 from apps.user.models import User
 
 router = Router(tags=["user"])
@@ -56,5 +61,4 @@ def sign_in(request, data: LoginSchema):
         status.NOT_FOUND: NotFoundError,
     },
 )
-def get_user(request, user_id: str):
-    ...
+def get_user(request, user_id: str): ...
