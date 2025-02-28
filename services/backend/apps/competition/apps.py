@@ -1,7 +1,7 @@
 from django.apps import AppConfig
 
 
-class UsersConfig(AppConfig):
+class CompetitionsConfig(AppConfig):
     default_auto_field = "django.db.models.BigAutoField"
-    name = "apps.user"
-    label = "user"
+    name = "apps.competition"
+    label = "competition"

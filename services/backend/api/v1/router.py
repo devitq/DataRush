@@ -3,14 +3,14 @@ from functools import partial
 from ninja import NinjaAPI
 
 from api.v1 import handlers
-from api.v1.auth import BearerAuth
+from api.v1.competition.views import router as competition_router
 from api.v1.ping.views import router as ping_router
-from api.v1.users.views import router as users_router
+from api.v1.user.views import router as user_router
 
 router = NinjaAPI(
-    title="DataRush API",
+    title="project_name API",
     version="1",
-    description="API docs for DataRush",
+    description="API docs for project_name",
     openapi_url="/docs/openapi.json",
 )
 
@@ -21,8 +21,11 @@ router.add_router(
 )
 router.add_router(
     "",
-    users_router,
-    auth=BearerAuth(),
+    user_router,
+)
+router.add_router(
+    "",
+    competition_router,
 )
 
 

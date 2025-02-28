@@ -3,7 +3,7 @@ from http import HTTPStatus as status
 from ninja import Router
 from ninja.errors import AuthenticationError
 
-from api.v1.users.schemas import LoginSchema, RegisterSchema, TokenSchema, UserSchema
+from api.v1.user.schemas import LoginSchema, RegisterSchema, TokenSchema, UserSchema
 from api.v1.auth import BearerAuth
 from api.v1.schemas import BadRequestError, ForbiddenError, NotFoundError
 from apps.user.models import User
