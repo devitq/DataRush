@@ -22,6 +22,6 @@ class BearerAuth(HttpBearer):
     def generate_jwt(user: User) -> str:
         data = {
             "exp": (datetime.datetime.now() + datetime.timedelta(days=365)).timestamp(),
-            "id": user.id
+            "id": str(user.id)
         }
         return jwt.encode(data, settings.SECRET_KEY, algorithm="HS256")
