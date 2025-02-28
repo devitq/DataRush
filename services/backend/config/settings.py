@@ -443,7 +443,7 @@ INSTALLED_APPS = [
     "minio_storage",
     # Internal apps
     "apps.core",
-    "apps.users",
+    "apps.user",
 ]
 
 # GUID

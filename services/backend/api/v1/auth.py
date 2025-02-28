@@ -6,7 +6,7 @@ from django.conf import settings
 from django.http import HttpRequest
 from ninja.security import HttpBearer
 
-from apps.users.models import User
+from apps.user.models import User
 
 
 class BearerAuth(HttpBearer):
