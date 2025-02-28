@@ -13,7 +13,7 @@ router = NinjaAPI(
     version="1",
     description="API docs for DataRush",
     openapi_url="/docs/openapi.json",
-    auth=BearerAuth()
+    auth=BearerAuth(),
 )
 
 

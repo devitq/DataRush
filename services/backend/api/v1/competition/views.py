@@ -1,12 +1,11 @@
 from http import HTTPStatus as status
-from typing import Literal
 from uuid import UUID
+
+from django.http import HttpRequest
 from django.shortcuts import get_object_or_404
-from django.http import HttpRequest, Http404
 from ninja import Router
 
 import api.v1.schemas as global_schemas
-from api.v1.auth import BearerAuth
 from api.v1.competition import schemas
 from apps.competition.models import Competition, State
 
@@ -46,13 +45,14 @@ def list_competitions(
         competitions = Competition.objects.exclude(participants=user)
     return status.OK, competitions
 
+
 @router.post(
     "competitions/{competition_id}/state",
     response={
         status.OK: schemas.StateOut,
         status.BAD_REQUEST: global_schemas.BadRequestError,
         status.UNAUTHORIZED: global_schemas.UnauthorizedError,
-    }
+    },
 )
 def change_competition_state(
     request: HttpRequest,
@@ -63,8 +63,6 @@ def change_competition_state(
     competition = get_object_or_404(Competition, id=competition_id)
 
     state_obj, _ = State.objects.update_or_create(
-        user=user,
-        competition=competition,
-        state=state.state
+        user=user, competition=competition, state=state.state
     )
     return status.OK, schemas.StateOut.from_orm(state_obj)

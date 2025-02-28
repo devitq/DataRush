@@ -13,15 +13,16 @@ class CompetitionOut(ModelSchema):
         model = Competition
         fields = "__all__"
 
+
 class StateOut(ModelSchema):
     class Meta:
         model = State
-        fields = (
-            "state",
-        )
+        fields = ("state",)
+
 
 class StateIn(Schema):
     state: Literal["started", "not_started", "finished"]
+
 
 class CompetitionListInstanceOut(ModelSchema):
     id: UUID
@@ -36,7 +37,9 @@ class CompetitionListInstanceOut(ModelSchema):
     @staticmethod
     def resolve_completed(self, context):
         user = context["request"].auth
-        return State.objects.filter(competition=self, user=user, state="finished").exists()
+        return State.objects.filter(
+            competition=self, user=user, state="finished"
+        ).exists()
 
     class Meta:
         model = Competition

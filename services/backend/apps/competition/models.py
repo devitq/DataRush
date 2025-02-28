@@ -3,15 +3,14 @@ from django.db import models
 from apps.core.models import BaseModel
 from apps.user.models import User
 
+
 class Competition(BaseModel):
     class CompetitionType(models.TextChoices):
         SOLO = "solo"
 
-
     class CompetitionParticipationType(models.TextChoices):
         EDU = "edu"
         COMPETITIVE = "competitive"
-
 
     title = models.CharField(max_length=100, verbose_name="Название")
     description = models.TextField(verbose_name="Описание")
@@ -43,9 +42,9 @@ class Competition(BaseModel):
 
 class State(BaseModel):
     class StateChoices(models.TextChoices):
-        NOT_STARTED = 'not_started'
-        STARTED = 'started'
-        FINISHED = 'finished'
+        NOT_STARTED = "not_started"
+        STARTED = "started"
+        FINISHED = "finished"
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     competition = models.ForeignKey(Competition, on_delete=models.CASCADE)
