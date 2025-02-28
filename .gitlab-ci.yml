@@ -14,7 +14,6 @@ variables:
   stage: build
   variables:
     DOCKER_CONFIG: /kaniko/.docker
-    CONTEXT: $CI_PROJECT_DIR
     REGISTRY_USER: $CI_REGISTRY_USER
     REGISTRY_PASSWORD: $CI_REGISTRY_PASSWORD
     REGISTRY_URL: $CI_REGISTRY
@@ -31,14 +30,16 @@ variables:
 build_frontend:
   <<: *build-template
   variables:
-    DOCKERFILE_PATH: ./services/frontend/Dockerfile
-    IMAGE_NAME: $CI_REGISTRY_IMAGE/frontend
+    CONTEXT: "${CI_PROJECT_DIR}/services/frontend"
+    DOCKERFILE_PATH: "Dockerfile"
+    IMAGE_NAME: "$CI_REGISTRY_IMAGE/frontend"
 
 build_backend:
   <<: *build-template
   variables:
-    DOCKERFILE_PATH: ./services/backend/Dockerfile
-    IMAGE_NAME: $CI_REGISTRY_IMAGE/backend
+    CONTEXT: "${CI_PROJECT_DIR}/services/backend"
+    DOCKERFILE_PATH: "Dockerfile"
+    IMAGE_NAME: "$CI_REGISTRY_IMAGE/backend"
 
 trigger_deployment:
   stage: trigger
