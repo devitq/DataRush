@@ -57,11 +57,10 @@ deploy:
     SSH_HOST: "158.160.172.23"
     SSH_USER: "ubuntu"
     SSH_ADDRESS: "$SSH_USER@$SSH_HOST"
-    SSH_PRIVATE_KEY_BASE64: "$ENV_PRIVATE_KEY_BASE64"
   script:
     - mkdir -p ~/.ssh && chmod 700 ~/.ssh
     - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config && chmod 600 ~/.ssh/config
-    - echo "$SSH_PRIVATE_KEY_BASE64" | base64 -d > ~/.ssh/id_rsa && chmod 400 ~/.ssh/id_rsa
+    - echo "$ENV_PRIVATE_KEY_BASE64" | base64 -d > ~/.ssh/id_rsa && chmod 400 ~/.ssh/id_rsa
     - ssh-agent sh -c "ssh-add ~/.ssh/id_rsa"
     - ssh-keyscan -H "$SSH_HOST"
     - AUTH_COMMAND="echo "$CI_REGISTRY_PASSWORD" | docker login $CI_REGISTRY --username $CI_REGISTRY_USER --password-stdin";
