@@ -61,6 +61,7 @@ deploy:
   before_script:
     - apk add --no-cache openssh-client
   script:
+    - echo $SSH_PRIVATE_KEY_BASE64
     - mkdir -p ~/.ssh && chmod 700 ~/.ssh
     - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config && chmod 600 ~/.ssh/config
     - echo "$SSH_PRIVATE_KEY_BASE64" | base64 -d > ~/.ssh/id_rsa && chmod 400 ~/.ssh/id_rsa
