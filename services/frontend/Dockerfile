@@ -1,0 +1,17 @@
+# Stage 1: Build the Vite app using Bun
+FROM oven/bun:latest AS builder
+
+WORKDIR /app
+
+COPY package.json bun.lock ./
+RUN bun install --frozen-lockfile
+
+COPY . .
+RUN npm run build
+
+# Stage 2: Serve the built files with Nginx
+FROM nginx:latest
+
+COPY --from=builder /app/dist /usr/share/nginx/html
+
+CMD ["nginx", "-g", "daemon off;"]
