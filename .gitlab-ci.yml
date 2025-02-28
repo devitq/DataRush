@@ -7,11 +7,14 @@ variables:
   FRONTEND_IMAGE: $CI_REGISTRY_IMAGE/frontend
   BACKEND_IMAGE: $CI_REGISTRY_IMAGE/backend
 
+image: docker:27.5.1
+
+services:
+  - docker:27.5.1-dind
+
 build_images:
+  image: alpine:latest
   stage: build
-  image: docker:27.5.1
-  services:
-    - docker:27.5.1-dind
   rules:
     - if: $CI_COMMIT_REF_NAME == "master"
   script:
