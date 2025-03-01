@@ -68,8 +68,8 @@ deploy:
     - ssh $SSH_ADDRESS "echo $PATH > path.log"
     - scp -C -r infrastructure/ ssl/ compose.yaml $SSH_ADDRESS:~/deploy/
     - ssh $SSH_ADDRESS "cd ~/deploy && \
-      /usr/bin/docker compose pull > deploy.log 2>&1 && \
-      /usr/bin/docker compose down >> deploy.log 2>&1 && \
-      /usr/bin/docker compose up -d --remove-orphans >> deploy.log 2>&1 && \
-      /usr/bin/docker compose ps >> deploy.log 2>&1"
+      docker compose pull > deploy.log 2>&1 && \
+      docker compose down >> deploy.log 2>&1 && \
+      docker compose up -d --remove-orphans >> deploy.log 2>&1 && \
+      docker compose ps >> deploy.log 2>&1"
     - ssh $SSH_ADDRESS "docker system prune -a"
