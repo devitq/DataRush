@@ -227,7 +227,7 @@ FIRST_DAY_OF_WEEK = 1
 
 FORMAT_MODULE_PATH = None
 
-LANGUAGE_CODE = env("DJANGO_LANGUAGE_CODE", default="en-us")
+LANGUAGE_CODE = env("DJANGO_LANGUAGE_CODE", default="ru-ru")
 
 LANGUAGES = [("en", _("English")), ("ru", _("Russian"))]
 
