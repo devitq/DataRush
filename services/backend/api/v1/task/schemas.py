@@ -7,4 +7,4 @@ from apps.task.models import CompetitionTask
 class TaskOutSchema(ModelSchema):
     class Meta:
         model = CompetitionTask
-        fields = ["id", "competition", "title", "description", "type"]
+        fields = ["id", "title", "description", "type"]
