@@ -8,7 +8,7 @@ from django.core.management.base import BaseCommand
 from django.utils import timezone
 
 from apps.competition.models import Competition, State
-from apps.task.models import CompetetionTaskSumbission, CompetitionTask
+from apps.task.models import CompetitionTaskSubmission, CompetitionTask
 from apps.user.models import User, UserRole
 
 
@@ -105,7 +105,7 @@ class Command(BaseCommand):
                     b"Submission content",
                     name=f"submission_{uuid.uuid4().hex}.txt",
                 )
-                submission = CompetetionTaskSumbission.objects.create(
+                submission = CompetitionTaskSubmission.objects.create(
                     user=user,
                     task=task,
                     earned_points=random.randint(

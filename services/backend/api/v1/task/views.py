@@ -13,7 +13,7 @@ from api.v1.task.schemas import (
 )
 from apps.competition.models import State
 from apps.task.models import (
-    CompetetionTaskSumbission,
+    CompetitionTaskSubmission,
     Competition,
     CompetitionTask,
 )
@@ -96,23 +96,23 @@ def submit_task(
     )
 
     if task.type == CompetitionTask.CompetitionTaskType.INPUT:
-        CompetetionTaskSumbission.objects.create(
+        CompetitionTaskSubmission.objects.create(
             user=user,
             task=task,
-            status=CompetetionTaskSumbission.StatusChoices.CHECKED,
+            status=CompetitionTaskSubmission.StatusChoices.CHECKED,
             result={"correct": submission.content == task.answer_file_path},
         )
     if task.type == CompetitionTask.CompetitionTaskType.REVIEW:
-        CompetetionTaskSumbission.objects.create(
+        CompetitionTaskSubmission.objects.create(
             user=user,
             task=task,
-            status=CompetetionTaskSumbission.StatusChoices.SENT,
+            status=CompetitionTaskSubmission.StatusChoices.SENT,
         )
     if task.type == CompetitionTask.CompetitionTaskType.CHECKER:
-        CompetetionTaskSumbission.objects.create(
+        CompetitionTaskSubmission.objects.create(
             user=user,
             task=task,
-            status=CompetetionTaskSumbission.StatusChoices.CHECKING,
+            status=CompetitionTaskSubmission.StatusChoices.CHECKING,
         )
 
-    return TaskSubmissionOut(id=CompetetionTaskSumbission.id)
+    return TaskSubmissionOut(id=CompetitionTaskSubmission.id)
