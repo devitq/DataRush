@@ -14,11 +14,13 @@ interface Competition {
 }
 
 type TaskStatus = "uncleared" | "checking" | "correct" | "partial" | "wrong";
+type SolutionType = "input" | "file" | "code";
 
 interface Task {
   id: string;
   number: string;
   status: TaskStatus;
+  solutionType: SolutionType;
 }
 
 export { CompetitionStatus };

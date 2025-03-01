@@ -53,14 +53,55 @@ const mockCompetitions: Competition[] = [
 ];
 
 const mockTasks: Task[] = [
-  { id: "1", number: "1.1", status: "uncleared" },
-  { id: "2", number: "1.2", status: "checking" },
-  { id: "3", number: "1.3", status: "correct" },
-  { id: "4", number: "2.1", status: "partial" },
-  { id: "5", number: "2.2", status: "wrong" },
-  { id: "6", number: "2.3", status: "uncleared" },
-  { id: "7", number: "3.1", status: "checking" },
-  { id: "8", number: "3.2", status: "correct" },
+  { 
+    id: "1", 
+    number: "1.1", 
+    status: "uncleared", 
+    solutionType: "input"
+  },
+  { 
+    id: "2", 
+    number: "1.2", 
+    status: "checking", 
+    solutionType: "file"
+  },
+  { 
+    id: "3", 
+    number: "1.3", 
+    status: "correct", 
+    solutionType: "code"
+  },
+  { 
+    id: "4", 
+    number: "2.1", 
+    status: "partial", 
+    solutionType: "input"
+  },
+  { 
+    id: "5", 
+    number: "2.2", 
+    status: "wrong", 
+    solutionType: "file"
+  },
+  { 
+    id: "6", 
+    number: "2.3", 
+    status: "uncleared", 
+    solutionType: "code"
+  },
+  { 
+    id: "7", 
+    number: "3.1", 
+    status: "checking", 
+    solutionType: "file"
+  },
+  { 
+    id: "8", 
+    number: "3.2", 
+    status: "correct", 
+    solutionType: "input"
+  },
 ];
+
 
 export { mockCompetitions, mockTasks };

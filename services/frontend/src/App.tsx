@@ -11,11 +11,11 @@ const App = () => {
       <Route element={<NavbarLayout />}>
         <Route path="/" element={<Competitions />} />
         <Route path="/competition/:id" element={<CompetitionPreview />} />
-        <Route
+      </Route>
+      <Route
           path="/competition/:id/tasks/:taskId"
           element={<CompetitionSession />}
         />
-      </Route>
     </Routes>
   );
 };
