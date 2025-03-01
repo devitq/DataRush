@@ -69,7 +69,6 @@ class SignInAPITestCase(TestCase):
             password=make_password("securepassword123"),
             username="testuser"
         )
-        print(self.user.password)
         self.valid_payload = {
             "email": "valid@example.com",
             "password": "securepassword123"
@@ -81,7 +80,6 @@ class SignInAPITestCase(TestCase):
             data=json.dumps(self.valid_payload),
             content_type="application/json"
         )
-        print(make_password(self.valid_payload["password"]))
         self.assertEqual(response.status_code, 200)
         self.assertIn("token", response.json())
 
