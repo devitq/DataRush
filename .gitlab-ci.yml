@@ -73,7 +73,7 @@ deploy:
     - AUTH_COMMAND="echo "$CI_REGISTRY_PASSWORD" | docker login $CI_REGISTRY --username $CI_REGISTRY_USER --password-stdin";
     - ssh $SSH_ADDRESS "$AUTH_COMMAND"
     - scp -C -r infrastructure/ compose.yaml $SSH_ADDRESS:~/deploy/
-
+    - ssh $SSH_ADDRESS "docker -v"
     - ssh $SSH_ADDRESS "cd ~/deploy && \
       docker compose pull > deploy.log 2>&1 && \
       docker compose down >> deploy.log 2>&1 && \
