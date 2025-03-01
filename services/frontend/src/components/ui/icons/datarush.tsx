@@ -1,10 +1,17 @@
-const DataRush = ({ size = 52 }: { size?: number }) => {
+const DataRush = ({
+  size = 52,
+  className,
+}: {
+  size?: number;
+  className?: string;
+}) => {
   return (
     <svg
       height={size}
       viewBox="0 0 149 52"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
+      className={className}
     >
       <rect width="149" height="52" fill="#333333" />
       <path
