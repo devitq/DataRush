@@ -124,8 +124,6 @@ def analyze_data_task(
 
         result_content = secure_exec(code_str, result_path, input_files)
 
-        print(result_content * 1024)
-
         result_hash = hashlib.sha256(result_content).hexdigest()
         expected_hash = hashlib.sha256(expected_bytes).hexdigest()
 
