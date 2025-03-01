@@ -1,10 +1,12 @@
 from http import HTTPStatus as status
 
+from django.shortcuts import get_object_or_404
 from ninja import Router
 
 from api.v1.schemas import NotFoundError, UnauthorizedError, ForbiddenError
 from api.v1.ping.schemas import PingOut
 from api.v1.task.schemas import TaskOutSchema
+from apps.competition.models import Competition, State
 
 router = Router(tags=["competition"])
 
@@ -19,7 +21,11 @@ router = Router(tags=["competition"])
     },
 )
 def start_competition(request, competition_id: str) -> PingOut:
-    ...
+    competition = get_object_or_404(Competition, pk=competition_id)
+    state_obj, _ = State.objects.update_or_create(
+        user=request.auth, competition=competition, state="started"
+    )
+    return status.OK, PingOut()
 
 
 @router.get(
