@@ -12,7 +12,7 @@ class UserRole(models.Choices):
 class User(BaseModel):
     email = models.EmailField(unique=True, verbose_name="почта")
     username = models.SlugField(unique=True, verbose_name="юзернейм")
-    password = models.TextField(verbose_name="пароль", editable=False)
+    password = models.TextField(verbose_name="пароль")
 
     def make_password(self):
         return make_password(self.password)

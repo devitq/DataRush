@@ -51,14 +51,6 @@ class CompetitionTask(BaseModel):
         blank=True,
         null=True,
         verbose_name="критерии",
-        default=lambda: [
-            {
-                "name": "CHANGE ME",
-                "slug": "CHANGE ME",
-                "max_value": 0,
-                "min_value": 0,
-            }
-        ],
     )
 
     def clean(self):
