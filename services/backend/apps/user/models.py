@@ -14,10 +14,11 @@ class User(BaseModel):
     username = models.SlugField(unique=True, verbose_name="юзернейм")
     password = models.TextField(verbose_name="пароль")
 
-    def make_password(self):
-        return make_password(self.password)
+    @staticmethod
+    def make_password(password: str):
+        return make_password(password)
 
-    def check_password(self, password):
+    def check_password(self, password: str):
         return check_password(self.password, password)
 
     status = models.CharField(
