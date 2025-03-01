@@ -4,7 +4,7 @@ import "./styles/globals.css";
 import { NavbarLayout } from "./widgets/navbar-layout";
 
 import Competitions from "./pages/Competitions";
-import CompetitionPreview from "./pages/CompetitionPreview";
+import Competition from "./pages/Competition";
 import CompetitionSession from "./pages/CompetitionSession";
 import LoginPage from "./pages/Login";
 import { AuthLayout } from "./widgets/auth-layout";
@@ -17,7 +17,7 @@ const App = () => {
       <Route element={<AuthLayout />}>
         <Route element={<NavbarLayout />}>
           <Route path="/" element={<Competitions />} />
-          <Route path="/competition/:id" element={<CompetitionPreview />} />
+          <Route path="/competition/:id" element={<Competition />} />
         </Route>
 
         <Route
