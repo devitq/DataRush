@@ -19,6 +19,7 @@ ALLOWED_MODULES = {
     "csv",
     "math",
     "statistics",
+    "statsmodels",
 }
 
 
@@ -63,18 +64,28 @@ def validate_code(code_str):
         raise SecurityException(f"Security check failed: {e!s}")
 
 
-def secure_exec(code_str, result_path):
+def secure_exec(code_str, result_path, input_files=None):
     original_dir = os.getcwd()
     original_stdout = sys.stdout
     sys.stdout = captured_stdout = StringIO()
     result_content = None
 
+    if input_files is None:
+        input_files = []
+
     with tempfile.TemporaryDirectory() as temp_dir:
         try:
             os.chdir(temp_dir)
+
+            for file in input_files:
+                file_path = os.path.join(temp_dir, file["bind_at"])
+                os.makedirs(os.path.dirname(file_path), exist_ok=True)
+                with open(file_path, "wb") as f:
+                    f.write(file["content"])
+
             restricted_globals = {
                 "__builtins__": {
-                    "open": lambda f, *a, **kw: open(f, *a, **kw),
+                    "open": open,
                     "print": print,
                     "str": str,
                     "int": int,
@@ -105,11 +116,15 @@ def secure_exec(code_str, result_path):
 
 
 @app.task(bind=True)
-def analyze_data_task(self, code_str, result_path, expected_bytes):
+def analyze_data_task(
+    self, code_str, result_path, expected_bytes, input_files=[]
+):
     try:
         validate_code(code_str)
 
-        result_content = secure_exec(code_str, result_path)
+        result_content = secure_exec(code_str, result_path, input_files)
+
+        print(result_content * 1024)
 
         result_hash = hashlib.sha256(result_content).hexdigest()
         expected_hash = hashlib.sha256(expected_bytes).hexdigest()
