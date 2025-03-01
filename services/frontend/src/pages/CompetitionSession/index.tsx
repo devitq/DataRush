@@ -6,7 +6,7 @@ import CompetitionHeader from "./components/CompetitionHeader";
 import TaskContent from "./components/TaskContent";
 import TaskSolution from "./modules/TaskSolution";
 
-const CompetitionSessionPage = () => {
+const CompetitionSession = () => {
   const { id, taskId } = useParams<{ id: string; taskId?: string }>();
   const [tasks] = useState<Task[]>(mockTasks);
   const [answer, setAnswer] = useState("");
@@ -21,9 +21,6 @@ const CompetitionSessionPage = () => {
     console.log("Submitting answer:", answer);
   };
   
-  const handleHistoryClick = () => {
-    console.log("View history");
-  };
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -44,7 +41,6 @@ const CompetitionSessionPage = () => {
                 answer={answer}
                 setAnswer={setAnswer}
                 onSubmit={handleSubmit}
-                onHistoryClick={handleHistoryClick}
               />
             </div>
           ) : (
@@ -60,4 +56,4 @@ const CompetitionSessionPage = () => {
   );
 };
 
-export default CompetitionSessionPage;
+export default CompetitionSession;
