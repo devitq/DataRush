@@ -35,11 +35,9 @@ const CompetitionPreview = () => {
   };
 
   const handleContinue = () => {
-    if (competition?.id) {
-      const competitionTasks = mockTasks[competition.id];
-      
-      if (competitionTasks && competitionTasks.length > 0) {
-        const firstTaskId = competitionTasks[0].id;
+    if (competition?.id) {      
+      if (mockTasks && mockTasks.length > 0) {
+        const firstTaskId = mockTasks[0].id;
         navigate(`/competition/${competition.id}/tasks/${firstTaskId}`);
       } else {
         navigate(`/competition/${competition.id}/tasks`);
