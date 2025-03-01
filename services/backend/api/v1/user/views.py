@@ -1,5 +1,6 @@
 from http import HTTPStatus as status
 
+from django.contrib.auth.hashers import check_password
 from django.shortcuts import get_object_or_404
 from ninja import Router
 from ninja.errors import AuthenticationError
@@ -46,7 +47,7 @@ def sign_in(request, data: LoginSchema):
     user = User.objects.filter(email=data.email).first()
     if not user:
         raise AuthenticationError
-    if not user.check_password(data.password):
+    if not check_password(data.password, user.password):
         raise AuthenticationError
 
     token = BearerAuth.generate_jwt(user)

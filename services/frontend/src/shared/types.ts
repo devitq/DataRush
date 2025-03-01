@@ -4,6 +4,14 @@ enum CompetitionStatus {
   Completed = "Завершено",
 }
 
+enum TaskStatus {
+  Uncleared = "uncleared",
+  Checking = "checking",
+  Correct = "correct",
+  Partial = "partial",
+  Wrong = "wrong"
+}
+
 interface Competition {
   id: string;
   name: string;
@@ -13,7 +21,6 @@ interface Competition {
   description?: string;
 }
 
-type TaskStatus = "uncleared" | "checking" | "correct" | "partial" | "wrong";
 type SolutionType = "input" | "file" | "code";
 
 interface Solution {
@@ -30,5 +37,5 @@ interface Task {
   solutionType: SolutionType;
 }
 
-export { CompetitionStatus };
-export type { Solution, Competition, TaskStatus, Task };
+export { CompetitionStatus, TaskStatus };
+export type { Solution, Competition, Task };
