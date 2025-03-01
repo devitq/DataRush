@@ -43,7 +43,7 @@ const Header = () => {
           <div className="px-2 py-4">
             <ProfileOption
               icon={<User size={18} />}
-              label="Ваш профиль"
+              label="Соси дура"
               onClick={() => {
                 setIsProfileOpen(false);
               }}
