@@ -12,12 +12,12 @@ class Criteria(BaseModel):
 
 class ContestTaskCriteriesValidator:
     def __call__(self, instance):
-        if instance.criterties and not isinstance(instance.criterties, list):
+        if instance.criteries and not isinstance(instance.criteries, list):
             err = "criteries must be a valid dictionary"
             raise ValidationError(err)
 
         try:
-            for criteria in instance.criterties:
+            for criteria in instance.criteries if instance.criteries else []:
                 Criteria(**criteria)
         except PydanticValidationError:
             err = "invalid criteries data"
