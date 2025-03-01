@@ -11,7 +11,7 @@ class CompetitionOut(ModelSchema):
 
     class Meta:
         model = Competition
-        fields = "__all__"
+        exclude = ("participants",)
 
 
 class StateOut(ModelSchema):
