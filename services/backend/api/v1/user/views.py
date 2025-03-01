@@ -1,6 +1,6 @@
 from http import HTTPStatus as status
 
-from django.contrib.auth.hashers import check_password
+from django.contrib.auth.hashers import check_password, make_password
 from django.shortcuts import get_object_or_404
 from ninja import Router
 from ninja.errors import AuthenticationError
@@ -33,7 +33,8 @@ router = Router(tags=["user"])
     auth=None,
 )
 def sign_up(request, data: RegisterSchema):
-    user = User(**data.dict())
+    user = User(**data.dict(exclude={"password"}))
+    user.password = make_password(data.password)
     user.save()
 
     token = BearerAuth.generate_jwt(user)
