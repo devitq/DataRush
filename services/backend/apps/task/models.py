@@ -20,7 +20,7 @@ class CompetitionTask(BaseModel):
     competition = models.ForeignKey(Competition, on_delete=models.CASCADE)
     title = models.CharField(verbose_name="заголовок", max_length=50)
     description = models.TextField(verbose_name="описание", max_length=300)
-    max_attemps = models.PositiveSmallIntegerField(default=0)
+    max_attemps = models.PositiveSmallIntegerField()
     type = models.CharField(
         choices=CompetitionTaskType, max_length=8, verbose_name="тип проверки"
     )
@@ -50,6 +50,14 @@ class CompetitionTask(BaseModel):
         blank=True,
         null=True,
         verbose_name="критерии",
+        default=lambda: [
+            {
+                "name": "CHANGE ME",
+                "slug": "CHANGE ME",
+                "max_value": 0,
+                "min_value": 0,
+            }
+        ],
     )
 
     def clean(self):
@@ -63,7 +71,7 @@ class CompetitionTask(BaseModel):
         verbose_name_plural = "задания"
 
 
-class CompetetionTaskSumbission(BaseModel):
+class CompetitionTaskSubmission(BaseModel):
     class StatusChoices(models.TextChoices):
         SENT = "sent"
         CHECKING = "checking"
