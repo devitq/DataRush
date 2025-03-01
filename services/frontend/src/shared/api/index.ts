@@ -23,8 +23,8 @@ export const authFetch = ofetch.create({
 
 export const apiFetch = ofetch.create({
   baseURL: BASE_URL,
-  headers: {
-    Authorization: "Bearer " + getToken(),
+  async onRequest({ options }) {
+    options.headers.set("Authorization", "Bearer " + getToken());
   },
   async onResponseError({ response }) {
     if (response.status === 401) {
