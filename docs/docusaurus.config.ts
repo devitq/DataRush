@@ -10,7 +10,7 @@ const config: Config = {
   favicon: 'https://prod-team-15-2pc0i3lc.final.prodcontest.ru/dr.svg',
 
   url: 'https://prod-team-15-2pc0i3lc.final.prodcontest.ru',
-  baseUrl: '/',
+  baseUrl: '/docs/',
 
   organizationName: 'megazord',
   projectName: 'megazord',
