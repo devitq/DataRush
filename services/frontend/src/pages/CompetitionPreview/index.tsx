@@ -1,8 +1,8 @@
-
 import { useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
+import ReactMarkdown from 'react-markdown';
 import { Competition } from "@/shared/types";
 import { mockCompetitions, mockTasks } from "@/shared/mocks/mocks";
 
@@ -48,10 +48,10 @@ const CompetitionPage = () => {
             <h1 className="text-[34px] leading-11 font-semibold text-balance">
               {competition.name}
             </h1>
-            <div className="text-xl leading-10 font-normal">
-              {competition.description
-                ?.split("\n")
-                .map((line, i) => <p key={i}>{line}</p>)}
+            <div className="text-xl leading-10 font-normal prose prose-lg max-w-none">
+              <ReactMarkdown>
+                {competition.description || ''}
+              </ReactMarkdown>
             </div>
           </div>
           <div className="w-96 *:w-full">
