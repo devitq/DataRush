@@ -4,8 +4,6 @@ stages:
 
 variables:
   DOCKER_TLS_CERTDIR: /certs
-  FRONTEND_IMAGE: $CI_REGISTRY_IMAGE/frontend
-  BACKEND_IMAGE: $CI_REGISTRY_IMAGE/backend
 
 .build-template: &build-template
   image:
@@ -57,7 +55,7 @@ deploy:
     SSH_HOST: "158.160.172.23"
     SSH_USER: "ubuntu"
     SSH_ADDRESS: "$SSH_USER@$SSH_HOST"
-    SSH_PRIVATE_KEY: SSH_PRIVATE_KEY
+    SSH_PRIVATE_KEY: $SSH_PRIVATE_KEY
   script:
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
@@ -73,4 +71,3 @@ deploy:
       docker compose down >> deploy.log 2>&1 && \
       docker compose up -d --remove-orphans >> deploy.log 2>&1 && \
       docker compose ps >> deploy.log 2>&1"
-
