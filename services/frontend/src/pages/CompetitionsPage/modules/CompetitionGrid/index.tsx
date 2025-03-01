@@ -1,4 +1,4 @@
-import { Competition } from "../../types";
+import { Competition } from "@/shared/types/types";
 import { CompetitionCard } from "../../components/CompetitionCard";
 import CompetitionSkeleton from "../../components/CompetitionSkeleton";
 import { cn } from "@/shared/lib/utils";

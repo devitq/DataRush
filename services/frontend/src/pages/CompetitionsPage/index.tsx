@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
-import { Competition, Status } from './types';
+import { Competition, Status } from '@/shared/types/types';
 import { CompetitionGrid } from './modules/CompetitionGrid';
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import Navbar from './modules/Navbar';
+import Navbar from '@/modules/Navbar';
 
 const mockCompetitions: Competition[] = [
   {

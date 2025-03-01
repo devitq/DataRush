@@ -1,10 +1,11 @@
-import { Competition } from "../../types";
+import { Competition } from "@/shared/types/types";
 import { cn } from "@/shared/lib/utils";
 import {
   Card,
   CardContent,
   CardFooter,
 } from "@/components/ui/card";
+import { useNavigate } from "react-router";
 
 interface CompetitionCardProps {
   competition: Competition;
@@ -12,10 +13,18 @@ interface CompetitionCardProps {
 }
 
 export function CompetitionCard({ competition, className }: CompetitionCardProps) {
-  const { name, imageUrl, isOlympics, status } = competition;
+  const { id, name, imageUrl, isOlympics, status } = competition;
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate(`/competition/${id}`);
+  };
 
   return (
-    <Card className={cn("overflow-hidden h-full", className)}>
+    <Card 
+      className={cn("overflow-hidden h-full", className)}
+      onClick={handleClick}
+    >
       <div className="relative h-48 overflow-hidden">
         <img 
           src={imageUrl} 
