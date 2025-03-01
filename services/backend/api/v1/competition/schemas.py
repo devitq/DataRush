@@ -8,6 +8,14 @@ from apps.competition.models import Competition, State
 
 class CompetitionOut(ModelSchema):
     id: UUID
+    state: Literal["not_started", "started", "finished"]
+
+    @staticmethod
+    def resolve_state(self, context) -> Literal["not_started", "started", "finished"]:
+        if not (state := State.objects.filter(user=context.get("request").auth, competition=self).first()):
+            return "not_started"
+        return state.state
+
 
     class Meta:
         model = Competition
