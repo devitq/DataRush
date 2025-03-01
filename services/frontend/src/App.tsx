@@ -1,8 +1,8 @@
 import { Routes, Route } from "react-router";
 import "./styles/globals.css";
-import CompetitionsPage from "./pages/CompetitionsPage";
-import CompetitionPreviewPage from "./pages/CompetitionPreviewPage";
-import CompetitionRunnerPage from "./pages/CompetitionRunnerPage";
+import CompetitionsPage from "./pages/Competitions";
+import CompetitionPage from "./pages/Competition";
+import CompetitionRunnerPage from "./pages/CompetitionSession";
 import { NavbarLayout } from "./widgets/navbar-layout";
 
 const App = () => {
@@ -10,12 +10,12 @@ const App = () => {
     <Routes>
       <Route element={<NavbarLayout />}>
         <Route path="/" element={<CompetitionsPage />} />
+        <Route path="/competitions/:id" element={<CompetitionPage />} />
+        <Route
+          path="/competitions/:id/tasks/:taskId"
+          element={<CompetitionRunnerPage />}
+        />
       </Route>
-      <Route path="/competition/:id" element={<CompetitionPreviewPage />} />
-      <Route
-        path="/competition/:id/tasks/:taskId"
-        element={<CompetitionRunnerPage />}
-      />
     </Routes>
   );
 };
