@@ -1,9 +1,7 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
-import Navbar from "@/modules/Navbar";
-import { Task, TaskStatus } from "@/shared/types/types";
-
-
+import Navbar from "@/widgets/Navbar";
+import { Task, TaskStatus } from "@/shared/types";
 
 const sampleTasks: Task[] = [
   { id: "1", number: "1.1", status: "uncleared" },
@@ -18,27 +16,39 @@ const sampleTasks: Task[] = [
 
 const CompetitionRunnerPage = () => {
   const { id } = useParams<{ id: string }>();
-  const [competitionTitle, setCompetitionTitle] = useState("Олимпиада DANO 2025. Индивидуальный этап");
+  const [competitionTitle, setCompetitionTitle] = useState(
+    "Олимпиада DANO 2025. Индивидуальный этап",
+  );
   const [tasks, setTasks] = useState<Task[]>(sampleTasks);
   const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
 
   const getTaskBgColor = (status: TaskStatus): string => {
     switch (status) {
-      case "uncleared": return "bg-[var(--color-task-uncleared)]";
-      case "checking": return "bg-[var(--color-task-checking)]";
-      case "correct": return "bg-[var(--color-task-correct)]";
-      case "partial": return "bg-[var(--color-task-partial)]";
-      case "wrong": return "bg-[var(--color-task-wrong)]";
+      case "uncleared":
+        return "bg-[var(--color-task-uncleared)]";
+      case "checking":
+        return "bg-[var(--color-task-checking)]";
+      case "correct":
+        return "bg-[var(--color-task-correct)]";
+      case "partial":
+        return "bg-[var(--color-task-partial)]";
+      case "wrong":
+        return "bg-[var(--color-task-wrong)]";
     }
   };
 
   const getTaskTextColor = (status: TaskStatus): string => {
     switch (status) {
-      case "uncleared": return "text-gray-600";
-      case "checking": return "text-gray-800";
-      case "correct": return "text-green-800";
-      case "partial": return "text-green-700";
-      case "wrong": return "text-red-800";
+      case "uncleared":
+        return "text-gray-600";
+      case "checking":
+        return "text-gray-800";
+      case "correct":
+        return "text-green-800";
+      case "partial":
+        return "text-green-700";
+      case "wrong":
+        return "text-red-800";
     }
   };
 
@@ -49,21 +59,20 @@ const CompetitionRunnerPage = () => {
   return (
     <>
       <Navbar />
-      
-      <div className="sticky top-16 z-10 bg-white border-b border-gray-200 shadow-sm">
+
+      <div className="sticky top-16 z-10 border-b border-gray-200 bg-white shadow-sm">
         <div className="container mx-auto px-4">
           <div className="py-4">
-            <h1 className="text-xl font-semibold font-hse-sans">{competitionTitle}</h1>
+            <h1 className="font-hse-sans text-xl font-semibold">
+              {competitionTitle}
+            </h1>
           </div>
-          
-          <div className="flex items-center gap-3 pb-4 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300">
+
+          <div className="scrollbar-thin scrollbar-thumb-gray-300 flex items-center gap-3 overflow-x-auto pb-4">
             {tasks.map((task) => (
-              <div 
+              <div
                 key={task.id}
-                className={`${getTaskBgColor(task.status)} ${getTaskTextColor(task.status)} 
-                  rounded-lg px-4 py-2 font-medium text-sm font-hse-sans cursor-pointer 
-                  transition-transform hover:scale-105 flex-shrink-0
-                  ${selectedTaskId === task.id ? 'ring-2 ring-black' : ''}`}
+                className={`${getTaskBgColor(task.status)} ${getTaskTextColor(task.status)} font-hse-sans flex-shrink-0 cursor-pointer rounded-lg px-4 py-2 text-sm font-medium transition-transform hover:scale-105 ${selectedTaskId === task.id ? "ring-2 ring-black" : ""}`}
                 onClick={() => handleTaskClick(task.id)}
               >
                 {task.number}
@@ -72,13 +81,13 @@ const CompetitionRunnerPage = () => {
           </div>
         </div>
       </div>
-      
+
       <div className="container mx-auto px-4 py-8">
-        <div className="bg-white rounded-lg p-6 shadow-sm">
+        <div className="rounded-lg bg-white p-6 shadow-sm">
           {selectedTaskId ? (
             <div className="font-hse-sans">
-              <h2 className="text-lg font-medium mb-4">
-                Задание {tasks.find(t => t.id === selectedTaskId)?.number}
+              <h2 className="mb-4 text-lg font-medium">
+                Задание {tasks.find((t) => t.id === selectedTaskId)?.number}
               </h2>
               <p className="text-gray-700">
                 Содержание задания будет отображаться здесь.

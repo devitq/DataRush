@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import Navbar from "@/modules/Navbar";
+import Navbar from "@/widgets/Navbar";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
-import { Competition } from "@/shared/types/types";
+import { Competition } from "@/shared/types";
 import { mockCompetitions, mockTasks } from "@/shared/mocks/mocks";
-
 
 const CompetitionPreview = () => {
   const { id } = useParams<{ id: string }>();
@@ -17,7 +16,7 @@ const CompetitionPreview = () => {
     const fetchCompetition = async () => {
       try {
         setTimeout(() => {
-          const found = mockCompetitions.find(comp => comp.id === id);
+          const found = mockCompetitions.find((comp) => comp.id === id);
           setCompetition(found || null);
           setIsLoading(false);
         }, 500);
@@ -37,7 +36,7 @@ const CompetitionPreview = () => {
   const handleContinue = () => {
     if (competition?.id) {
       const competitionTasks = mockTasks[competition.id];
-      
+
       if (competitionTasks && competitionTasks.length > 0) {
         const firstTaskId = competitionTasks[0].id;
         navigate(`/competition/${competition.id}/tasks/${firstTaskId}`);
@@ -50,49 +49,55 @@ const CompetitionPreview = () => {
   return (
     <>
       <Navbar />
-      <div className="container mx-auto px-4 py-8 mt-16">
-        <button 
+      <div className="container mx-auto mt-16 px-4 py-8">
+        <button
           onClick={handleBack}
-          className="flex items-center text-gray-600 mb-8 font-hse-sans"
+          className="font-hse-sans mb-8 flex items-center text-gray-600"
         >
           <ArrowLeft size={16} className="mr-2" />
           Назад к соревнованиям
         </button>
 
         {isLoading ? (
-          <div className="flex justify-center items-center h-64">
+          <div className="flex h-64 items-center justify-center">
             <p className="font-hse-sans text-gray-500">Загрузка...</p>
           </div>
         ) : competition ? (
-          <div className="max-w-5xl mx-auto bg-white rounded-lg overflow-hidden shadow-lg">
-            <div className="w-full h-80 overflow-hidden">
-              <img 
-                src={competition.imageUrl} 
+          <div className="mx-auto max-w-5xl overflow-hidden rounded-lg bg-white shadow-lg">
+            <div className="h-80 w-full overflow-hidden">
+              <img
+                src={competition.imageUrl}
                 alt={competition.name}
-                className="w-full h-full object-cover"
+                className="h-full w-full object-cover"
               />
             </div>
-            
+
             <div className="p-8">
-              <div className="flex justify-between items-center mb-8">
-                <h1 className="text-3xl font-semibold font-hse-sans mr-6 flex-1">{competition.name}</h1>
-                <Button 
-                  className="bg-yellow-400 hover:bg-yellow-500 text-black font-hse-sans text-base px-12 min-w-[180px]"
+              <div className="mb-8 flex items-center justify-between">
+                <h1 className="font-hse-sans mr-6 flex-1 text-3xl font-semibold">
+                  {competition.name}
+                </h1>
+                <Button
+                  className="font-hse-sans min-w-[180px] bg-yellow-400 px-12 text-base text-black hover:bg-yellow-500"
                   onClick={handleContinue}
                 >
                   Продолжить
                 </Button>
               </div>
-              
-              <div className="text-gray-700 font-hse-sans text-lg leading-relaxed">
+
+              <div className="font-hse-sans text-lg leading-relaxed text-gray-700">
                 <p>{competition.description}</p>
               </div>
             </div>
           </div>
         ) : (
-          <div className="text-center py-12">
-            <h2 className="text-2xl font-bold mb-2 font-hse-sans">Соревнование не найдено</h2>
-            <p className="text-gray-600 font-hse-sans">Запрошенное соревнование не существует или было удалено.</p>
+          <div className="py-12 text-center">
+            <h2 className="font-hse-sans mb-2 text-2xl font-bold">
+              Соревнование не найдено
+            </h2>
+            <p className="font-hse-sans text-gray-600">
+              Запрошенное соревнование не существует или было удалено.
+            </p>
           </div>
         )}
       </div>
