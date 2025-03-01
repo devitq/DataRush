@@ -1,9 +1,10 @@
-import tempfile
+import ast
+import hashlib
 import os
 import sys
-import ast
+import tempfile
 from io import StringIO
-import hashlib
+
 from config.celery import app
 
 ALLOWED_MODULES = {
@@ -29,7 +30,7 @@ def validate_code(code_str):
     try:
         tree = ast.parse(code_str)
     except SyntaxError as e:
-        raise SecurityException(f"Syntax error: {str(e)}")
+        raise SecurityException(f"Syntax error: {e!s}")
 
     class ImportVisitor(ast.NodeVisitor):
         def visit_Import(self, node):
@@ -56,10 +57,10 @@ def validate_code(code_str):
     try:
         ImportVisitor().visit(tree)
         SecurityVisitor().visit(tree)
-    except SecurityException as e:
+    except SecurityException:
         raise
     except Exception as e:
-        raise SecurityException(f"Security check failed: {str(e)}")
+        raise SecurityException(f"Security check failed: {e!s}")
 
 
 def secure_exec(code_str, result_path):
@@ -95,7 +96,7 @@ def secure_exec(code_str, result_path):
                     result_content = f.read()
 
         except Exception as e:
-            raise RuntimeError(f"Execution error: {str(e)}")
+            raise RuntimeError(f"Execution error: {e!s}")
         finally:
             os.chdir(original_dir)
             sys.stdout = original_stdout
@@ -121,8 +122,8 @@ def analyze_data_task(self, code_str, result_path, expected_bytes):
         }
 
     except SecurityException as e:
-        return {"success": False, "error": f"Security violation: {str(e)}"}
+        return {"success": False, "error": f"Security violation: {e!s}"}
     except RuntimeError as e:
-        return {"success": False, "error": f"Execution error: {str(e)}"}
+        return {"success": False, "error": f"Execution error: {e!s}"}
     except Exception as e:
-        return {"success": False, "error": f"Unexpected error: {str(e)}"}
+        return {"success": False, "error": f"Unexpected error: {e!s}"}

@@ -1,8 +1,8 @@
-from typing import List, Literal
+from typing import Literal
 from uuid import UUID
 
 from django.http import HttpRequest
-from ninja import Schema, ModelSchema
+from ninja import ModelSchema, Schema
 
 from apps.review.models import Reviewer
 from apps.task.models import CompetetionTaskSumbission
@@ -11,6 +11,7 @@ from apps.task.models import CompetetionTaskSumbission
 class PingOut(Schema):
     status: str = "ok"
 
+
 class ReviewerOut(ModelSchema):
     id: UUID
 
@@ -18,20 +19,19 @@ class ReviewerOut(ModelSchema):
         model = Reviewer
         exclude = ("token",)
 
+
 class SubmissionOut(ModelSchema):
     id: UUID
     status: Literal["sent", "checking", "checked"]
 
     class Meta:
         model = CompetetionTaskSumbission
-        exclude = (
-            "user",
-                   )
+        exclude = ("user",)
+
 
 class SubmissionsOut(Schema):
     submissions: list[SubmissionOut] = []
 
     @staticmethod
-    def resolve_submissions(self, context: HttpRequest) -> List[SubmissionOut]:
-        print(CompetetionTaskSumbission.objects.all())
+    def resolve_submissions(self, context: HttpRequest) -> list[SubmissionOut]:
         return list(CompetetionTaskSumbission.objects.all())

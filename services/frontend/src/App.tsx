@@ -2,7 +2,7 @@ import { Routes, Route } from "react-router";
 import "./styles/globals.css";
 import Competitions from "./pages/Competitions";
 import CompetitionPreview from './pages/CompetitionPreview'
-import CompetitionSession from "./pages/CompetitionSesssion";
+import CompetitionSession from "./pages/CompetitionSession";
 import { NavbarLayout } from "./widgets/navbar-layout";
 
 const App = () => {

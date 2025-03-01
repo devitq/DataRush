@@ -64,6 +64,7 @@ def sign_in(request, data: LoginSchema):
 def get_me(request):
     return 200, request.auth
 
+
 @router.get(
     path="/user/{user_id}",
     response={

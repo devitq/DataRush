@@ -1,5 +1,4 @@
-import { TaskStatus } from "@/shared/types/types";
-
+import { TaskStatus } from "@/shared/types";
 const getTaskBgColor = (status: TaskStatus): string => {
   switch (status) {
     case "uncleared": return "bg-[var(--color-task-uncleared)]";

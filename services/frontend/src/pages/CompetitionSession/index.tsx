@@ -40,16 +40,18 @@ const CompetitionSessionPage = () => {
   };
 
   return (
-    <>      
+    <>
       <div className="sticky top-0 z-10 bg-white">
-        <div className="max-w-6xl mx-auto px-4">
+        <div className="mx-auto max-w-6xl px-4">
           <div className="py-3 text-center">
-            <h1 className="text-lg font-semibold font-hse-sans">{competitionTitle}</h1>
+            <h1 className="font-hse-sans text-lg font-semibold">
+              {competitionTitle}
+            </h1>
           </div>
           
           <div className="flex items-center justify-center gap-2 pb-3 overflow-x-auto no-scrollbar">
             {tasks.map((task) => (
-              <div 
+              <div
                 key={task.id}
                 className={`${getTaskBgColor(task.status)} ${getTaskTextColor(task.status)} 
                   rounded-lg px-3 py-1.5 font-medium text-sm font-hse-sans cursor-pointer 
