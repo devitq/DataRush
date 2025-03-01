@@ -54,6 +54,15 @@ build_backend-staticfiles:
     DOCKERFILE_PATH: "Dockerfile.staticfiles"
     IMAGE_NAME: "$CI_REGISTRY_IMAGE/backend-staticfiles"
 
+build_docs:
+  <<: *build-template
+  rules:
+    - if: '$CI_COMMIT_REF_NAME == "master"'
+  variables:
+    CONTEXT: "${CI_PROJECT_DIR}/docs"
+    DOCKERFILE_PATH: "Dockerfile"
+    IMAGE_NAME: "$CI_REGISTRY_IMAGE/docs"
+
 deploy:
   image: kroniak/ssh-client:3.19
   stage: deploy
