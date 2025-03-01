@@ -1,3 +1,5 @@
+from uuid import uuid4
+
 from django.db import models
 
 from apps.core.models import BaseModel
@@ -17,3 +19,13 @@ class Team(BaseModel):
     class Meta:
         verbose_name = "команда"
         verbose_name_plural = "команды"
+
+
+class TeamInvite(BaseModel):
+    team = models.ForeignKey(Team, on_delete=models.CASCADE,
+                             verbose_name="команда")
+    link = models.UUIDField(verbose_name="инвайт")
+
+    class Meta:
+        verbose_name = "приглашение"
+        verbose_name_plural = "приглашения"
