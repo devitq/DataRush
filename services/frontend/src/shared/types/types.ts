@@ -13,5 +13,13 @@ interface Competition {
   description?: string;
 }
 
+type TaskStatus = "uncleared" | "checking" | "correct" | "partial" | "wrong";
+
+interface Task {
+  id: string;
+  number: string; 
+  status: TaskStatus;
+}
+
 export {Status}
-export type {Competition}
+export type {Competition, TaskStatus, Task}

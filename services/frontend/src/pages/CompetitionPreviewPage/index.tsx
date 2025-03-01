@@ -3,26 +3,9 @@ import { useParams, useNavigate } from "react-router-dom";
 import Navbar from "@/modules/Navbar";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
-import { Competition, Status } from "@/shared/types/types";
+import { Competition } from "@/shared/types/types";
+import { mockCompetitions, mockTasks } from "@/shared/mocks/mocks";
 
-const mockCompetitions: Competition[] = [
-  {
-    id: '1',
-    name: 'Олимпиада DANO 2025. Индивидуальный этап',
-    imageUrl: '/DANO.png',
-    isOlympics: true,
-    status: Status.InProgress,
-    description: 'Проверка глубоких знаний и навыков в анализе данных. Будет несколько творческих заданий со свободным ответом. Задания выполняются индивидуально, вес тура в итоговом результате – 0,5. Этап пройдет онлайн в заданное время, с применением системы прокторинга. На работу дается 240 минут.'
-  },
-  {
-    id: '2',
-    name: 'Олимпиада DANO 2025. Индивидуальный этап',
-    imageUrl: '/DANO.png',
-    isOlympics: false,
-    status: Status.NotParticipating,
-    description: 'Индивидуальный этап олимпиады DANO 2025 – это уникальная возможность для студентов продемонстрировать свои навыки анализа данных и решения сложных задач. Участники будут работать с реальными наборами данных и применять современные методы машинного обучения и статистического анализа.'
-  },
-];
 
 const CompetitionPreview = () => {
   const { id } = useParams<{ id: string }>();
@@ -52,7 +35,16 @@ const CompetitionPreview = () => {
   };
 
   const handleContinue = () => {
-    console.log("Continue to competition:", competition?.id);
+    if (competition?.id) {
+      const competitionTasks = mockTasks[competition.id];
+      
+      if (competitionTasks && competitionTasks.length > 0) {
+        const firstTaskId = competitionTasks[0].id;
+        navigate(`/competition/${competition.id}/tasks/${firstTaskId}`);
+      } else {
+        navigate(`/competition/${competition.id}/tasks`);
+      }
+    }
   };
 
   return (

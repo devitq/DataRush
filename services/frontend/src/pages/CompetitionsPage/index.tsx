@@ -5,52 +5,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Navbar from '@/modules/Navbar';
-
-const mockCompetitions: Competition[] = [
-  {
-    id: '1',
-    name: 'Олимпиада DANO 2025. Индивидуальный этап',
-    imageUrl: '/DANO.png',
-    isOlympics: true,
-    status: Status.InProgress
-  },
-  {
-    id: '2',
-    name: 'Олимпиада DANO 2025. Индивидуальный этап',
-    imageUrl: '/DANO.png',
-    isOlympics: false,
-    status: Status.NotParticipating
-  },
-  {
-    id: '3',
-    name: 'Олимпиада DANO 2025. Индивидуальный этап',
-    imageUrl: '/DANO.png',
-    isOlympics: false,
-    status: Status.InProgress
-  },
-  {
-    id: '4',
-    name: 'Олимпиада DANO 2025. Индивидуальный этап',
-    imageUrl: '/DANO.png',
-    isOlympics: true,
-    status: Status.Completed
-  },
-  {
-    id: '5',
-    name: 'Олимпиада DANO 2025. Индивидуальный этап',
-    imageUrl: '/DANO.png',
-    isOlympics: false,
-    status: Status.Completed
-  },
-  {
-    id: '6',
-    name: 'Олимпиада DANO 2025. Индивидуальный этап',
-    imageUrl: '/DANO.png',
-    isOlympics: true,
-    status: Status.NotParticipating
-  }
-];
-
+import { mockCompetitions } from '@/shared/mocks/mocks';
 
 const CompetitionsPage = () => {
   const [competitions, setCompetitions] = useState<Competition[]>([]);
