@@ -19,7 +19,7 @@ class Competition(BaseModel):
 
     title = models.CharField(max_length=100, verbose_name="название")
     description = models.TextField(verbose_name="описание")
-    image_url = models.FileField(
+    image_url = models.ImageField(
         verbose_name="изображение соревнования",
         null=True,
         blank=True,
