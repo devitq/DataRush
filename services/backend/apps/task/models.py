@@ -1,12 +1,12 @@
-from random import choice
 from uuid import uuid4
 
 from django.db import models
 
-from apps.task.validators import ContestTaskCriteriesValidator
 from apps.competition.models import Competition
 from apps.core.models import BaseModel
+from apps.task.validators import ContestTaskCriteriesValidator
 from apps.user.models import User
+
 
 class CompetitionTask(BaseModel):
     class CompetitionTaskType(models.TextChoices):
@@ -45,7 +45,7 @@ class CompetetionTaskSumbission(BaseModel):
         CHECKED = "checked"
 
     def submission_content_upload_to(instance, filename) -> str:
-        return f"/submissions/{instance.id}/content"
+        return f"submissions/{instance.id}/content"
 
     def submission_stdout_upload_to(instance, filename) -> str:
         return f"/submissions/{instance.id}/stdout"
