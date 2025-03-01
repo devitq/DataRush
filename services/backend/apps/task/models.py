@@ -46,7 +46,7 @@ class CompetitionTask(BaseModel):
     )
 
     # only when "review" type
-    # todo make it more humanize
+    # TODO make it more humanize
     criteries = models.JSONField(
         blank=True,
         null=True,
@@ -60,8 +60,17 @@ class CompetitionTask(BaseModel):
         return self.title
 
     class Meta:
-        verbose_name = "задание"
         verbose_name_plural = "задания"
+
+
+class CompetitionTaskAttachment(BaseModel):
+    def file_upload_at(instance, filename):
+        return f"/attachment/{instance.id}/file"
+
+    task = models.ForeignKey(CompetitionTask, on_delete=models.CASCADE)
+    file = models.FileField(upload_to=file_upload_at)
+    bind_at = models.FilePathField()
+    public = models.BooleanField(default=False)
 
 
 class CompetitionTaskSubmission(BaseModel):
