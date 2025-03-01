@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Competition, CompetitionStatus } from "@/shared/types";
 import { CompetitionGrid } from "./modules/CompetitionGrid";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";

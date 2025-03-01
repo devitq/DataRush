@@ -16,6 +16,13 @@ interface Competition {
 type TaskStatus = "uncleared" | "checking" | "correct" | "partial" | "wrong";
 type SolutionType = "input" | "file" | "code";
 
+interface Solution {
+  id: string,
+  status: TaskStatus,
+  date: string,
+  score?: number,
+  maxScore?: number,
+}
 interface Task {
   id: string;
   number: string;
@@ -24,4 +31,4 @@ interface Task {
 }
 
 export { CompetitionStatus };
-export type { Competition, TaskStatus, Task };
+export type { Solution, Competition, TaskStatus, Task };
