@@ -7,6 +7,7 @@ from api.v1.schemas import NotFoundError, UnauthorizedError, ForbiddenError
 from api.v1.ping.schemas import PingOut
 from api.v1.task.schemas import TaskOutSchema
 from apps.competition.models import Competition, State
+from apps.task.models import CompetitionTask
 
 router = Router(tags=["competition"])
 
@@ -39,7 +40,14 @@ def start_competition(request, competition_id: str) -> PingOut:
     }
 )
 def get_competition_tasks(request, competition_id: str) -> list[TaskOutSchema]:
-    ...
+    competition = get_object_or_404(Competition, pk=competition_id)
+    state = State.objects.filter(
+        user=request.auth, competition=competition, state="started"
+    ).first()
+    if not state:
+        return 403, ForbiddenError()
+
+    return status.OK, CompetitionTask.objects.filter(competition=competition).all()
 
 
 @router.get(
