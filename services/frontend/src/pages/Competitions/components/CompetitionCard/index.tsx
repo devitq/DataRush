@@ -11,13 +11,9 @@ export function CompetitionCard({
   competition,
   className,
 }: CompetitionCardProps) {
-
   return (
     <Card
-      className={cn(
-        "aspect-square h-full max-h-80 w-auto overflow-hidden",
-        className,
-      )}
+      className={cn("aspect-square h-full w-auto overflow-hidden", className)}
     >
       <div className="relative h-full overflow-hidden">
         <img
@@ -40,7 +36,9 @@ export function CompetitionCard({
               </>
             )}
           </div>
-          <h3 className="text-xl font-semibold">{competition.name}</h3>
+          <h3 className="line-clamp-2 text-xl font-semibold">
+            {competition.name}
+          </h3>
         </div>
       </CardContent>
     </Card>

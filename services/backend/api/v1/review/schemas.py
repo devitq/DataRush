@@ -1,10 +1,9 @@
 from typing import Literal
 from uuid import UUID
 
-from django.http import HttpRequest
 from ninja import ModelSchema, Schema
 
-from apps.review.models import Reviewer, Review
+from apps.review.models import Review, Reviewer
 from apps.task.models import CompetitionTaskSubmission
 
 
@@ -34,4 +33,6 @@ class SubmissionsOut(Schema):
 
     @staticmethod
     def resolve_submissions(self, context) -> list[SubmissionOut]:
-        return list(Review.objects.filter(reviewer=context.get("request").auth))
+        return list(
+            Review.objects.filter(reviewer=context.get("request").auth)
+        )
