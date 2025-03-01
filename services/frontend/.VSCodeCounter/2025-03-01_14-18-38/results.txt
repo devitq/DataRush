@@ -1,0 +1,59 @@
+Date : 2025-03-01 14:18:38
+Directory : c:\Users\Admin\Documents\VS Code Projects\project\services\frontend\src
+Total : 18 files,  736 codes, 5 comments, 85 blanks, all 826 lines
+
+Languages
++----------------+------------+------------+------------+------------+------------+
+| language       | files      | code       | comment    | blank      | total      |
++----------------+------------+------------+------------+------------+------------+
+| TypeScript JSX |         13 |        579 |          4 |         72 |        655 |
+| CSS            |          2 |        140 |          0 |          8 |        148 |
+| TypeScript     |          3 |         17 |          1 |          5 |         23 |
++----------------+------------+------------+------------+------------+------------+
+
+Directories
++-----------------------------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                                                                    | files      | code       | comment    | blank      | total      |
++-----------------------------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                                                                       |         18 |        736 |          5 |         85 |        826 |
+| . (Files)                                                                                                                               |          3 |         22 |          1 |          6 |         29 |
+| components                                                                                                                              |          6 |        289 |          0 |         37 |        326 |
+| components\ui                                                                                                                           |          6 |        289 |          0 |         37 |        326 |
+| pages                                                                                                                                   |          6 |        280 |          4 |         32 |        316 |
+| pages\CompetitionsPage                                                                                                                  |          6 |        280 |          4 |         32 |        316 |
+| pages\CompetitionsPage (Files)                                                                                                          |          2 |        157 |          4 |         17 |        178 |
+| pages\CompetitionsPage\components                                                                                                       |          3 |         82 |          0 |         10 |         92 |
+| pages\CompetitionsPage\components\CompetitionCard                                                                                       |          1 |         41 |          0 |          5 |         46 |
+| pages\CompetitionsPage\components\CompetitionSkeleton                                                                                   |          1 |         18 |          0 |          2 |         20 |
+| pages\CompetitionsPage\components\CompetitionTag                                                                                        |          1 |         23 |          0 |          3 |         26 |
+| pages\CompetitionsPage\modules                                                                                                          |          1 |         41 |          0 |          5 |         46 |
+| pages\CompetitionsPage\modules\CompetitionGrid                                                                                          |          1 |         41 |          0 |          5 |         46 |
+| shared                                                                                                                                  |          1 |          5 |          0 |          2 |          7 |
+| shared\lib                                                                                                                              |          1 |          5 |          0 |          2 |          7 |
+| styles                                                                                                                                  |          2 |        140 |          0 |          8 |        148 |
++-----------------------------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++-----------------------------------------------------------------------------------------------------------------------------------------+----------------+------------+------------+------------+------------+
+| filename                                                                                                                                | language       | code       | comment    | blank      | total      |
++-----------------------------------------------------------------------------------------------------------------------------------------+----------------+------------+------------+------------+------------+
+| c:\Users\Admin\Documents\VS Code Projects\project\services\frontend\src\App.tsx                                                         | TypeScript JSX |         11 |          0 |          3 |         14 |
+| c:\Users\Admin\Documents\VS Code Projects\project\services\frontend\src\components\ui\alert.tsx                                         | TypeScript JSX |         60 |          0 |          7 |         67 |
+| c:\Users\Admin\Documents\VS Code Projects\project\services\frontend\src\components\ui\badge.tsx                                         | TypeScript JSX |         41 |          0 |          6 |         47 |
+| c:\Users\Admin\Documents\VS Code Projects\project\services\frontend\src\components\ui\button.tsx                                        | TypeScript JSX |         53 |          0 |          6 |         59 |
+| c:\Users\Admin\Documents\VS Code Projects\project\services\frontend\src\components\ui\card.tsx                                          | TypeScript JSX |         60 |          0 |          9 |         69 |
+| c:\Users\Admin\Documents\VS Code Projects\project\services\frontend\src\components\ui\skeleton.tsx                                      | TypeScript JSX |         11 |          0 |          3 |         14 |
+| c:\Users\Admin\Documents\VS Code Projects\project\services\frontend\src\components\ui\tabs.tsx                                          | TypeScript JSX |         64 |          0 |          6 |         70 |
+| c:\Users\Admin\Documents\VS Code Projects\project\services\frontend\src\main.tsx                                                        | TypeScript JSX |         11 |          0 |          2 |         13 |
+| c:\Users\Admin\Documents\VS Code Projects\project\services\frontend\src\pages\CompetitionsPage\components\CompetitionCard\index.tsx     | TypeScript JSX |         41 |          0 |          5 |         46 |
+| c:\Users\Admin\Documents\VS Code Projects\project\services\frontend\src\pages\CompetitionsPage\components\CompetitionSkeleton\index.tsx | TypeScript JSX |         18 |          0 |          2 |         20 |
+| c:\Users\Admin\Documents\VS Code Projects\project\services\frontend\src\pages\CompetitionsPage\components\CompetitionTag\index.tsx      | TypeScript JSX |         23 |          0 |          3 |         26 |
+| c:\Users\Admin\Documents\VS Code Projects\project\services\frontend\src\pages\CompetitionsPage\index.tsx                                | TypeScript JSX |        145 |          4 |         15 |        164 |
+| c:\Users\Admin\Documents\VS Code Projects\project\services\frontend\src\pages\CompetitionsPage\modules\CompetitionGrid\index.tsx        | TypeScript JSX |         41 |          0 |          5 |         46 |
+| c:\Users\Admin\Documents\VS Code Projects\project\services\frontend\src\pages\CompetitionsPage\types.ts                                 | TypeScript     |         12 |          0 |          2 |         14 |
+| c:\Users\Admin\Documents\VS Code Projects\project\services\frontend\src\shared\lib\utils.ts                                             | TypeScript     |          5 |          0 |          2 |          7 |
+| c:\Users\Admin\Documents\VS Code Projects\project\services\frontend\src\styles\fonts.css                                                | CSS            |         18 |          0 |          2 |         20 |
+| c:\Users\Admin\Documents\VS Code Projects\project\services\frontend\src\styles\globals.css                                              | CSS            |        122 |          0 |          6 |        128 |
+| c:\Users\Admin\Documents\VS Code Projects\project\services\frontend\src\vite-env.d.ts                                                   | TypeScript     |          0 |          1 |          1 |          2 |
+| Total                                                                                                                                   |                |        736 |          5 |         85 |        826 |
++-----------------------------------------------------------------------------------------------------------------------------------------+----------------+------------+------------+------------+------------+

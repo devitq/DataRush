@@ -1,6 +1,14 @@
-import { Routes } from "react-router";
+import { Routes, Route } from "react-router";
 import "./styles/globals.css";
+import CompetitionsPage from "./pages/CompetitionsPage";
 
-export default function App() {
-  return <Routes />;
-}
+const App = () => {
+  return (
+    <Routes>
+      <Route path="/" element={<CompetitionsPage/>} />
+    </Routes>
+
+  );
+};
+
+export default App;
