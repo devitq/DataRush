@@ -10,6 +10,7 @@ class Competition(BaseModel):
     class CompetitionType(models.TextChoices):
         EDU = "edu", "Образовательный"
         COMPETITIVE = "competitive", "Соревновательный"
+
     class CompetitionParticipationType(models.TextChoices):
         SOLO = "solo", "Индивидуальный"
 
