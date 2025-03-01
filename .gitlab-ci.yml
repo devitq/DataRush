@@ -55,7 +55,7 @@ deploy:
     SSH_HOST: "158.160.172.23"
     SSH_USER: "ubuntu"
     SSH_ADDRESS: "$SSH_USER@$SSH_HOST"
-    SSH_PRIVATE_KEY: "$SSH_PRIVATE_KEY"
+    SSH_PRIVATE_KEY: SSH_PRIVATE_KEY
   script:
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
