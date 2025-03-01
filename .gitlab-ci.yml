@@ -27,6 +27,8 @@ variables:
 
 build_frontend:
   <<: *build-template
+  rules:
+    - if: '$CI_COMMIT_REF_NAME == "master"'
   variables:
     CONTEXT: "${CI_PROJECT_DIR}/services/frontend"
     DOCKERFILE_PATH: "Dockerfile"
@@ -34,6 +36,8 @@ build_frontend:
 
 build_backend:
   <<: *build-template
+  rules:
+    - if: '$CI_COMMIT_REF_NAME == "master"'
   variables:
     CONTEXT: "${CI_PROJECT_DIR}/services/backend"
     DOCKERFILE_PATH: "Dockerfile"
@@ -41,6 +45,8 @@ build_backend:
 
 build_backend-staticfiles:
   <<: *build-template
+  rules:
+    - if: '$CI_COMMIT_REF_NAME == "master"'
   variables:
     CONTEXT: "${CI_PROJECT_DIR}/services/backend"
     DOCKERFILE_PATH: "Dockerfile.staticfiles"
