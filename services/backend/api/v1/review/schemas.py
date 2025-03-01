@@ -4,8 +4,8 @@ from uuid import UUID
 from django.http import HttpRequest
 from ninja import ModelSchema, Schema
 
-from apps.review.models import Reviewer
-from apps.task.models import CompetetionTaskSumbission
+from apps.review.models import Reviewer, Review
+from apps.task.models import CompetitionTaskSubmission
 
 
 class PingOut(Schema):
@@ -25,13 +25,13 @@ class SubmissionOut(ModelSchema):
     status: Literal["sent", "checking", "checked"]
 
     class Meta:
-        model = CompetetionTaskSumbission
+        model = CompetitionTaskSubmission
         exclude = ("user",)
 
 
 class SubmissionsOut(Schema):
-    submissions: list[SubmissionOut] = []
+    submissions: list = None
 
     @staticmethod
-    def resolve_submissions(self, context: HttpRequest) -> list[SubmissionOut]:
-        return list(CompetetionTaskSumbission.objects.all())
+    def resolve_submissions(self, context) -> list[SubmissionOut]:
+        return list(Review.objects.filter(reviewer=context.get("request").auth))

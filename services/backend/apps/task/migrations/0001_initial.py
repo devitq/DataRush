@@ -38,8 +38,8 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
                 ('status', models.CharField(choices=[('sent', 'Sent'), ('checking', 'Checking'), ('checked', 'Checked')], default='sent', max_length=8)),
-                ('content', models.FileField(upload_to=apps.task.models.CompetetionTaskSumbission.submission_content_upload_to)),
-                ('stdout', models.FileField(blank=True, null=True, upload_to=apps.task.models.CompetetionTaskSumbission.submission_stdout_upload_to)),
+                ('content', models.FileField(upload_to=apps.task.models.CompetitionTaskSubmission.submission_content_upload_to)),
+                ('stdout', models.FileField(blank=True, null=True, upload_to=apps.task.models.CompetitionTaskSubmission.submission_stdout_upload_to)),
                 ('result', models.JSONField(blank=True, default=None, null=True)),
                 ('earned_points', models.IntegerField()),
                 ('timestamp', models.DateTimeField(auto_now_add=True)),
