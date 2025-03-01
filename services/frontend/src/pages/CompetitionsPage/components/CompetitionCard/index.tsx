@@ -1,6 +1,7 @@
 import { Competition, CompetitionStatus } from "@/shared/types";
 import { cn } from "@/shared/lib/utils";
 import { Card, CardContent } from "@/components/ui/card";
+import { useNavigate } from "react-router";
 
 interface CompetitionCardProps {
   competition: Competition;
@@ -11,12 +12,19 @@ export function CompetitionCard({
   competition,
   className,
 }: CompetitionCardProps) {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate(`/competition/${competition.id}`);
+  };
+
   return (
     <Card
       className={cn(
         "aspect-square h-full max-h-80 w-auto overflow-hidden",
         className,
       )}
+      onClick={handleClick}
     >
       <div className="relative h-full overflow-hidden">
         <img
