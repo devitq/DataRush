@@ -1,5 +1,6 @@
 import json
 from django.test import TestCase
+from django.contrib.auth.hashers import make_password
 
 from apps.user.models import User
 
@@ -58,3 +59,81 @@ class SignUpAPITestCase(TestCase):
         )
         self.assertEqual(response.status_code, 409)
         self.assertIn("detail", response.json())
+
+class SignInAPITestCase(TestCase):
+    def setUp(self):
+        self.user = User.objects.create(
+            email="valid@example.com",
+            password=make_password("securepassword123"),
+            username="testuser"
+        )
+        print(self.user.password)
+        self.valid_payload = {
+            "email": "valid@example.com",
+            "password": "securepassword123"
+        }
+
+    def test_successful_sign_in(self):
+        response = self.client.post(
+            "/api/v1/sign-in",
+            data=json.dumps(self.valid_payload),
+            content_type="application/json"
+        )
+        print(make_password(self.valid_payload["password"]))
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("token", response.json())
+
+    def test_missing_credentials(self):
+        # Test missing email
+        response = self.client.post(
+            "/api/v1/sign-in",
+            data=json.dumps({"password": "pass"}),
+            content_type="application/json"
+        )
+        self.assertEqual(response.status_code, 400)
+
+        # Test missing password
+        response = self.client.post(
+            "/api/v1/sign-in",
+            data=json.dumps({"email": "test@example.com"}),
+            content_type="application/json"
+        )
+        self.assertEqual(response.status_code, 400)
+
+    def test_invalid_email_format(self):
+        payload = {
+            "email": "invalid-email",
+            "password": "password123"
+        }
+        response = self.client.post(
+            "/api/v1/sign-in",
+            data=json.dumps(payload),
+            content_type="application/json"
+        )
+        self.assertEqual(response.status_code, 401)
+
+    def test_incorrect_password(self):
+        payload = {
+            "email": "valid@example.com",
+            "password": "wrongpassword"
+        }
+        response = self.client.post(
+            "/api/v1/sign-in",
+            data=json.dumps(payload),
+            content_type="application/json"
+        )
+        self.assertEqual(response.status_code, 401)
+        self.assertEqual(response.json()["detail"], "Unauthorized")
+
+    def test_nonexistent_user(self):
+        payload = {
+            "email": "notexist@example.com",
+            "password": "password123"
+        }
+        response = self.client.post(
+            "/api/v1/sign-in",
+            data=json.dumps(payload),
+            content_type="application/json"
+        )
+        self.assertEqual(response.status_code, 401)
+        self.assertEqual(response.json()["detail"], "Unauthorized")
