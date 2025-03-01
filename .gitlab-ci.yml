@@ -75,9 +75,12 @@ deploy:
     - ssh $SSH_ADDRESS "$AUTH_COMMAND"
     - scp -C -r infrastructure/ compose.yaml $SSH_ADDRESS:~/deploy/
     - ssh $SSH_ADDRESS "docker -v"
-    - ssh $SSH_ADDRESS "cd ~/deploy && \
-      docker compose pull > deploy.log 2>&1 && \
-      docker compose down >> deploy.log 2>&1 && \
-      docker compose up -d --remove-orphans >> deploy.log 2>&1 && \
-      docker compose ps >> deploy.log 2>&1"
+    - |
+      ssh $SSH_ADDRESS <<'EOF'
+      cd ~/deploy
+      docker compose pull > deploy.log 2>&1
+      docker compose down >> deploy.log 2>&1
+      docker compose up -d --remove-orphans >> deploy.log 2>&1
+      docker compose ps >> deploy.log 2>&1
+      EOF
     - ssh $SSH_ADDRESS "docker system prune -a"
