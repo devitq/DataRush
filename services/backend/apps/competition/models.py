@@ -8,11 +8,10 @@ from apps.user.models import User
 
 class Competition(BaseModel):
     class CompetitionType(models.TextChoices):
-        SOLO = "solo", "Индивидуальный"
-
-    class CompetitionParticipationType(models.TextChoices):
         EDU = "edu", "Образовательный"
         COMPETITIVE = "competitive", "Соревновательный"
+    class CompetitionParticipationType(models.TextChoices):
+        SOLO = "solo", "Индивидуальный"
 
     def image_url_upload_to(instance, filename):
         return f"/competitions/{instance.id}/image"
@@ -32,7 +31,7 @@ class Competition(BaseModel):
         verbose_name="дедлайн участия", null=True, blank=True
     )
     type = models.CharField(
-        max_length=10,
+        max_length=11,
         choices=CompetitionType.choices,
         verbose_name="тип участия",
     )
