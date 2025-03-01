@@ -9,6 +9,7 @@ from api.v1.ping.views import router as ping_router
 from api.v1.review.auth import ReviewerAuth
 from api.v1.review.views import router as review_router
 from api.v1.user.views import router as user_router
+from api.v1.task.views import router as task_router
 
 router = NinjaAPI(
     title="DataRush API",
@@ -36,6 +37,11 @@ router.add_router(
     "review",
     review_router,
     auth=ReviewerAuth(),
+)
+router.add_router(
+    "",
+    task_router,
+    auth=BearerAuth(),
 )
 
 
