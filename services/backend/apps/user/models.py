@@ -9,9 +9,9 @@ class UserRole(models.Choices):
 
 
 class User(BaseModel):
-    email = models.EmailField(unique=True, verbose_name="Почта")
-    username = models.SlugField(unique=True, verbose_name="Юзернейм")
-    password = models.TextField(verbose_name="Пароль")
+    email = models.EmailField(unique=True, verbose_name="почта")
+    username = models.SlugField(unique=True, verbose_name="юзернейм")
+    password = models.TextField(verbose_name="пароль")
 
     status = models.CharField(
         max_length=10, choices=UserRole, default="student"
