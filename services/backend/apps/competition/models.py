@@ -47,9 +47,6 @@ class Competition(BaseModel):
 
     def __str__(self):
         return self.title
-    
-    @property
-    def 
 
     class Meta:
         verbose_name = "соревнование"

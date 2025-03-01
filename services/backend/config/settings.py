@@ -448,6 +448,7 @@ INSTALLED_APPS = [
     "apps.competition",
     "apps.review",
     "apps.task",
+    "apps.team",
 ]
 
 # tinymce

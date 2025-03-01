@@ -8,6 +8,8 @@ from apps.competition.models import Competition, State
 
 class CompetitionOut(ModelSchema):
     id: UUID
+    type: Literal["edu", "competitive"]
+    participation_type: Literal["solo"]
 
     class Meta:
         model = Competition
