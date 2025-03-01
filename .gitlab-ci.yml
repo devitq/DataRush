@@ -4,8 +4,6 @@ stages:
 
 variables:
   DOCKER_TLS_CERTDIR: /certs
-  FRONTEND_IMAGE: $CI_REGISTRY_IMAGE/frontend
-  BACKEND_IMAGE: $CI_REGISTRY_IMAGE/backend
 
 .build-template: &build-template
   image:
@@ -29,6 +27,8 @@ variables:
 
 build_frontend:
   <<: *build-template
+  rules:
+    - if: '$CI_COMMIT_REF_NAME == "master"'
   variables:
     CONTEXT: "${CI_PROJECT_DIR}/services/frontend"
     DOCKERFILE_PATH: "Dockerfile"
@@ -36,6 +36,8 @@ build_frontend:
 
 build_backend:
   <<: *build-template
+  rules:
+    - if: '$CI_COMMIT_REF_NAME == "master"'
   variables:
     CONTEXT: "${CI_PROJECT_DIR}/services/backend"
     DOCKERFILE_PATH: "Dockerfile"
@@ -43,13 +45,15 @@ build_backend:
 
 build_backend-staticfiles:
   <<: *build-template
+  rules:
+    - if: '$CI_COMMIT_REF_NAME == "master"'
   variables:
     CONTEXT: "${CI_PROJECT_DIR}/services/backend"
     DOCKERFILE_PATH: "Dockerfile.staticfiles"
     IMAGE_NAME: "$CI_REGISTRY_IMAGE/backend-staticfiles"
 
 deploy:
-  image: alpine:latest
+  image: kroniak/ssh-client:3.19
   stage: deploy
   rules:
     - if: '$CI_COMMIT_REF_NAME == "master"'
@@ -57,22 +61,22 @@ deploy:
     SSH_HOST: "158.160.172.23"
     SSH_USER: "ubuntu"
     SSH_ADDRESS: "$SSH_USER@$SSH_HOST"
-    SSH_PRIVATE_KEY_BASE64: "$ENV_PRIVATE_KEY_BASE64"
-  before_script:
-    - apk add --no-cache openssh-client
+    SSH_PRIVATE_KEY: SSH_PRIVATE_KEY
   script:
-    - echo $SSH_PRIVATE_KEY_BASE64
-    - mkdir -p ~/.ssh && chmod 700 ~/.ssh
-    - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config && chmod 600 ~/.ssh/config
-    - echo "$SSH_PRIVATE_KEY_BASE64" | base64 -d > ~/.ssh/id_rsa && chmod 400 ~/.ssh/id_rsa
-    - cat ~/.ssh/id_rsa
-    - ssh-agent sh -c "ssh-add ~/.ssh/id_rsa"
-    - ssh-keyscan -H "$SSH_HOST"
-    - scp -C -r infrastructure/ compose.yaml "$SSH_ADDRESS":~/deploy/
-    - ssh "$SSH_ADDRESS" << 'EOF'
-        set -e
-        cd ~/deploy
-        docker compose pull
-        docker compose down
-        docker compose up -d --remove-orphans
-      EOF
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+    - echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+    - chmod 600 ~/.ssh/id_rsa
+    - ssh-keyscan -H "$SSH_HOST" > /dev/null 2>&1
+
+    - AUTH_COMMAND="echo "$CI_REGISTRY_PASSWORD" | docker login $CI_REGISTRY --username $CI_REGISTRY_USER --password-stdin";
+    - ssh $SSH_ADDRESS "$AUTH_COMMAND"
+    - scp -C -r infrastructure/ compose.yaml $SSH_ADDRESS:~/deploy/
+
+    - ssh $SSH_ADDRESS "cd ~/deploy && \
+      docker compose pull > deploy.log 2>&1 && \
+      docker compose down >> deploy.log 2>&1 && \
+      docker compose up -d --remove-orphans >> deploy.log 2>&1 && \
+      docker compose ps >> deploy.log 2>&1"
+    - ssh $SSH_ADDRESS "docker system prune -a"
