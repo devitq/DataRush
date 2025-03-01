@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
-import ReactMarkdown from 'react-markdown';
+import ReactMarkdown from "react-markdown";
 import { Competition } from "@/shared/types";
 import { mockCompetitions, mockTasks } from "@/shared/mocks/mocks";
 
@@ -14,7 +14,7 @@ const CompetitionPage = () => {
   );
 
   const handleContinue = () => {
-    if (competition?.id) {      
+    if (competition?.id) {
       if (mockTasks && mockTasks.length > 0) {
         const firstTaskId = mockTasks[0].id;
         navigate(`/competition/${competition.id}/tasks/${firstTaskId}`);
@@ -43,19 +43,19 @@ const CompetitionPage = () => {
           />
         </div>
 
-        <div className="flex gap-8">
+        <div className="flex flex-col-reverse gap-8 md:flex-row">
           <div className="flex flex-1 flex-col gap-5">
             <h1 className="text-[34px] leading-11 font-semibold text-balance">
               {competition.name}
             </h1>
-            <div className="text-xl leading-10 font-normal prose prose-lg max-w-none">
-              <ReactMarkdown>
-                {competition.description || ''}
-              </ReactMarkdown>
+            <div className="prose prose-lg max-w-none text-xl leading-10 font-normal">
+              <ReactMarkdown>{competition.description || ""}</ReactMarkdown>
             </div>
           </div>
-          <div className="w-96 *:w-full">
-            <Button onClick={handleContinue}>Продолжить</Button>
+          <div className="w-full *:w-full md:w-96">
+            <Button size={"lg"} onClick={handleContinue}>
+              Продолжить
+            </Button>
           </div>
         </div>
       </div>
