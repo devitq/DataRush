@@ -21,6 +21,7 @@ class CompetitionTask(BaseModel):
     title = models.TextField(verbose_name="заголовок", max_length=50)
     description = models.TextField(verbose_name="описание", max_length=300)
     type = models.CharField(choices=CompetitionTaskType, max_length=8)
+    max_attemps = models.PositiveSmallIntegerField()
 
     # only when "input" or "checker" type
     correct_answer_file = models.FileField(
