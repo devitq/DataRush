@@ -1,4 +1,4 @@
-import { Competition, CompetitionStatus } from "../types";
+import { Competition, CompetitionStatus, Task } from "../types";
 
 const mockCompetitions: Competition[] = [
   {
@@ -7,8 +7,11 @@ const mockCompetitions: Competition[] = [
     imageUrl: "/DANO.png",
     isOlympics: true,
     status: CompetitionStatus.InProgress,
-    description:
-      "Проверка глубоких знаний и навыков в анализе данных. Будет несколько творческих заданий со свободным ответом. Задания выполняются индивидуально, вес тура в итоговом результате – 0,5. Этап пройдет онлайн в заданное время, с применением системы прокторинга. На работу дается 240 минут.",
+    description: `Проверка глубоких знаний и навыков в анализе данных.
+Будет несколько творческих заданий со свободным ответом.
+Задания выполняются индивидуально, вес тура в итоговом результате – 0,5.
+Этап пройдет онлайн в заданное время, с применением системы прокторинга.
+На работу дается 240 минут.`,
   },
   {
     id: "2",
@@ -49,16 +52,15 @@ const mockCompetitions: Competition[] = [
   },
 ];
 
-const mockTasks = {
-  "1": [
-    { id: "1.1", number: "1.1", status: "uncleared" },
-    { id: "1.2", number: "1.2", status: "checking" },
-    { id: "1.3", number: "1.3", status: "correct" },
-  ],
-  "2": [
-    { id: "2.1", number: "1.1", status: "uncleared" },
-    { id: "2.2", number: "1.2", status: "uncleared" },
-  ],
-};
+const mockTasks: Task[] = [
+  { id: "1", number: "1.1", status: "uncleared" },
+  { id: "2", number: "1.2", status: "checking" },
+  { id: "3", number: "1.3", status: "correct" },
+  { id: "4", number: "2.1", status: "partial" },
+  { id: "5", number: "2.2", status: "wrong" },
+  { id: "6", number: "2.3", status: "uncleared" },
+  { id: "7", number: "3.1", status: "checking" },
+  { id: "8", number: "3.2", status: "correct" },
+];
 
 export { mockCompetitions, mockTasks };

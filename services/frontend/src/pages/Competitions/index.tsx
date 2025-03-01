@@ -2,65 +2,7 @@ import { useState, useEffect } from "react";
 import { Competition, CompetitionStatus } from "@/shared/types";
 import { CompetitionGrid } from "./modules/CompetitionGrid";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-
-const mockCompetitions: Competition[] = [
-  {
-    id: "1",
-    name: "Олимпиада DANO 2025. Индивидуальный этап",
-    imageUrl: "/DANO.png",
-    isOlympics: true,
-    status: CompetitionStatus.InProgress,
-  },
-  {
-    id: "2",
-    name: "Олимпиада DANO 2025. Индивидуальный этап",
-    imageUrl: "/DANO.png",
-    isOlympics: false,
-    status: CompetitionStatus.NotParticipating,
-  },
-  {
-    id: "3",
-    name: "Олимпиада DANO 2025. Индивидуальный этап",
-    imageUrl: "/DANO.png",
-    isOlympics: false,
-    status: CompetitionStatus.InProgress,
-  },
-  {
-    id: "4",
-    name: "Олимпиада DANO 2025. Индивидуальный этап",
-    imageUrl: "/DANO.png",
-    isOlympics: true,
-    status: CompetitionStatus.Completed,
-  },
-  {
-    id: "5",
-    name: "Олимпиада DANO 2025. Индивидуальный этап",
-    imageUrl: "/DANO.png",
-    isOlympics: false,
-    status: CompetitionStatus.Completed,
-  },
-  {
-    id: "6",
-    name: "Олимпиада DANO 2025. Индивидуальный этап",
-    imageUrl: "/DANO.png",
-    isOlympics: true,
-    status: CompetitionStatus.NotParticipating,
-  },
-  {
-    id: "6",
-    name: "Олимпиада DANO 2025. Индивидуальный этап",
-    imageUrl: "/DANO.png",
-    isOlympics: true,
-    status: CompetitionStatus.NotParticipating,
-  },
-  {
-    id: "6",
-    name: "Олимпиада DANO 2025. Индивидуальный этап",
-    imageUrl: "/DANO.png",
-    isOlympics: true,
-    status: CompetitionStatus.NotParticipating,
-  },
-];
+import { mockCompetitions } from "@/shared/mocks/mocks";
 
 const CompetitionsPage = () => {
   const [competitions] = useState<Competition[]>(mockCompetitions);
