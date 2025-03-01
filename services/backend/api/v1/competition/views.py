@@ -18,6 +18,7 @@ router = Router(tags=["competition"])
         status.OK: schemas.CompetitionOut,
         status.BAD_REQUEST: global_schemas.BadRequestError,
         status.UNAUTHORIZED: global_schemas.UnauthorizedError,
+        status.NOT_FOUND: global_schemas.NotFoundError,
     },
 )
 def get_competition(
