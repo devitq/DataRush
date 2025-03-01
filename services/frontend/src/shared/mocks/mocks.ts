@@ -1,4 +1,4 @@
-import { Competition, CompetitionStatus, Task } from "../types";
+import { Competition, CompetitionStatus, Solution, Task, TaskStatus } from "../types";
 
 const mockCompetitions: Competition[] = [
   {
@@ -56,52 +56,81 @@ const mockTasks: Task[] = [
   { 
     id: "1", 
     number: "1.1", 
-    status: "uncleared", 
+    status: TaskStatus.Uncleared, 
     solutionType: "input"
   },
   { 
     id: "2", 
     number: "1.2", 
-    status: "checking", 
+    status: TaskStatus.Checking, 
     solutionType: "file"
   },
   { 
     id: "3", 
     number: "1.3", 
-    status: "correct", 
+    status: TaskStatus.Correct, 
     solutionType: "code"
   },
   { 
     id: "4", 
     number: "2.1", 
-    status: "partial", 
+    status: TaskStatus.Partial, 
     solutionType: "input"
   },
   { 
     id: "5", 
     number: "2.2", 
-    status: "wrong", 
+    status: TaskStatus.Wrong, 
     solutionType: "file"
   },
   { 
     id: "6", 
     number: "2.3", 
-    status: "uncleared", 
+    status: TaskStatus.Uncleared, 
     solutionType: "code"
   },
   { 
     id: "7", 
     number: "3.1", 
-    status: "checking", 
+    status: TaskStatus.Checking, 
     solutionType: "file"
   },
   { 
     id: "8", 
     number: "3.2", 
-    status: "correct", 
+    status: TaskStatus.Correct, 
     solutionType: "input"
   },
 ];
 
 
-export { mockCompetitions, mockTasks };
+const mockSolutions: Solution[] = [
+  {
+    id: '1',
+    status: TaskStatus.Wrong,
+    date: '1 марта, 08:41',
+  },
+  {
+    id: '2',
+    status: TaskStatus.Partial,
+    score: 5,
+    maxScore: 10,
+    date: '28 февраля, 15:22',
+  },
+  {
+    id: '3',
+    status: TaskStatus.Correct,
+    score: 0,
+    maxScore: 10,
+    date: '27 февраля, 12:10',
+  },
+  {
+    id: '4',
+    status: TaskStatus.Checking,
+    date: '1 марта, 08:41',
+  },
+
+];
+
+
+export { mockCompetitions, mockTasks, mockSolutions };

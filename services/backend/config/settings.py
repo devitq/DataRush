@@ -483,6 +483,10 @@ DJANGO_GUID = {
 
 LANGUAGE_COOKIE_AGE = 31449600
 
+PASSWORD_HASHERS = [
+    "django.contrib.auth.hashers.Argon2PasswordHasher",
+]
+
 LANGUAGE_COOKIE_DOMAIN = None
 
 LANGUAGE_COOKIE_HTTPONLY = False

@@ -25,6 +25,7 @@ variables:
       --destination "${IMAGE_NAME}:latest"
       --cache=true
       --registry-mirror=dockerhub.timeweb.cloud
+  retry: 2
 
 build_frontend:
   <<: *build-template
@@ -84,3 +85,4 @@ deploy:
       docker compose ps >> deploy.log 2>&1
       EOF
     - ssh $SSH_ADDRESS "docker system prune -a --force"
+  retry: 2

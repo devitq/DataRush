@@ -1,24 +1,41 @@
 import React from 'react';
-import { Task } from "@/shared/types";
+import { Solution, TaskStatus } from "@/shared/types";
 import { getTaskBgColor, getTaskTextColor } from '@/pages/CompetitionSession/utils/utils';
 
 interface SolutionStatusProps {
-  task: Task;
+  solution: Solution;
 }
 
-const SolutionStatus: React.FC<SolutionStatusProps> = ({ task }) => {
+const SolutionStatus: React.FC<SolutionStatusProps> = ({ solution }) => {
+  const getStatusText = (status: TaskStatus, score?: number, maxScore?: number) => {
+    switch (status) {
+      case TaskStatus.Checking:
+        return 'На проверке';
+      case TaskStatus.Wrong:
+        return 'Неверный ответ';
+      case TaskStatus.Correct:
+        return `Зачтено ${maxScore}/${maxScore} баллов`;
+      case TaskStatus.Partial:
+        return `Зачтено ${score}/${maxScore} баллов`;
+      case TaskStatus.Uncleared:
+        return 'Не решено';
+      default:
+        return '';
+    }
+  };
+
   return (
-    <div className={`${getTaskBgColor(task.status)} rounded-lg p-4 relative`}>
+    <div className={`${getTaskBgColor(solution.status)} rounded-lg p-4 relative`}>
       <div className="flex flex-col">
-        <span className={`${getTaskTextColor(task.status)} font-medium`}>
-          Решение 12345
+        <span className={`${getTaskTextColor(solution.status)} font-medium`}>
+          Решение {solution.id}
         </span>
-        <span className={`${getTaskTextColor(task.status)} mt-1`}>
-          Зачтено 5/10 баллов
+        <span className={`${getTaskTextColor(solution.status)} mt-1`}>
+          {getStatusText(solution.status, solution.score, solution.maxScore)}
         </span>
       </div>
-      <div className={`absolute bottom-2 right-3 text-xs ${getTaskTextColor(task.status)}`}>
-        1 марта, 08:41
+      <div className={`absolute bottom-2 right-3 text-xs ${getTaskTextColor(solution.status)}`}>
+        {solution.date}
       </div>
     </div>
   );
