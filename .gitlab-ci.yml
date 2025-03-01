@@ -67,11 +67,14 @@ deploy:
     - ssh-keyscan -H "$SSH_HOST"
     - AUTH_COMMAND="echo "$CI_REGISTRY_PASSWORD" | docker login $CI_REGISTRY --username $CI_REGISTRY_USER --password-stdin";
     - ssh $SSH_ADDRESS "$AUTH_COMMAND"
-    - scp -C -r infrastructure/ compose.yaml "$SSH_ADDRESS":~/deploy/
+    - scp -C -r infrastructure/ ssl/ compose.yaml "$SSH_ADDRESS":~/deploy/
     - ssh "$SSH_ADDRESS" << 'EOF'
         set -e
         cd ~/deploy
-        docker compose pull
-        docker compose down
-        docker compose up -d --remove-orphans
+        {
+          docker compose pull
+          docker compose down
+          docker compose up -d --remove-orphans
+          docker compose ps
+        } > deploy.log 2>&1
       EOF
