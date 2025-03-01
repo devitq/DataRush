@@ -9,15 +9,15 @@ interface SolutionStatusProps {
 const SolutionStatus: React.FC<SolutionStatusProps> = ({ solution }) => {
   const getStatusText = (status: TaskStatus, score?: number, maxScore?: number) => {
     switch (status) {
-      case 'checking':
+      case TaskStatus.Checking:
         return 'На проверке';
-      case 'wrong':
+      case TaskStatus.Wrong:
         return 'Неверный ответ';
-      case 'correct':
+      case TaskStatus.Correct:
         return `Зачтено ${maxScore}/${maxScore} баллов`;
-      case 'partial':
+      case TaskStatus.Partial:
         return `Зачтено ${score}/${maxScore} баллов`;
-      case 'uncleared':
+      case TaskStatus.Uncleared:
         return 'Не решено';
       default:
         return '';
