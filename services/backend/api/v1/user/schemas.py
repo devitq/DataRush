@@ -22,4 +22,4 @@ class LoginSchema(ModelSchema):
 class UserSchema(ModelSchema):
     class Meta:
         model = User
-        fields = ["email", "username"]
+        fields = ["id", "email", "username"]
