@@ -45,26 +45,18 @@ const CompetitionRunnerPage = () => {
   };
 
   return (
-<<<<<<< HEAD:services/frontend/src/pages/CompetitionRunnerPage/index.tsx
-    <>      
-      <div className="sticky top-0 z-10 bg-white">
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="py-3 text-center">
-            <h1 className="text-lg font-semibold font-hse-sans">{competitionTitle}</h1>
-=======
     <>
-      <div className="sticky top-16 z-10 border-b border-gray-200 bg-white shadow-sm">
-        <div className="container mx-auto px-4">
-          <div className="py-4">
-            <h1 className="font-hse-sans text-xl font-semibold">
+      <div className="sticky top-0 z-10 bg-white">
+        <div className="mx-auto max-w-6xl px-4">
+          <div className="py-3 text-center">
+            <h1 className="font-hse-sans text-lg font-semibold">
               {competitionTitle}
             </h1>
->>>>>>> 58f493250150ba62ac4f325a0708b96eb88661e9:services/frontend/src/pages/CompetitionSession/index.tsx
           </div>
 
           <div className="no-scrollbar flex items-center justify-center gap-2 overflow-x-auto pb-3">
             {tasks.map((task) => (
-              <div 
+              <div
                 key={task.id}
                 className={`${getTaskBgColor(task.status)} ${getTaskTextColor(task.status)} font-hse-sans flex-shrink-0 cursor-pointer rounded-lg px-3 py-1.5 text-sm font-medium transition-all hover:brightness-95 ${selectedTaskId === task.id ? "scale-105 transform shadow-md" : ""}`}
                 onClick={() => handleTaskClick(task.id)}
