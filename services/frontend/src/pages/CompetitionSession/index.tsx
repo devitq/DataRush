@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
-import Navbar from "@/widgets/Navbar";
 import { Task, TaskStatus } from "@/shared/types";
 
 const sampleTasks: Task[] = [
@@ -58,8 +57,6 @@ const CompetitionRunnerPage = () => {
 
   return (
     <>
-      <Navbar />
-
       <div className="sticky top-16 z-10 border-b border-gray-200 bg-white shadow-sm">
         <div className="container mx-auto px-4">
           <div className="py-4">
