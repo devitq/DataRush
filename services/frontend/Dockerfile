@@ -14,4 +14,6 @@ FROM nginx:latest
 
 COPY --from=builder /app/dist /usr/share/nginx/html
 
+COPY ./nginx/nginx.conf /etc/nginx/nginx.conf
+
 CMD ["nginx", "-g", "daemon off;"]
