@@ -83,4 +83,4 @@ deploy:
       docker compose up -d --remove-orphans >> deploy.log 2>&1
       docker compose ps >> deploy.log 2>&1
       EOF
-    - ssh $SSH_ADDRESS "docker system prune -a"
+    - ssh $SSH_ADDRESS "docker system prune -a --force"
