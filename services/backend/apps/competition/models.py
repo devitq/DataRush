@@ -8,11 +8,11 @@ from apps.user.models import User
 
 class Competition(BaseModel):
     class CompetitionType(models.TextChoices):
-        SOLO = "solo"
+        SOLO = "solo", "Индивидуальный"
 
     class CompetitionParticipationType(models.TextChoices):
-        EDU = "edu"
-        COMPETITIVE = "competitive"
+        EDU = "edu", "Образовательный"
+        COMPETITIVE = "competitive", "Соревновательный"
 
     title = models.CharField(max_length=100, verbose_name="Название")
     description = models.TextField(verbose_name="Описание")
@@ -35,7 +35,11 @@ class Competition(BaseModel):
         choices=CompetitionParticipationType.choices,
         verbose_name="Тип соревнования",
     )
-    participants = models.ManyToManyField(User, related_name="participants")
+    participants = models.ManyToManyField(User, related_name="participants", blank=True,
+                                          editable=False)
+
+    def __str__(self):
+        return self.title
 
     class Meta:
         verbose_name = "соревнование"
