@@ -1,4 +1,4 @@
-"""ASGI config for project_name."""
+"""ASGI config for datarush."""
 
 import os
 

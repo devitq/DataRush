@@ -1,4 +1,4 @@
-"""URL configuration for project_name."""
+"""URL configuration for datarush."""
 
 from django.conf import settings
 from django.contrib import admin
@@ -6,9 +6,9 @@ from django.urls import include, path
 
 from config import handlers
 
-admin.site.site_title = "project_name"
-admin.site.site_header = "project_name"
-admin.site.index_title = "project_name"
+admin.site.site_title = "DataRush"
+admin.site.site_header = "DataRush"
+admin.site.index_title = "DataRush"
 
 
 urlpatterns = [

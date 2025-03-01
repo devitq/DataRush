@@ -1,4 +1,4 @@
-# E2E tests for project_name
+# E2E tests for DataRush
 
 ## Prerequisites
 
