@@ -6,6 +6,7 @@ from api.v1 import handlers
 from api.v1.auth import BearerAuth
 from api.v1.competition.views import router as competition_router
 from api.v1.ping.views import router as ping_router
+from api.v1.task.views import router as task_router
 from api.v1.user.views import router as user_router
 
 router = NinjaAPI(
@@ -29,6 +30,10 @@ router.add_router(
     "",
     competition_router,
     auth=BearerAuth(),
+)
+router.add_router(
+    "",
+    task_router,
 )
 
 

@@ -18,6 +18,7 @@ router = Router(tags=["competition"])
         status.OK: schemas.CompetitionOut,
         status.BAD_REQUEST: global_schemas.BadRequestError,
         status.UNAUTHORIZED: global_schemas.UnauthorizedError,
+        status.NOT_FOUND: global_schemas.NotFoundError,
     },
 )
 def get_competition(
@@ -30,14 +31,14 @@ def get_competition(
 @router.get(
     "competitions",
     response={
-        status.OK: list[schemas.CompetitionListInstanceOut],
+        status.OK: list[schemas.CompetitionOut],
         status.BAD_REQUEST: global_schemas.BadRequestError,
         status.UNAUTHORIZED: global_schemas.UnauthorizedError,
     },
 )
 def list_competitions(
     request: HttpRequest, is_participating: bool
-) -> tuple[status, list[schemas.CompetitionListInstanceOut]]:
+) -> tuple[status, list[schemas.CompetitionOut]]:
     user = request.auth
     if is_participating:
         competitions = Competition.objects.filter(participants=user)
