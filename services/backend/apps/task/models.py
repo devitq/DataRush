@@ -1,11 +1,10 @@
 from uuid import uuid4
 
-from competition.models import Competition
-from core.models import BaseModel
 from django.db import models
 
 from apps.task.validators import ContestTaskCriteriesValidator
-
+from apps.competition.models import Competition
+from apps.core.models import BaseModel
 
 class CompetitionTask(BaseModel):
     class CompetitionTaskType(models.TextChoices):
@@ -19,7 +18,7 @@ class CompetitionTask(BaseModel):
     competition = models.ForeignKey(Competition, on_delete=models.CASCADE)
     title = models.TextField(verbose_name="заголовок", max_length=50)
     description = models.TextField(verbose_name="описание", max_length=300)
-    type = models.CharField(choices=CompetitionTaskType)
+    type = models.CharField(choices=CompetitionTaskType, max_length=8)
 
     # only when "input" or "checker" type
     correct_answer_file = models.FileField(upload_to=answer_file_upload_to)
