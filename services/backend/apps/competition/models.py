@@ -14,10 +14,16 @@ class Competition(BaseModel):
         EDU = "edu", "Образовательный"
         COMPETITIVE = "competitive", "Соревновательный"
 
+    def image_url_upload_to(instance, filename):
+        return f"/competitions/{instance.id}/image"
+
     title = models.CharField(max_length=100, verbose_name="Название")
     description = models.TextField(verbose_name="Описание")
     image_url = models.FileField(
-        verbose_name="Изображение соревнования", null=True, blank=True
+        verbose_name="Изображение соревнования",
+        null=True,
+        blank=True,
+        upload_to=image_url_upload_to,
     )
     end_date = models.DateTimeField(
         verbose_name="Дедлайн участия", null=True, blank=True
@@ -35,8 +41,9 @@ class Competition(BaseModel):
         choices=CompetitionParticipationType.choices,
         verbose_name="Тип соревнования",
     )
-    participants = models.ManyToManyField(User, related_name="participants", blank=True,
-                                          editable=False)
+    participants = models.ManyToManyField(
+        User, related_name="participants", blank=True, editable=False
+    )
 
     def __str__(self):
         return self.title
