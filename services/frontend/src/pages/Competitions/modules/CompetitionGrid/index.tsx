@@ -10,7 +10,7 @@ export function CompetitionGrid({ competitions }: CompetitionGridProps) {
   return (
     <div className="grid grid-cols-3 gap-9">
       {competitions.map((competition) => (
-        <Link key={competition.id} to={`/competitions/${competition.id}`}>
+        <Link key={competition.id} to={`/competition/${competition.id}`}>
           <CompetitionCard competition={competition} />
         </Link>
       ))}

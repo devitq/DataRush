@@ -1,15 +1,28 @@
+
 import { useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { Competition } from "@/shared/types";
-import { mockCompetitions } from "@/shared/mocks/mocks";
+import { mockCompetitions, mockTasks } from "@/shared/mocks/mocks";
 
 const CompetitionPage = () => {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const [competition] = useState<Competition>(
     mockCompetitions.find((comp) => comp.id === id)!,
   );
+
+  const handleContinue = () => {
+    if (competition?.id) {      
+      if (mockTasks && mockTasks.length > 0) {
+        const firstTaskId = mockTasks[0].id;
+        navigate(`/competition/${competition.id}/tasks/${firstTaskId}`);
+      } else {
+        navigate(`/competition/${competition.id}/tasks`);
+      }
+    }
+  };
 
   return (
     <div className="flex flex-col gap-4">
@@ -42,7 +55,7 @@ const CompetitionPage = () => {
             </div>
           </div>
           <div className="w-96 *:w-full">
-            <Button>Продолжить</Button>
+            <Button onClick={handleContinue}>Продолжить</Button>
           </div>
         </div>
       </div>
