@@ -62,9 +62,10 @@ deploy:
     - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
     - echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
     - chmod 600 ~/.ssh/id_rsa
-    - ssh-keyscan -H "$SSH_HOST"
+    - ssh-keyscan -H "$SSH_HOST" > /dev/null 2>&1
     - AUTH_COMMAND="echo "$CI_REGISTRY_PASSWORD" | docker login $CI_REGISTRY --username $CI_REGISTRY_USER --password-stdin";
     - ssh $SSH_ADDRESS "$AUTH_COMMAND"
+    - ssh $SSH_ADDRESS "echo $PATH > path.log"
     - scp -C -r infrastructure/ ssl/ compose.yaml $SSH_ADDRESS:~/deploy/
     - ssh $SSH_ADDRESS "cd ~/deploy && \
       /usr/bin/docker compose pull > deploy.log 2>&1 && \
