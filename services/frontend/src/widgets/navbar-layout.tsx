@@ -5,8 +5,10 @@ const NavbarLayout = () => {
   return (
     <>
       <Header />
-      <div className="m-auto mt-6 w-full max-w-5xl">
-        <Outlet />
+      <div className="px-4 sm:px-6">
+        <div className="m-auto mt-6 w-full max-w-5xl">
+          <Outlet />
+        </div>
       </div>
     </>
   );

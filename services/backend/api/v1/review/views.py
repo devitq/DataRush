@@ -1,4 +1,3 @@
-import logging
 from http import HTTPStatus as status
 from uuid import UUID
 
@@ -8,7 +7,6 @@ from ninja import Router
 
 from api.v1 import schemas as global_schemas
 from api.v1.review import schemas
-from api.v1.task.schemas import TaskSubmissionIn
 from apps.task.models import CompetitionTaskSubmission
 
 router = Router(tags=["review"])
@@ -19,9 +17,11 @@ router = Router(tags=["review"])
     response={
         status.OK: schemas.SubmissionsOut,
     },
-    description="Список отправок, на проверку которых назначен ревьюер"
+    description="Список отправок, на проверку которых назначен ревьюер",
 )
-def get_submissions(request: HttpRequest, token: str) -> tuple[status, schemas.SubmissionsOut]:
+def get_submissions(
+    request: HttpRequest, token: str
+) -> tuple[status, schemas.SubmissionsOut]:
     return status.OK, schemas.SubmissionsOut()
 
 
@@ -36,12 +36,15 @@ def get_submissions(request: HttpRequest, token: str) -> tuple[status, schemas.S
 def get_reviewer_profile(request: HttpRequest, token: str):
     return status.OK, request.auth
 
+
 @router.get(
     "{token}/submissions/{submition_id}",
     response={
         status.OK: schemas.SubmissionOut,
     },
 )
-def get_submission(request: HttpRequest, token: str, submition_id: UUID) -> tuple[status, schemas.SubmissionsOut]:
+def get_submission(
+    request: HttpRequest, token: str, submition_id: UUID
+) -> tuple[status, schemas.SubmissionsOut]:
     submission = get_object_or_404(CompetitionTaskSubmission, id=submition_id)
     return status.OK, submission

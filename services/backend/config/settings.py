@@ -463,7 +463,7 @@ TINYMCE_DEFAULT_CONFIG = {
     "alignright alignjustify | bullist numlist outdent indent | "
     "removeformat | help",
     "skin": "oxide-dark",
-    "content_css": "dark"
+    "content_css": "dark",
 }
 
 # GUID
