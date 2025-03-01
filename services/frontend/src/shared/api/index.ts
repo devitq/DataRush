@@ -3,6 +3,8 @@ import { getToken, removeToken } from "../token";
 
 const BASE_URL = import.meta.env.VITE_API_ENDPOINT;
 
+console.log(import.meta.env.VITE_API_ENDPOINT);
+
 export class ApiError extends Error {
   response: Response;
   status: number;
