@@ -6,7 +6,7 @@ from ninja import Router
 from ninja.errors import AuthenticationError
 
 from api.v1.auth import BearerAuth
-from api.v1.schemas import BadRequestError, ForbiddenError, NotFoundError
+from api.v1.schemas import BadRequestError, ForbiddenError, NotFoundError, ConflictError
 from api.v1.user.schemas import (
     LoginSchema,
     RegisterSchema,
@@ -23,6 +23,7 @@ router = Router(tags=["user"])
     response={
         status.CREATED: TokenSchema,
         status.BAD_REQUEST: BadRequestError,
+        status.CONFLICT: ConflictError,
     },
     auth=None,
 )
