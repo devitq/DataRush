@@ -24,9 +24,6 @@ class TestSignUp(TestCase):
             user.full_clean()
 
     def test_missing_params(self):
-        user = User(
-            password="123123",
-            username="132131232131"
-        )
+        user = User(password="123123", username="132131232131")
         with self.assertRaises(ValidationError):
             user.full_clean()

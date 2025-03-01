@@ -4,18 +4,13 @@ import { Task } from "@/shared/types";
 import { getTaskBgColor, getTaskTextColor } from "./utils/utils";
 import { mockTasks } from "@/shared/mocks/mocks";
 import { Button } from "@/components/ui/button";
-import { Calendar } from "lucide-react";
 
-const CompetitionRunnerPage = () => {
+const CompetitionSessionPage = () => {
   const { id, taskId } = useParams<{ id: string; taskId?: string }>();
   const navigate = useNavigate();
-  const [competitionTitle, setCompetitionTitle] = useState(
-    "Олимпиада DANO 2025. Индивидуальный этап",
-  );
+  const [competitionTitle, setCompetitionTitle] = useState("Олимпиада DANO 2025. Индивидуальный этап");
   const [tasks] = useState<Task[]>(mockTasks);
-  const [selectedTaskId, setSelectedTaskId] = useState<string | null>(
-    taskId || null,
-  );
+  const [selectedTaskId, setSelectedTaskId] = useState<string | null>(taskId || null);
   const [answer, setAnswer] = useState("");
 
   useEffect(() => {
@@ -33,40 +28,35 @@ const CompetitionRunnerPage = () => {
     }
   };
 
-  const currentTask = tasks.find((t) => t.id === selectedTaskId);
-
+  const currentTask = tasks.find(t => t.id === selectedTaskId);
+  
   const handleSubmit = () => {
     console.log("Submitting answer:", answer);
     // Submit logic here
   };
-
+  
   const handleHistoryClick = () => {
     console.log("View history");
   };
 
   return (
-<<<<<<< HEAD:services/frontend/src/pages/CompetitionRunnerPage/index.tsx
-    <>      
-      <div className="sticky top-0 z-10 bg-white">
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="py-3 text-center">
-            <h1 className="text-lg font-semibold font-hse-sans">{competitionTitle}</h1>
-=======
     <>
-      <div className="sticky top-16 z-10 border-b border-gray-200 bg-white shadow-sm">
-        <div className="container mx-auto px-4">
-          <div className="py-4">
-            <h1 className="font-hse-sans text-xl font-semibold">
+      <div className="sticky top-0 z-10 bg-white">
+        <div className="mx-auto max-w-6xl px-4">
+          <div className="py-3 text-center">
+            <h1 className="font-hse-sans text-lg font-semibold">
               {competitionTitle}
             </h1>
->>>>>>> 58f493250150ba62ac4f325a0708b96eb88661e9:services/frontend/src/pages/CompetitionSession/index.tsx
           </div>
-
-          <div className="no-scrollbar flex items-center justify-center gap-2 overflow-x-auto pb-3">
+          
+          <div className="flex items-center justify-center gap-2 pb-3 overflow-x-auto no-scrollbar">
             {tasks.map((task) => (
-              <div 
+              <div
                 key={task.id}
-                className={`${getTaskBgColor(task.status)} ${getTaskTextColor(task.status)} font-hse-sans flex-shrink-0 cursor-pointer rounded-lg px-3 py-1.5 text-sm font-medium transition-all hover:brightness-95 ${selectedTaskId === task.id ? "scale-105 transform shadow-md" : ""}`}
+                className={`${getTaskBgColor(task.status)} ${getTaskTextColor(task.status)} 
+                  rounded-lg px-3 py-1.5 font-medium text-sm font-hse-sans cursor-pointer 
+                  transition-all hover:brightness-95 flex-shrink-0
+                  ${selectedTaskId === task.id ? 'shadow-md transform scale-105' : ''}`}
                 onClick={() => handleTaskClick(task.id)}
               >
                 {task.number}
@@ -75,74 +65,69 @@ const CompetitionRunnerPage = () => {
           </div>
         </div>
       </div>
-
-      <div className="min-h-screen bg-[#F8F8F8] pb-8">
-        <div className="mx-auto max-w-6xl px-4 py-6">
+      
+      <div className="bg-[#F8F8F8] min-h-screen pb-8">
+        <div className="max-w-6xl mx-auto px-4 py-6">
           {currentTask ? (
-            <div className="font-hse-sans flex flex-col gap-6 md:flex-row">
+            <div className="flex flex-col md:flex-row gap-6 font-hse-sans">
               {/* Left Container - Task Description */}
-              <div className="flex-1 rounded-lg bg-white p-6">
-                <h2 className="mb-4 text-xl font-medium">
+              <div className="flex-1 bg-white rounded-lg p-6">
+                <h2 className="text-xl font-medium mb-4">
                   Задача {currentTask.number}
                 </h2>
-
+                
                 <div className="prose max-w-none text-gray-700">
                   <p>
-                    Рассмотрим последовательность чисел 2, 3, 5, 9, 17, 33, 65,
-                    129, ... Каждый член этой последовательности, начиная с
-                    третьего, равен сумме двух предыдущих членов.
+                    Рассмотрим последовательность чисел 2, 3, 5, 9, 17, 33, 65, 129, ... 
+                    Каждый член этой последовательности, начиная с третьего, равен сумме двух предыдущих членов.
                   </p>
                   <p className="mt-4">
                     Найдите сумму первых 15 членов этой последовательности.
                   </p>
-                  <p className="mt-4">В ответе укажите целое число.</p>
+                  <p className="mt-4">
+                    В ответе укажите целое число.
+                  </p>
                 </div>
               </div>
-
+              
               {/* Right Container - Solution Area */}
-              <div className="flex flex-col gap-4 md:w-[350px]">
+              <div className="md:w-[350px] flex flex-col gap-4">
                 {/* Solution Status Card */}
-                <div
-                  className={`${getTaskBgColor(currentTask.status)} relative rounded-lg p-4`}
-                >
+                <div className={`${getTaskBgColor(currentTask.status)} rounded-lg p-4 relative`}>
                   <div className="flex flex-col">
-                    <span
-                      className={`${getTaskTextColor(currentTask.status)} font-medium`}
-                    >
+                    <span className={`${getTaskTextColor(currentTask.status)} font-medium`}>
                       Решение 12345
                     </span>
-                    <span
-                      className={`${getTaskTextColor(currentTask.status)} mt-1`}
-                    >
+                    <span className={`${getTaskTextColor(currentTask.status)} mt-1`}>
                       Зачтено 5/10 баллов
                     </span>
                   </div>
-                  <div className="absolute right-3 bottom-2 text-xs text-gray-600">
+                  <div className="absolute bottom-2 right-3 text-xs text-gray-600">
                     1 марта, 08:41
                   </div>
                 </div>
-
+                
                 {/* Answer Input */}
-                <div className="rounded-lg bg-white p-4">
-                  <textarea
-                    className="font-hse-sans h-32 w-full rounded-md border border-gray-300 p-3 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                <div className="bg-white rounded-lg p-4">
+                  <textarea 
+                    className="w-full h-32 border border-gray-300 rounded-md p-3 font-hse-sans text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="Введите ответ"
                     value={answer}
                     onChange={(e) => setAnswer(e.target.value)}
                   />
                 </div>
-
+                
                 {/* Action Buttons */}
-                <div className="flex justify-between gap-3">
-                  <Button
-                    variant="outline"
+                <div className="flex gap-3 justify-between">
+                  <Button 
+                    variant="outline" 
                     className="font-hse-sans"
                     onClick={handleHistoryClick}
                   >
                     История
                   </Button>
-                  <Button
-                    className="font-hse-sans bg-yellow-400 text-black hover:bg-yellow-500"
+                  <Button 
+                    className="bg-yellow-400 hover:bg-yellow-500 text-black font-hse-sans"
                     onClick={handleSubmit}
                   >
                     Отправить решение
@@ -151,8 +136,10 @@ const CompetitionRunnerPage = () => {
               </div>
             </div>
           ) : (
-            <div className="flex h-40 items-center justify-center rounded-lg bg-white">
-              <p className="font-hse-sans text-gray-500">Загрузка задания...</p>
+            <div className="flex justify-center items-center h-40 bg-white rounded-lg">
+              <p className="font-hse-sans text-gray-500">
+                Загрузка задания...
+              </p>
             </div>
           )}
         </div>
@@ -161,4 +148,4 @@ const CompetitionRunnerPage = () => {
   );
 };
 
-export default CompetitionRunnerPage;
+export default CompetitionSessionPage;

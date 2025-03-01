@@ -1,8 +1,8 @@
 from typing import Literal
 from uuid import UUID
+
 from ninja import ModelSchema, Schema
 
-from apps.competition.models import State
 from apps.task.models import CompetitionTask
 
 

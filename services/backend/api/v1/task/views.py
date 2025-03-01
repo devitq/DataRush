@@ -3,21 +3,20 @@ from uuid import UUID
 
 from django.shortcuts import get_object_or_404
 from ninja import Router
-from django.shortcuts import get_object_or_404
 
-from api.v1.schemas import NotFoundError, UnauthorizedError, ForbiddenError
 from api.v1.ping.schemas import PingOut
+from api.v1.schemas import ForbiddenError, NotFoundError, UnauthorizedError
 from api.v1.task.schemas import (
     TaskOutSchema,
-    TaskSubmissionOut,
     TaskSubmissionIn,
-)
-from apps.task.models import (
-    Competition,
-    CompetitionTask,
-    CompetetionTaskSumbission,
+    TaskSubmissionOut,
 )
 from apps.competition.models import State
+from apps.task.models import (
+    CompetetionTaskSumbission,
+    Competition,
+    CompetitionTask,
+)
 
 router = Router(tags=["competition"])
 
@@ -49,7 +48,9 @@ def start_competition(request, competition_id: UUID) -> PingOut:
         status.NOT_FOUND: NotFoundError,
     },
 )
-def get_competition_tasks(request, competition_id: UUID) -> list[TaskOutSchema]:
+def get_competition_tasks(
+    request, competition_id: UUID
+) -> list[TaskOutSchema]:
     competition = get_object_or_404(Competition, pk=competition_id)
     state = State.objects.filter(
         user=request.auth, competition=competition, state="started"
@@ -57,7 +58,9 @@ def get_competition_tasks(request, competition_id: UUID) -> list[TaskOutSchema]:
     if not state:
         return 403, ForbiddenError()
 
-    return status.OK, CompetitionTask.objects.filter(competition=competition).all()
+    return status.OK, CompetitionTask.objects.filter(
+        competition=competition
+    ).all()
 
 
 @router.get(
