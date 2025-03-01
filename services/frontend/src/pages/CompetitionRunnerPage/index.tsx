@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Task } from "@/shared/types/types";
+import { Task } from "@/shared/types";
 import { getTaskBgColor, getTaskTextColor } from "./utils/utils";
 import { mockTasks } from "@/shared/mocks/mocks";
 import { Button } from "@/components/ui/button";
@@ -41,16 +41,17 @@ const CompetitionRunnerPage = () => {
   };
 
   return (
-    <>      
-      <div className="sticky top-0 z-10 bg-white">
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="py-3 text-center">
-            <h1 className="text-lg font-semibold font-hse-sans">{competitionTitle}</h1>
+    <>
+      
+      <div className="sticky top-16 z-10 bg-white border-b border-gray-200 shadow-sm">
+        <div className="container mx-auto px-4">
+          <div className="py-4">
+            <h1 className="text-xl font-semibold font-hse-sans">{competitionTitle}</h1>
           </div>
           
           <div className="flex items-center justify-center gap-2 pb-3 overflow-x-auto no-scrollbar">
             {tasks.map((task) => (
-              <div 
+              <div
                 key={task.id}
                 className={`${getTaskBgColor(task.status)} ${getTaskTextColor(task.status)} 
                   rounded-lg px-3 py-1.5 font-medium text-sm font-hse-sans cursor-pointer 

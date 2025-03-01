@@ -1,50 +1,52 @@
-import { Competition, Status, Task } from "../types/types";
+import { Competition, CompetitionStatus, Task } from "../types";
 
 const mockCompetitions: Competition[] = [
   {
-    id: '1',
-    name: 'Олимпиада DANO 2025. Индивидуальный этап',
-    imageUrl: '/DANO.png',
+    id: "1",
+    name: "Олимпиада DANO 2025. Индивидуальный этап",
+    imageUrl: "/DANO.png",
     isOlympics: true,
-    status: Status.InProgress,
-    description: 'Проверка глубоких знаний и навыков в анализе данных. Будет несколько творческих заданий со свободным ответом. Задания выполняются индивидуально, вес тура в итоговом результате – 0,5. Этап пройдет онлайн в заданное время, с применением системы прокторинга. На работу дается 240 минут.'
+    status: CompetitionStatus.InProgress,
+    description:
+      "Проверка глубоких знаний и навыков в анализе данных. Будет несколько творческих заданий со свободным ответом. Задания выполняются индивидуально, вес тура в итоговом результате – 0,5. Этап пройдет онлайн в заданное время, с применением системы прокторинга. На работу дается 240 минут.",
   },
   {
-    id: '2',
-    name: 'Олимпиада DANO 2025. Индивидуальный этап',
-    imageUrl: '/DANO.png',
+    id: "2",
+    name: "Олимпиада DANO 2025. Индивидуальный этап",
+    imageUrl: "/DANO.png",
     isOlympics: false,
-    status: Status.NotParticipating,
-    description: 'Индивидуальный этап олимпиады DANO 2025 – это уникальная возможность для студентов продемонстрировать свои навыки анализа данных и решения сложных задач. Участники будут работать с реальными наборами данных и применять современные методы машинного обучения и статистического анализа.'
+    status: CompetitionStatus.NotParticipating,
+    description:
+      "Индивидуальный этап олимпиады DANO 2025 – это уникальная возможность для студентов продемонстрировать свои навыки анализа данных и решения сложных задач. Участники будут работать с реальными наборами данных и применять современные методы машинного обучения и статистического анализа.",
   },
   {
-    id: '3',
-    name: 'Олимпиада DANO 2025. Индивидуальный этап',
-    imageUrl: '/DANO.png',
+    id: "3",
+    name: "Олимпиада DANO 2025. Индивидуальный этап",
+    imageUrl: "/DANO.png",
     isOlympics: false,
-    status: Status.InProgress
+    status: CompetitionStatus.InProgress,
   },
   {
-    id: '4',
-    name: 'Олимпиада DANO 2025. Индивидуальный этап',
-    imageUrl: '/DANO.png',
+    id: "4",
+    name: "Олимпиада DANO 2025. Индивидуальный этап",
+    imageUrl: "/DANO.png",
     isOlympics: true,
-    status: Status.Completed
+    status: CompetitionStatus.Completed,
   },
   {
-    id: '5',
-    name: 'Олимпиада DANO 2025. Индивидуальный этап',
-    imageUrl: '/DANO.png',
+    id: "5",
+    name: "Олимпиада DANO 2025. Индивидуальный этап",
+    imageUrl: "/DANO.png",
     isOlympics: false,
-    status: Status.Completed
+    status: CompetitionStatus.Completed,
   },
   {
-    id: '6',
-    name: 'Олимпиада DANO 2025. Индивидуальный этап',
-    imageUrl: '/DANO.png',
+    id: "6",
+    name: "Олимпиада DANO 2025. Индивидуальный этап",
+    imageUrl: "/DANO.png",
     isOlympics: true,
-    status: Status.NotParticipating
-  }
+    status: CompetitionStatus.NotParticipating,
+  },
 ];
 
 const mockTasks: Task[] = [
@@ -58,4 +60,4 @@ const mockTasks: Task[] = [
   { id: "8", number: "3.2", status: "correct" },
 ];
 
-export { mockCompetitions, mockTasks }
+export { mockCompetitions, mockTasks };

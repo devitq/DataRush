@@ -1,54 +1,46 @@
-import { Competition } from "@/shared/types/types";
+import { Competition, CompetitionStatus } from "@/shared/types";
 import { cn } from "@/shared/lib/utils";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-} from "@/components/ui/card";
-import { useNavigate } from "react-router";
+import { Card, CardContent } from "@/components/ui/card";
 
 interface CompetitionCardProps {
   competition: Competition;
   className?: string;
 }
 
-export function CompetitionCard({ competition, className }: CompetitionCardProps) {
-  const { id, name, imageUrl, isOlympics, status } = competition;
-  const navigate = useNavigate();
-
-  const handleClick = () => {
-    navigate(`/competition/${id}`);
-  };
-
+export function CompetitionCard({
+  competition,
+  className,
+}: CompetitionCardProps) {
   return (
-    <Card 
-      className={cn("overflow-hidden h-full", className)}
-      onClick={handleClick}
+    <Card
+      className={cn(
+        "aspect-square h-full max-h-80 w-auto overflow-hidden",
+        className,
+      )}
     >
-      <div className="relative h-48 overflow-hidden">
-        <img 
-          src={imageUrl} 
-          alt={name}
-          className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+      <div className="relative h-full overflow-hidden">
+        <img
+          src={competition.imageUrl}
+          alt={competition.name}
+          className="h-full w-full object-cover object-center"
         />
       </div>
-      
-      <CardFooter className="p-4 pb-0 flex items-center text-xs font-medium font-hse-sans">
-        <span className="text-gray-500">
-          {isOlympics ? "Олимпиада" : "Тренировка"}
-        </span>
-        <span className="mx-2 w-1.5 h-1.5 rounded-full bg-gray-300"></span>
-        <span className={cn(
-          status === 'В процессе' && "text-yellow-500",
-          status === 'Завершено' && "text-green-500",
-          status === 'Не участвую' && "text-gray-500"
-        )}>
-          {status.replace(/^\w/, c => c.toUpperCase())}
-        </span>
-      </CardFooter>
-      
-      <CardContent className="p-4 pt-2">
-        <h3 className="font-semibold text-lg line-clamp-2 font-hse-sans">{name}</h3>
+
+      <CardContent>
+        <div className="flex flex-col gap-2.5">
+          <div className="text-muted-foreground flex items-center gap-2 *:text-sm *:font-semibold">
+            <span>{competition.isOlympics ? "Олимпиада" : "Тренировка"}</span>
+            {competition.status != CompetitionStatus.NotParticipating && (
+              <>
+                <span>•</span>
+                <span className="text-primary-foreground">
+                  {competition.status}
+                </span>
+              </>
+            )}
+          </div>
+          <h3 className="text-xl font-semibold">{competition.name}</h3>
+        </div>
       </CardContent>
     </Card>
   );

@@ -445,6 +445,8 @@ INSTALLED_APPS = [
     "apps.core",
     "apps.user",
     "apps.competition",
+    "apps.review",
+    "apps.task"
 ]
 
 # GUID

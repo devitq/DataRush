@@ -1,7 +1,7 @@
-import * as React from "react"
-import * as TabsPrimitive from "@radix-ui/react-tabs"
+import * as React from "react";
+import * as TabsPrimitive from "@radix-ui/react-tabs";
 
-import { cn } from "@/shared/lib/utils"
+import { cn } from "@/shared/lib/utils";
 
 function Tabs({
   className,
@@ -10,10 +10,10 @@ function Tabs({
   return (
     <TabsPrimitive.Root
       data-slot="tabs"
-      className={cn("flex flex-col", className)}
+      className={cn("flex flex-col gap-2", className)}
       {...props}
     />
-  )
+  );
 }
 
 function TabsList({
@@ -24,34 +24,28 @@ function TabsList({
     <TabsPrimitive.List
       data-slot="tabs-list"
       className={cn(
-        "inline-flex items-center justify-center gap-6", 
-        className
+        "inline-flex w-fit items-center justify-center gap-6 rounded-lg",
+        className,
       )}
       {...props}
     />
-  )
+  );
 }
 
 function TabsTrigger({
   className,
-  value,
   ...props
-}: React.ComponentProps<typeof TabsPrimitive.Trigger> & { value: string }) {
+}: React.ComponentProps<typeof TabsPrimitive.Trigger>) {
   return (
     <TabsPrimitive.Trigger
       data-slot="tabs-trigger"
-      value={value}
       className={cn(
-        "relative px-1 py-2 text-sm font-medium outline-none",
-        "text-gray-500",
-        "data-[state=active]:font-semibold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5",
-        value === "ongoing" && "data-[state=active]:text-yellow-500 data-[state=active]:after:bg-yellow-500",
-        value === "completed" && "data-[state=active]:text-green-500 data-[state=active]:after:bg-green-500",
-        className
+        "data-[state=active]:text-foreground text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:outline-ring data-[state=active]:border-primary-foreground inline-flex cursor-pointer items-center justify-center border-b-2 border-transparent pt-3 pb-[18px] text-base font-semibold whitespace-nowrap focus-visible:ring-[3px] focus-visible:outline-1 disabled:pointer-events-none disabled:opacity-50",
+        className,
       )}
       {...props}
     />
-  )
+  );
 }
 
 function TabsContent({
@@ -61,10 +55,10 @@ function TabsContent({
   return (
     <TabsPrimitive.Content
       data-slot="tabs-content"
-      className={cn("mt-2 outline-none", className)}
+      className={cn("flex-1 outline-none", className)}
       {...props}
     />
-  )
+  );
 }
 
-export { Tabs, TabsList, TabsTrigger, TabsContent }
+export { Tabs, TabsList, TabsTrigger, TabsContent };
