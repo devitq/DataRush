@@ -4,8 +4,8 @@ from typing import Any
 import jwt
 from django.conf import settings
 from django.http import HttpRequest
+from ninja.errors import AuthenticationError
 from ninja.security import HttpBearer
-from redis.exceptions import AuthorizationError
 
 from apps.user.models import User
 
@@ -17,7 +17,7 @@ class BearerAuth(HttpBearer):
             if data["exp"] < datetime.datetime.now().timestamp():
                 return None
         except Exception:
-            raise AuthorizationError
+            raise AuthenticationError
 
         user = User.objects.get(id=data["id"])
         return user

@@ -45,7 +45,6 @@ def sign_up(request, data: RegisterSchema):
 )
 def sign_in(request, data: LoginSchema):
     user = User.objects.filter(email=data.email).first()
-    print(check_password(data.password, user.password))
     if not user:
         raise AuthenticationError
     if not check_password(data.password, user.password):
