@@ -60,7 +60,7 @@ const config: Config = {
           items: [
             {
               label: 'Начало',
-              to: '/docs/intro',
+              to: '/docs/docs/intro',
             },
           ],
         },
