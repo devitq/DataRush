@@ -35,6 +35,8 @@ class SubmissionOut(ModelSchema):
     evaluation: list[CriteriaMarkOut] | None = None
     criteries: list[CriteriaOut] | None = None
     submitted_at: datetime = Field(..., alias="timestamp")
+    competition: UUID = Field(..., alias="task.competition.id")
+    competition_name: str = Field(..., alias="task.competition.title")
 
     @staticmethod
     def resolve_criteries(self, context) -> list[CriteriaOut] | None:
