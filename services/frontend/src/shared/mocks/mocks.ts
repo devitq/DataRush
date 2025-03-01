@@ -1,4 +1,4 @@
-import { Competition, CompetitionStatus, Task } from "../types";
+import { Competition, CompetitionStatus, Solution, Task } from "../types";
 
 const mockCompetitions: Competition[] = [
   {
@@ -104,4 +104,33 @@ const mockTasks: Task[] = [
 ];
 
 
-export { mockCompetitions, mockTasks };
+const mockSolutions: Solution[] = [
+  {
+    id: '1',
+    status: 'wrong',
+    date: '1 марта, 08:41',
+  },
+  {
+    id: '2',
+    status: 'partial',
+    score: 5,
+    maxScore: 10,
+    date: '28 февраля, 15:22',
+  },
+  {
+    id: '3',
+    status: 'correct',
+    score: 0,
+    maxScore: 10,
+    date: '27 февраля, 12:10',
+  },
+  {
+    id: '4',
+    status: 'checking',
+    date: '1 марта, 08:41',
+  },
+
+];
+
+
+export { mockCompetitions, mockTasks, mockSolutions };

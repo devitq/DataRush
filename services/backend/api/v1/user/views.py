@@ -28,8 +28,6 @@ router = Router(tags=["user"])
 )
 def sign_up(request, data: RegisterSchema):
     user = User(**data.dict())
-    user.password = user.make_password()
-    user.full_clean()
     user.save()
 
     token = BearerAuth.generate_jwt(user)
