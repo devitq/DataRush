@@ -1,7 +1,6 @@
 from datetime import datetime
 
 from django.db import models
-from tinymce.models import HTMLField
 
 from apps.core.models import BaseModel
 from apps.user.models import User
@@ -48,8 +47,6 @@ class Competition(BaseModel):
 
     def __str__(self):
         return self.title
-
-
 
     class Meta:
         verbose_name = "соревнование"
