@@ -1,4 +1,6 @@
 import json
+import uuid
+
 from django.test import TestCase
 from django.contrib.auth.hashers import make_password
 
@@ -137,3 +139,81 @@ class SignInAPITestCase(TestCase):
         )
         self.assertEqual(response.status_code, 401)
         self.assertEqual(response.json()["detail"], "Unauthorized")
+
+
+class UserMeEndpointTestCase(TestCase):
+    def setUp(self):
+        # Create test user and token
+        self.user = User.objects.create(
+            email="johndoe@example.com",
+            username="johndoe",
+            password=make_password("securepassword123")
+        )
+        resp = self.client.post(
+            "/api/v1/sign-in",
+            data=json.dumps({"email": "johndoe@example.com", "password": "securepassword123"}),
+            content_type="application/json"
+        ).json()
+        self.token = resp['token']
+        self.url = "/api/v1/me"
+
+    def test_get_authenticated_user_data(self):
+        """Test authenticated user can retrieve their profile (200 OK)"""
+        response = self.client.get(
+            self.url,
+            HTTP_AUTHORIZATION=f"Bearer {self.token}"
+        )
+
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+
+        # Validate UserSchema structure
+        self.assertIn("id", data)
+        self.assertIn("email", data)
+        self.assertIn("username", data)
+
+        # Validate UUID format if ID is present
+        if data["id"] is not None:
+            try:
+                uuid.UUID(data["id"])
+            except ValueError:
+                self.fail("ID is not a valid UUID")
+
+        # Validate response content
+        self.assertEqual(data["email"], "johndoe@example.com")
+        self.assertEqual(data["username"], "johndoe")
+
+    def test_unauthenticated_access(self):
+        """Test unauthorized access returns 401 Unauthorized"""
+        response = self.client.get(self.url)
+
+        self.assertEqual(response.status_code, 401)
+        self.assertEqual(response.json()["detail"], "Unauthorized")
+
+    def test_invalid_auth_scheme(self):
+        """Test invalid authentication scheme returns 401"""
+        response = self.client.get(
+            self.url,
+            HTTP_AUTHORIZATION=f"InvalidScheme {self.token}"
+        )
+
+        self.assertEqual(response.status_code, 401)
+        self.assertEqual(response.json()["detail"], "Unauthorized")
+
+    def test_malformed_token(self):
+        """Test malformed token returns 401"""
+        test_cases = [
+            "invalid.token.123",
+            "Bearer",
+            "",
+            "123456"
+        ]
+
+        for token in test_cases:
+            with self.subTest(token=token):
+                response = self.client.get(
+                    self.url,
+                    HTTP_AUTHORIZATION=f"Bearer {token}"
+                )
+                self.assertEqual(response.status_code, 401)
+                self.assertEqual(response.json()["detail"], "Unauthorized")
