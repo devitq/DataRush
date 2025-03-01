@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Task } from "@/shared/types";
+import { Solution, Task } from "@/shared/types";
 import SolutionStatus from './components/SolutionStatus';
 import InputSolution from './components/InputSolution';
 import FileSolution from './components/FileSolution';
@@ -8,6 +8,7 @@ import ActionButtons from './components/ActionButtons';
 
 interface TaskSolutionProps {
   task: Task;
+  solutions: Solution[];
   answer: string;
   setAnswer: (value: string) => void;
   onSubmit: () => void;
@@ -16,6 +17,7 @@ interface TaskSolutionProps {
 
 const TaskSolution: React.FC<TaskSolutionProps> = ({ 
   task, 
+  solutions,
   answer, 
   setAnswer, 
   onSubmit, 
@@ -26,7 +28,7 @@ const TaskSolution: React.FC<TaskSolutionProps> = ({
 
   return (
     <div className="md:w-[500px] flex flex-col gap-4">
-      <SolutionStatus task={task} />
+      <SolutionStatus solution={solutions[0]} />
       
       {task.solutionType === 'input' && (
         <InputSolution answer={answer} setAnswer={setAnswer} />

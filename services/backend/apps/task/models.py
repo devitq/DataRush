@@ -1,6 +1,7 @@
 from uuid import uuid4
 
 from django.db import models
+from tinymce.models import HTMLField
 
 from apps.competition.models import Competition
 from apps.core.models import BaseModel
@@ -19,8 +20,8 @@ class CompetitionTask(BaseModel):
 
     competition = models.ForeignKey(Competition, on_delete=models.CASCADE)
     title = models.CharField(verbose_name="заголовок", max_length=50)
-    description = models.TextField(verbose_name="описание", max_length=300)
-    max_attemps = models.PositiveSmallIntegerField(default=0)
+    description = HTMLField(verbose_name="описание", max_length=300)
+    max_attemps = models.PositiveSmallIntegerField()
     type = models.CharField(
         choices=CompetitionTaskType, max_length=8, verbose_name="тип проверки"
     )
@@ -63,7 +64,7 @@ class CompetitionTask(BaseModel):
         verbose_name_plural = "задания"
 
 
-class CompetetionTaskSumbission(BaseModel):
+class CompetitionTaskSubmission(BaseModel):
     class StatusChoices(models.TextChoices):
         SENT = "sent"
         CHECKING = "checking"

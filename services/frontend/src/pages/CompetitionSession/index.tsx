@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useParams, Navigate } from "react-router-dom";
 import { Task } from "@/shared/types";
-import { mockTasks } from "@/shared/mocks/mocks";
+import { mockSolutions, mockTasks } from "@/shared/mocks/mocks";
 import CompetitionHeader from "./components/CompetitionHeader";
 import TaskContent from "./components/TaskContent";
 import TaskSolution from "./modules/TaskSolution";
@@ -40,6 +40,7 @@ const CompetitionSessionPage = () => {
               <TaskContent task={currentTask} />
               <TaskSolution 
                 task={currentTask}
+                solutions={mockSolutions}
                 answer={answer}
                 setAnswer={setAnswer}
                 onSubmit={handleSubmit}
