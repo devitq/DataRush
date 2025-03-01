@@ -4,9 +4,8 @@ import { Task } from "@/shared/types";
 import { getTaskBgColor, getTaskTextColor } from "./utils/utils";
 import { mockTasks } from "@/shared/mocks/mocks";
 import { Button } from "@/components/ui/button";
-import { Calendar } from "lucide-react";
 
-const CompetitionRunnerPage = () => {
+const CompetitionSessionPage = () => {
   const { id, taskId } = useParams<{ id: string; taskId?: string }>();
   const navigate = useNavigate();
   const [competitionTitle, setCompetitionTitle] = useState("Олимпиада DANO 2025. Индивидуальный этап");
@@ -147,4 +146,4 @@ const CompetitionRunnerPage = () => {
   );
 };
 
-export default CompetitionRunnerPage;
+export default CompetitionSessionPage;

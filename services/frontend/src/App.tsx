@@ -1,19 +1,19 @@
 import { Routes, Route } from "react-router";
 import "./styles/globals.css";
-import CompetitionsPage from "./pages/Competitions";
-import CompetitionPage from "./pages/Competition";
-import CompetitionRunnerPage from "./pages/CompetitionSession";
+import Competitions from "./pages/Competitions";
+import CompetitionPreview from './pages/CompetitionPreview'
+import CompetitionSession from "./pages/CompetitionSesssion";
 import { NavbarLayout } from "./widgets/navbar-layout";
 
 const App = () => {
   return (
     <Routes>
       <Route element={<NavbarLayout />}>
-        <Route path="/" element={<CompetitionsPage />} />
-        <Route path="/competitions/:id" element={<CompetitionPage />} />
+        <Route path="/" element={<Competitions />} />
+        <Route path="/competition/:id" element={<CompetitionPreview />} />
         <Route
-          path="/competitions/:id/tasks/:taskId"
-          element={<CompetitionRunnerPage />}
+          path="/competition/:id/tasks/:taskId"
+          element={<CompetitionSession />}
         />
       </Route>
     </Routes>
