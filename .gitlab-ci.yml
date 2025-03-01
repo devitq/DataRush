@@ -24,7 +24,7 @@ variables:
       --destination "${IMAGE_NAME}:${CI_COMMIT_SHA}"
       --destination "${IMAGE_NAME}:latest"
       --cache=true
-      --registry-mirror=https://dockerhub.timeweb.cloud
+      --registry-mirror=dockerhub.timeweb.cloud
 
 build_frontend:
   <<: *build-template
