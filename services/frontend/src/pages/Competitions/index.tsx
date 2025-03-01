@@ -25,7 +25,7 @@ const CompetitionsPage = () => {
   );
 
   return (
-    <div className="flex flex-col gap-8">
+    <div className="flex flex-col gap-6 sm:gap-8">
       <Section>
         <SectionHeader>
           <SectionTitle>Мои события</SectionTitle>
@@ -50,11 +50,15 @@ const CompetitionsPage = () => {
 };
 
 const Section = ({ children }: { children: React.ReactNode }) => {
-  return <div className="flex flex-col gap-8">{children}</div>;
+  return <div className="flex flex-col gap-6 sm:gap-8">{children}</div>;
 };
 
 const SectionHeader = ({ children }: { children: React.ReactNode }) => {
-  return <div className="flex h-[58px] items-center gap-2">{children}</div>;
+  return (
+    <div className="flex min-h-[58px] flex-col items-center justify-center gap-4 sm:flex-row sm:gap-2">
+      {children}
+    </div>
+  );
 };
 
 const SectionTitle = ({ children }: { children: React.ReactNode }) => {

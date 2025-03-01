@@ -5,13 +5,11 @@ import { Solution } from "@/shared/types";
 import { mockSolutions } from '@/shared/mocks/mocks';
 
 interface ActionButtonsProps {
-  onHistoryClick: () => void;
   onSubmit: () => void;
   solutionHistory?: Solution[]; 
 }
 
 const ActionButtons: React.FC<ActionButtonsProps> = ({ 
-  onHistoryClick, 
   onSubmit,
   solutionHistory = mockSolutions
 }) => {
@@ -19,7 +17,6 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
   
   const handleHistoryClick = () => {
     setIsHistoryOpen(true);
-    onHistoryClick();
   };
 
   return (

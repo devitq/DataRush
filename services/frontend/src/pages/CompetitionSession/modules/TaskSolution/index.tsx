@@ -12,7 +12,7 @@ interface TaskSolutionProps {
   answer: string;
   setAnswer: (value: string) => void;
   onSubmit: () => void;
-  onHistoryClick: () => void;
+
 }
 
 const TaskSolution: React.FC<TaskSolutionProps> = ({ 
@@ -21,7 +21,6 @@ const TaskSolution: React.FC<TaskSolutionProps> = ({
   answer, 
   setAnswer, 
   onSubmit, 
-  onHistoryClick,
 }) => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -46,7 +45,7 @@ const TaskSolution: React.FC<TaskSolutionProps> = ({
         <CodeSolution answer={answer} setAnswer={setAnswer} />
       )}
       
-      <ActionButtons onHistoryClick={onHistoryClick} onSubmit={onSubmit} />
+      <ActionButtons onSubmit={onSubmit} />
     </div>
   );
 };
