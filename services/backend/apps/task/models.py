@@ -21,7 +21,7 @@ class CompetitionTask(BaseModel):
     competition = models.ForeignKey(Competition, on_delete=models.CASCADE)
     title = models.CharField(verbose_name="заголовок", max_length=50)
     description = HTMLField(verbose_name="описание", max_length=300)
-    max_attemps = models.PositiveSmallIntegerField()
+    max_attempts = models.PositiveSmallIntegerField(null=True, blank=True)
     type = models.CharField(
         choices=CompetitionTaskType, max_length=8, verbose_name="тип проверки"
     )
@@ -60,6 +60,7 @@ class CompetitionTask(BaseModel):
         return self.title
 
     class Meta:
+        verbose_name = "задание"
         verbose_name_plural = "задания"
 
 
@@ -110,4 +111,5 @@ class CompetitionTaskSubmission(BaseModel):
     # just more readable result representation, maybe will be calcuated somehow more complex depends on criteria
     earned_points = models.IntegerField()
 
+    reviewed_at = models.DateTimeField(null=True, blank=True)
     timestamp = models.DateTimeField(auto_now_add=True)
