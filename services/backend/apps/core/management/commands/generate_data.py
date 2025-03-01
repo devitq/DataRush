@@ -8,7 +8,7 @@ from django.core.management.base import BaseCommand
 from django.utils import timezone
 
 from apps.competition.models import Competition, State
-from apps.task.models import CompetitionTaskSubmission, CompetitionTask
+from apps.task.models import CompetitionTask, CompetitionTaskSubmission
 from apps.user.models import User, UserRole
 
 

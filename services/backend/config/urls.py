@@ -13,7 +13,7 @@ admin.site.index_title = "DataRush"
 
 urlpatterns = [
     # tinymce
-    path('tinymce/', include('tinymce.urls')),
+    path("tinymce/", include("tinymce.urls")),
     # Admin urls
     path("admin/", admin.site.urls),
     # API urls
