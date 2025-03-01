@@ -1,4 +1,4 @@
-"""Django settings for project_name."""
+"""Django settings for datarush."""
 
 import contextlib
 import logging
@@ -141,7 +141,7 @@ MINIO_STORAGE_SECRET_KEY = env("MINIO_SECRET_KEY", default=None)
 MINIO_STORAGE_USE_HTTPS = env("MINIO_USE_HTTPS", default=False)
 
 MINIO_STORAGE_MEDIA_BUCKET_NAME = env(
-    "MINIO_MEDIA_BUCKET_NAME", default="projectname-media"
+    "MINIO_MEDIA_BUCKET_NAME", default="datarush-media"
 )
 
 MINIO_STORAGE_AUTO_CREATE_MEDIA_BUCKET = True
@@ -300,7 +300,7 @@ WSGI_APPLICATION = "config.wsgi.application"
 
 # Logging
 
-LOGGER_NAME = "project_name"
+LOGGER_NAME = "datarush"
 
 LOGGER = logging.getLogger(LOGGER_NAME)
 

@@ -1,4 +1,4 @@
-# project_name Tests
+# DataRush Tests
 
 There is `unit` and `e2e` tests available, unit tests are placed all around `backend` serivce folder and `e2e` tests placed [here](./e2e/).
 

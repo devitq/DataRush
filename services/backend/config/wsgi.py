@@ -1,4 +1,4 @@
-"""WSGI config for project_name."""
+"""WSGI config for datarush."""
 
 import os
 

@@ -1,4 +1,4 @@
-# project_name Backend
+# DataRush Backend
 
 ## Prerequisites
 
@@ -15,13 +15,13 @@ Ensure you have the following installed on your system:
 #### Clone the project
 
 ```bash
-git clone project_name
+git clone git@gitlab.prodcontest.ru:team-15/project.git
 ```
 
 #### Go to the project directory
 
 ```bash
-cd project_name/services/backend
+cd project/services/backend
 ```
 
 #### Customize environment
@@ -79,19 +79,19 @@ uv run gunicorn config.wsgi
 ### Clone the project
 
 ```bash
-git clone project_name
+git clone git@gitlab.prodcontest.ru:team-15/project.git
 ```
 
 ### Go to the project directory
 
 ```bash
-cd project_name/services/backend
+cd project/services/backend
 ```
 
 ### Build docker image
 
 ```bash
-docker build -t project_name-backend .
+docker build -t datarush-backend .
 ```
 
 ### Customize environment
@@ -103,13 +103,13 @@ Customize environment with `docker run` command (or bind .env file to container)
 #### Backend
 
 ```bash
-docker run -p 8080:8080 --name project_name-backend project_name-backend
+docker run -p 8080:8080 --name datarush-backend datarush-backend
 ```
 
 #### Celery worker
 
 ```bash
-docker run --name project_name-celery-worker project_name-backend celery -A config worker -l INFO
+docker run --name datarush-celery-worker datarush-backend celery -A config worker -l INFO
 ```
 
 Backend will be available on [127.0.0.1:8080](http://127.0.0.1:8080).
@@ -119,13 +119,13 @@ Backend will be available on [127.0.0.1:8080](http://127.0.0.1:8080).
 ### Clone the project
 
 ```bash
-git clone project_name
+git clone git@gitlab.prodcontest.ru:team-15/project.git
 ```
 
 ### Go to the project directory
 
 ```bash
-cd project_name/services/backend
+cd project/services/backend
 ```
 
 ### Install dependencies

@@ -1,5 +1,7 @@
 from http import HTTPStatus as status
+from uuid import UUID
 
+from django.shortcuts import get_object_or_404
 from ninja import Router
 from django.shortcuts import get_object_or_404
 
@@ -15,6 +17,7 @@ from apps.task.models import (
     CompetitionTask,
     CompetetionTaskSumbission,
 )
+from apps.competition.models import State
 
 router = Router(tags=["competition"])
 
@@ -28,7 +31,12 @@ router = Router(tags=["competition"])
         status.NOT_FOUND: NotFoundError,
     },
 )
-def start_competition(request, competition_id: str) -> PingOut: ...
+def start_competition(request, competition_id: UUID) -> PingOut:
+    competition = get_object_or_404(Competition, pk=competition_id)
+    state_obj, _ = State.objects.update_or_create(
+        user=request.auth, competition=competition, state="started"
+    )
+    return status.OK, PingOut()
 
 
 @router.get(
@@ -41,9 +49,15 @@ def start_competition(request, competition_id: str) -> PingOut: ...
         status.NOT_FOUND: NotFoundError,
     },
 )
-def get_competition_tasks(
-    request, competition_id: str
-) -> list[TaskOutSchema]: ...
+def get_competition_tasks(request, competition_id: UUID) -> list[TaskOutSchema]:
+    competition = get_object_or_404(Competition, pk=competition_id)
+    state = State.objects.filter(
+        user=request.auth, competition=competition, state="started"
+    ).first()
+    if not state:
+        return 403, ForbiddenError()
+
+    return status.OK, CompetitionTask.objects.filter(competition=competition).all()
 
 
 @router.get(

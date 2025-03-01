@@ -1,4 +1,4 @@
-name: project_name
+name: datarush
 
 services:
   backend:
@@ -131,7 +131,7 @@ services:
       - name: web
         target: 80
         published: 8002
-        host_ip: 127.0.0.1
+        host_ip: 0.0.0.0
         protocol: tcp
     restart: unless-stopped
 
@@ -372,7 +372,7 @@ services:
         protocol: tcp
     volumes:
       - type: bind
-        source: /ssl
+        source: ./infrastructure/ssl
         target: /etc/nginx/certs
     restart: unless-stopped
 

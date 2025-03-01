@@ -55,6 +55,16 @@ def sign_in(request, data: LoginSchema):
 
 
 @router.get(
+    "/me",
+    response={
+        status.OK: UserSchema,
+        status.UNAUTHORIZED: ForbiddenError,
+    },
+)
+def get_me(request):
+    return 200, request.auth
+
+@router.get(
     path="/user/{user_id}",
     response={
         status.OK: UserSchema,
