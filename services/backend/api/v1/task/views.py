@@ -13,9 +13,9 @@ from api.v1.task.schemas import (
 )
 from apps.competition.models import State
 from apps.task.models import (
-    CompetitionTaskSubmission,
     Competition,
     CompetitionTask,
+    CompetitionTaskSubmission,
 )
 
 router = Router(tags=["competition"])
