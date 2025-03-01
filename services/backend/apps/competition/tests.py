@@ -12,14 +12,14 @@ class CompetitionEndpointTests(TestCase):
         self.user = User.objects.create(
             email="user@example.com",
             password=make_password("password123"),
-            username="t1wk4"
+            username="t1wk4",
         )
 
         self.competition = Competition.objects.create(
             title="AI Challenge",
             description="Machine Learning Competition",
             type="solo",
-            participation_type="edu"
+            participation_type="edu",
         )
 
         resp = self.client.post(
@@ -29,9 +29,7 @@ class CompetitionEndpointTests(TestCase):
         ).json()
         token = resp["token"]
 
-        self.valid_headers = {
-            "HTTP_AUTHORIZATION": f"Bearer {token}"
-        }
+        self.valid_headers = {"HTTP_AUTHORIZATION": f"Bearer {token}"}
 
     # --- Helper methods ---
     def get_url(self, competition_id):
@@ -41,8 +39,7 @@ class CompetitionEndpointTests(TestCase):
     def test_get_competition_success(self):
         """Authenticated user gets competition details (200 OK)"""
         response = self.client.get(
-            self.get_url(self.competition.id),
-            **self.valid_headers
+            self.get_url(self.competition.id), **self.valid_headers
         )
 
         self.assertEqual(response.status_code, 200)
@@ -61,8 +58,7 @@ class CompetitionEndpointTests(TestCase):
     def test_invalid_uuid_format(self):
         """Invalid UUID format returns 400 Bad Request"""
         response = self.client.get(
-            self.get_url("invalid-id"),
-            **self.valid_headers
+            self.get_url("invalid-id"), **self.valid_headers
         )
         self.assertEqual(response.status_code, 400)
 
@@ -76,8 +72,7 @@ class CompetitionEndpointTests(TestCase):
         """Valid UUID but missing competition returns 404"""
         new_uuid = uuid.uuid4()
         response = self.client.get(
-            self.get_url(new_uuid),
-            **self.valid_headers
+            self.get_url(new_uuid), **self.valid_headers
         )
         self.assertEqual(response.status_code, 404)
         self.assertEqual(response.json()["detail"], "Not Found")
@@ -86,7 +81,7 @@ class CompetitionEndpointTests(TestCase):
         """Invalid token returns 401 Unauthorized"""
         response = self.client.get(
             self.get_url(self.competition.id),
-            HTTP_AUTHORIZATION="Bearer invalid_token"
+            HTTP_AUTHORIZATION="Bearer invalid_token",
         )
         self.assertEqual(response.status_code, 401)
         self.assertEqual(response.json()["detail"], "Unauthorized")
@@ -103,6 +98,6 @@ class CompetitionEndpointTests(TestCase):
             with self.subTest(header=header):
                 response = self.client.get(
                     self.get_url(self.competition.id),
-                    HTTP_AUTHORIZATION=header
+                    HTTP_AUTHORIZATION=header,
                 )
                 self.assertEqual(response.status_code, expected_status)

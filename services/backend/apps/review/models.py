@@ -11,17 +11,23 @@ class Reviewer(BaseModel):
     token = models.CharField(max_length=100)
 
 
-class Review(BaseModel):
-    class ReviewStatusChoices(models.TextChoices):
-        NOT_CHECKED = "not_checked"
-        CHECKING = "checking"
-        CHECKED = "checked"
+class ReviewStatusChoices(models.TextChoices):
+    NOT_CHECKED = "not_checked"
+    CHECKING = "checking"
+    CHECKED = "checked"
 
+
+class Review(BaseModel):
     reviewer = models.ForeignKey(Reviewer, on_delete=models.CASCADE)
     submission = models.ForeignKey(
-        CompetitionTaskSubmission, on_delete=models.CASCADE
+        CompetitionTaskSubmission,
+        on_delete=models.CASCADE,
+        related_name="reviews",
     )
 
+    evaluation = models.JSONField(default=list, null=True, blank=True)
     state = models.CharField(
-        choices=ReviewStatusChoices.choices, max_length=11
+        choices=ReviewStatusChoices.choices,
+        default=ReviewStatusChoices.NOT_CHECKED.value,
+        max_length=11,
     )

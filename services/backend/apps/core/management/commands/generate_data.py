@@ -8,6 +8,7 @@ from django.core.management.base import BaseCommand
 from django.utils import timezone
 
 from apps.competition.models import Competition, State
+from apps.review.models import Review, Reviewer
 from apps.task.models import CompetitionTask, CompetitionTaskSubmission
 from apps.user.models import User, UserRole
 
@@ -20,9 +21,21 @@ class Command(BaseCommand):
         users = self.create_users(5)
         competitions = self.create_competitions(2, users)
         tasks = self.create_tasks(competitions)
+        self.reviewers = self.create_reviewers(1)
         self.create_submissions(tasks, users)
         self.create_states(competitions, users)
         self.stdout.write("Data generation completed.")
+
+    def create_reviewers(self, count):
+        reviewers = []
+        for i in range(count):
+            name = f"John_{i}"
+            surname = f"Smith_{i}"
+            token = random.randint(100000, 999999)
+            reviewer = Reviewer(name=name, surname=surname, token=token)
+            reviewer.save()
+            reviewers.append(reviewer)
+        return reviewers
 
     def create_users(self, count):
         users = []
@@ -89,6 +102,7 @@ class Command(BaseCommand):
                     description=description,
                     type=task_type,
                     points=random.randint(1, 10),
+                    max_attempts=random.randint(1, 10),
                 )
                 tasks.append(task)
                 self.stdout.write(f"Created task: {title} (type: {task_type})")
@@ -116,6 +130,15 @@ class Command(BaseCommand):
                 submission.save()
                 self.stdout.write(
                     f"Created submission for task '{task.title}' by user '{user.username}'"
+                )
+                self.add_reviewers(submission)
+
+    def add_reviewers(self, submission):
+        for reviewer in self.reviewers:
+            if random.choice([True, False]):
+                Review.objects.create(
+                    submission=submission,
+                    reviewer=reviewer,
                 )
 
     def create_states(self, competitions, users):
