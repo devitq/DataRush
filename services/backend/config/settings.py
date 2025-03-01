@@ -485,6 +485,7 @@ LANGUAGE_COOKIE_AGE = 31449600
 
 PASSWORD_HASHERS = [
     "django.contrib.auth.hashers.Argon2PasswordHasher",
+    "django.contrib.auth.hashers.ScryptPasswordHasher",
 ]
 
 LANGUAGE_COOKIE_DOMAIN = None
