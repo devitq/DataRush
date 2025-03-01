@@ -10,32 +10,48 @@ from apps.user.models import User
 
 class CompetitionTask(BaseModel):
     class CompetitionTaskType(models.TextChoices):
-        INPUT = "input"
-        CHECKER = "checker"
-        REVIEW = "review"
+        INPUT = "input", "Ввод правильного ответа"
+        CHECKER = "checker", "Вывод кода"
+        REVIEW = "review", "Ручная"
 
     def answer_file_upload_to(instance, filename) -> str:
         return f"/tasks/{instance.id}/answer/{uuid4()}/filename"
 
     competition = models.ForeignKey(Competition, on_delete=models.CASCADE)
-    title = models.TextField(verbose_name="заголовок", max_length=50)
+    title = models.CharField(verbose_name="заголовок", max_length=50)
     description = models.TextField(verbose_name="описание", max_length=300)
-    type = models.CharField(choices=CompetitionTaskType, max_length=8)
+    type = models.CharField(choices=CompetitionTaskType, max_length=8,
+                            verbose_name="тип проверки")
 
     # only when "input" or "checker" type
     correct_answer_file = models.FileField(
-        upload_to=answer_file_upload_to, null=True, blank=True
+        upload_to=answer_file_upload_to, null=True, blank=True,
+        verbose_name="файл с правильным ответом"
     )
-    points = models.IntegerField(null=True, blank=True)
+    points = models.IntegerField(null=True, blank=True,
+                                 verbose_name="баллы за задание")
 
     # only when "checker" type
-    answer_file_path = models.TextField(null=True, blank=True)
+    answer_file_path = models.TextField(null=True, blank=True,
+                                        verbose_name="куда сохранять решения",
+                                        default="stdout")
 
     # only when "review" type
-    criteries = models.JSONField(blank=True, null=True)
+    # todo make it more humanize
+    criteries = models.JSONField(blank=True, null=True,
+                                 verbose_name="критерии",
+                                  default=lambda: [{"name": "CHANGE ME", "slug": "CHANGE ME", "max_value": 0, "min_value": 0}]
+                                 )
 
     def clean(self):
         ContestTaskCriteriesValidator()(self)
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        verbose_name = "задание"
+        verbose_name_plural = "задания"
 
 
 class CompetetionTaskSumbission(BaseModel):
