@@ -6,8 +6,6 @@ export const getToken = () => {
 
 export const saveToken = (token: string) => {
   Cookie.set("token", token, {
-    secure: true,
-    sameSite: "Strict",
     expires: 30,
   });
 };

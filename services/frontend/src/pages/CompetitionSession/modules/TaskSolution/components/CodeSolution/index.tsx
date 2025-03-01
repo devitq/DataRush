@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
 import * as monaco from 'monaco-editor';
-import { Copy, Check } from 'lucide-react'; // Import Lucide React icons
+import { Copy, Check } from 'lucide-react'; 
 
 interface CodeSolutionProps {
   answer: string;
