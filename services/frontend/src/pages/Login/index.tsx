@@ -17,8 +17,8 @@ const LoginPage = () => {
   }, []);
 
   return (
-    <div className="flex h-screen flex-col items-center gap-10 px-4 py-10 sm:gap-18 sm:py-18">
-      <DataRush size={52} />
+    <div className="flex flex-col items-center gap-10 px-4 py-10 sm:gap-18 sm:py-18">
+      <DataRush size={52} className="min-h-[52px]" />
       <div className="flex w-full max-w-96 flex-col items-center gap-7">
         <h1 className="text-center text-4xl font-semibold">
           Добро пожаловать!

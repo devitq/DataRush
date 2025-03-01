@@ -6,7 +6,7 @@ const NavbarLayout = () => {
     <>
       <Header />
       <div className="px-4 sm:px-6">
-        <div className="m-auto mt-6 w-full max-w-5xl">
+        <div className="m-auto my-6 w-full max-w-5xl">
           <Outlet />
         </div>
       </div>

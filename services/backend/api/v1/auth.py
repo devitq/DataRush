@@ -19,7 +19,10 @@ class BearerAuth(HttpBearer):
         except Exception:
             raise AuthenticationError
 
-        user = User.objects.get(id=data["id"])
+        try:
+            user = User.objects.get(id=data["id"])
+        except User.DoesNotExist:
+            raise AuthenticationError
         return user
 
     @staticmethod

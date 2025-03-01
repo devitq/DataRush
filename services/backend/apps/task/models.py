@@ -60,6 +60,7 @@ class CompetitionTask(BaseModel):
         return self.title
 
     class Meta:
+        verbose_name = "задание"
         verbose_name_plural = "задания"
 
 
