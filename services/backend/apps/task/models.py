@@ -1,3 +1,4 @@
+from random import choice
 from uuid import uuid4
 
 from django.db import models
@@ -6,7 +7,6 @@ from apps.task.validators import ContestTaskCriteriesValidator
 from apps.competition.models import Competition
 from apps.core.models import BaseModel
 from apps.user.models import User
-
 
 class CompetitionTask(BaseModel):
     class CompetitionTaskType(models.TextChoices):
