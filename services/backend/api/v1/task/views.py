@@ -1,4 +1,5 @@
 from http import HTTPStatus as status
+from uuid import UUID
 
 from django.shortcuts import get_object_or_404
 from ninja import Router
@@ -21,7 +22,7 @@ router = Router(tags=["competition"])
         status.NOT_FOUND: NotFoundError,
     },
 )
-def start_competition(request, competition_id: str) -> PingOut:
+def start_competition(request, competition_id: UUID) -> PingOut:
     competition = get_object_or_404(Competition, pk=competition_id)
     state_obj, _ = State.objects.update_or_create(
         user=request.auth, competition=competition, state="started"
@@ -39,7 +40,7 @@ def start_competition(request, competition_id: str) -> PingOut:
         status.NOT_FOUND: NotFoundError,
     }
 )
-def get_competition_tasks(request, competition_id: str) -> list[TaskOutSchema]:
+def get_competition_tasks(request, competition_id: UUID) -> list[TaskOutSchema]:
     competition = get_object_or_404(Competition, pk=competition_id)
     state = State.objects.filter(
         user=request.auth, competition=competition, state="started"
@@ -60,7 +61,7 @@ def get_competition_tasks(request, competition_id: str) -> list[TaskOutSchema]:
         status.NOT_FOUND: NotFoundError,
     }
 )
-def get_task(request, competition_id: str, task_id: str) -> TaskOutSchema:
+def get_task(request, competition_id: UUID, task_id: UUID) -> TaskOutSchema:
     ...
 
 
@@ -74,5 +75,5 @@ def get_task(request, competition_id: str, task_id: str) -> TaskOutSchema:
         status.NOT_FOUND: NotFoundError,
     }
 )
-def submit_task(request, competition_id: str, task_id: str) -> PingOut:
+def submit_task(request, competition_id: UUID, task_id: UUID) -> PingOut:
     ...
