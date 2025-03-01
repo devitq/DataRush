@@ -15,4 +15,4 @@ router = Router(tags=["ping"])
     },
 )
 def ping(request: HttpRequest) -> tuple[status, schemas.PingOut]:
-    return status.OK, schemas.PingOut
+    return status.OK, schemas.PingOut()

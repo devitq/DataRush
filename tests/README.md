@@ -16,4 +16,4 @@ image here
 
 ## Running e2e tests
 
-See [tests/e2e/README.md](e2e/README.md).
+See [tests/e2e/README.md](./e2e/README.md).

@@ -1,0 +1,82 @@
+stages:
+  - build
+  - deploy
+
+variables:
+  DOCKER_TLS_CERTDIR: /certs
+
+.build-template: &build-template
+  image:
+    name: gcr.io/kaniko-project/executor:v1.23.2-debug
+    entrypoint: [""]
+  stage: build
+  variables:
+    DOCKER_CONFIG: /kaniko/.docker
+    REGISTRY_USER: $CI_REGISTRY_USER
+    REGISTRY_PASSWORD: $CI_REGISTRY_PASSWORD
+    REGISTRY_URL: $CI_REGISTRY
+  script:
+    - mkdir -p /kaniko/.docker
+    - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$REGISTRY_USER\",\"password\":\"$REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
+    - /kaniko/executor
+      --context "${CONTEXT}"
+      --dockerfile "${DOCKERFILE_PATH}"
+      --destination "${IMAGE_NAME}:${CI_COMMIT_SHA}"
+      --destination "${IMAGE_NAME}:latest"
+      --cache=true
+
+build_frontend:
+  <<: *build-template
+  rules:
+    - if: '$CI_COMMIT_REF_NAME == "master"'
+  variables:
+    CONTEXT: "${CI_PROJECT_DIR}/services/frontend"
+    DOCKERFILE_PATH: "Dockerfile"
+    IMAGE_NAME: "$CI_REGISTRY_IMAGE/frontend"
+
+build_backend:
+  <<: *build-template
+  rules:
+    - if: '$CI_COMMIT_REF_NAME == "master"'
+  variables:
+    CONTEXT: "${CI_PROJECT_DIR}/services/backend"
+    DOCKERFILE_PATH: "Dockerfile"
+    IMAGE_NAME: "$CI_REGISTRY_IMAGE/backend"
+
+build_backend-staticfiles:
+  <<: *build-template
+  rules:
+    - if: '$CI_COMMIT_REF_NAME == "master"'
+  variables:
+    CONTEXT: "${CI_PROJECT_DIR}/services/backend"
+    DOCKERFILE_PATH: "Dockerfile.staticfiles"
+    IMAGE_NAME: "$CI_REGISTRY_IMAGE/backend-staticfiles"
+
+deploy:
+  image: kroniak/ssh-client:3.19
+  stage: deploy
+  rules:
+    - if: '$CI_COMMIT_REF_NAME == "master"'
+  variables:
+    SSH_HOST: "158.160.172.23"
+    SSH_USER: "ubuntu"
+    SSH_ADDRESS: "$SSH_USER@$SSH_HOST"
+    SSH_PRIVATE_KEY: SSH_PRIVATE_KEY
+  script:
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+    - echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+    - chmod 600 ~/.ssh/id_rsa
+    - ssh-keyscan -H "$SSH_HOST" > /dev/null 2>&1
+
+    - AUTH_COMMAND="echo "$CI_REGISTRY_PASSWORD" | docker login $CI_REGISTRY --username $CI_REGISTRY_USER --password-stdin";
+    - ssh $SSH_ADDRESS "$AUTH_COMMAND"
+    - scp -C -r infrastructure/ compose.yaml $SSH_ADDRESS:~/deploy/
+
+    - ssh $SSH_ADDRESS "cd ~/deploy && \
+      docker compose pull > deploy.log 2>&1 && \
+      docker compose down >> deploy.log 2>&1 && \
+      docker compose up -d --remove-orphans >> deploy.log 2>&1 && \
+      docker compose ps >> deploy.log 2>&1"
+    - ssh $SSH_ADDRESS "docker system prune -a"
