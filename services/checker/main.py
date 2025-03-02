@@ -26,6 +26,7 @@ print(docker_client.login(
     password=config.REGISTRY_PASSWORD,
     registry=config.REGISTRY_URL,
 ))
+print(config.REGISTRY_LOGIN, config.REGISTRY_PASSWORD)
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 
