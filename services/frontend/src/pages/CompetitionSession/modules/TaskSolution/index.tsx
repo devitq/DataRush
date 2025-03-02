@@ -29,6 +29,7 @@ const TaskSolution: React.FC<TaskSolutionProps> = ({
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
+  const [selectedSolutionUrl, setSelectedSolutionUrl] = useState<string | null>(null);
   const { id: competitionId } = useParams<{ id: string }>();
 
   const solutionsQuery = useQuery({
@@ -44,6 +45,25 @@ const TaskSolution: React.FC<TaskSolutionProps> = ({
   };
 
   const latestSolution = solutionHistory && solutionHistory.length > 0 ? solutionHistory[solutionHistory.length - 1] : null;
+
+  const handleSolutionSelect = async (solution: Solution) => {
+    if (!solution.content) return;
+    
+    setSelectedSolutionUrl(solution.content);
+    
+    try {
+      if (task.type !== TaskType.FILE) {
+        const response = await fetch(solution.content);
+        if (!response.ok) {
+          throw new Error(`Failed to fetch solution content: ${response.status}`);
+        }
+        const text = await response.text();
+        setAnswer(text);
+      }
+    } catch (error) {
+      console.error('Error loading solution content:', error);
+    } 
+  };
 
   return (
     <div className="md:w-[500px] flex flex-col gap-4">
@@ -64,6 +84,7 @@ const TaskSolution: React.FC<TaskSolutionProps> = ({
           selectedFile={selectedFile} 
           setSelectedFile={setSelectedFile} 
           fileInputRef={fileInputRef}
+          existingFileUrl={selectedSolutionUrl}
         />
       )}
       
@@ -81,6 +102,7 @@ const TaskSolution: React.FC<TaskSolutionProps> = ({
         onOpenChange={setIsHistoryOpen} 
         solutions={solutionHistory}
         maxPoints={task.points}
+        onSolutionSelect={handleSolutionSelect}
       />
     </div>
   );

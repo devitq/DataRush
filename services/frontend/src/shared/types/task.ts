@@ -29,7 +29,8 @@ interface Solution {
   id: string,
   status: SolutionStatus,
   timestamp: string,
-  earned_points: number
+  earned_points: number,
+  content: string
 }
 
 export type {Task, Solution}
