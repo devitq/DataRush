@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Task } from "@/shared/types";
+import { Task } from '@/shared/types/task';
 import { getTaskBgColor, getTaskTextColor } from '../../utils/utils';
 
 interface CompetitionHeaderProps {
@@ -28,12 +28,12 @@ const CompetitionHeader: React.FC<CompetitionHeaderProps> = ({
             <Link
               key={task.id}
               to={`/competition/${competitionId}/tasks/${task.id}`}
-              className={`${getTaskBgColor(task.status)} ${getTaskTextColor(task.status)} 
+              className={`text-[var(--color-task-text-uncleared)] bg-[var(--color-task-uncleared)]
                 rounded-lg px-3 py-1.5 font-medium text-sm font-hse-sans cursor-pointer 
                 transition-all hover:brightness-95 flex-shrink-0
                 `}
             >
-              {task.number}
+              {task.in_competition_position}
             </Link>
           ))}
         </div>

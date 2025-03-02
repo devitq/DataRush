@@ -2,7 +2,7 @@ export interface Task {
   id: string;
   title: string;
   description: string;
-  type: 'input' | 'file' | 'code';
+  type: TaskType;
   in_competition_position: number;
   points: number;
 }
