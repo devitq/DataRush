@@ -16,6 +16,7 @@ class TaskOutSchema(ModelSchema):
             "description",
             "type",
             "in_competition_position",
+            "points",
         ]
 
 

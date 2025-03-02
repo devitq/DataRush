@@ -26,10 +26,10 @@ class Competition(BaseModel):
         upload_to=image_url_upload_to,
     )
     end_date = models.DateTimeField(
-        verbose_name="дедлайн участия", null=True, blank=True
+        verbose_name="окончание соревнования", null=True, blank=True
     )
     start_date = models.DateTimeField(
-        verbose_name="дедлайн участия", null=True, blank=True
+        verbose_name="начало соревнования", null=True, blank=True
     )
     type = models.CharField(
         max_length=11,
