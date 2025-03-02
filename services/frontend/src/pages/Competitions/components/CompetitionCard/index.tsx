@@ -1,6 +1,10 @@
-import { Competition, CompetitionStatus } from "@/shared/types";
 import { cn } from "@/shared/lib/utils";
 import { Card, CardContent } from "@/components/ui/card";
+import {
+  Competition,
+  CompetitionState,
+  CompetitionType,
+} from "@/shared/types/competition";
 
 interface CompetitionCardProps {
   competition: Competition;
@@ -17,8 +21,8 @@ export function CompetitionCard({
     >
       <div className="relative h-full overflow-hidden">
         <img
-          src={competition.imageUrl}
-          alt={competition.name}
+          src={competition.image_url ? competition.image_url : '/DANO.png'}
+          alt={competition.title}
           className="h-full w-full object-cover object-center"
         />
       </div>
@@ -26,18 +30,24 @@ export function CompetitionCard({
       <CardContent>
         <div className="flex flex-col gap-2.5">
           <div className="text-muted-foreground flex items-center gap-2 *:text-sm *:font-semibold">
-            <span>{competition.isOlympics ? "Олимпиада" : "Тренировка"}</span>
-            {competition.status != CompetitionStatus.NotParticipating && (
+            <span>
+              {competition.type === CompetitionType.COMPETITIVE
+                ? "Соревнование"
+                : "Тренировка"}
+            </span>
+            {competition.state != CompetitionState.NOT_STARTED && (
               <>
                 <span>•</span>
                 <span className="text-primary-foreground">
-                  {competition.status}
+                  {competition.state === CompetitionState.STARTED
+                    ? "В прогрессе"
+                    : "Завершено"}
                 </span>
               </>
             )}
           </div>
           <h3 className="line-clamp-2 text-xl font-semibold">
-            {competition.name}
+            {competition.title}
           </h3>
         </div>
       </CardContent>

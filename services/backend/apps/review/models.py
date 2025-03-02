@@ -1,7 +1,6 @@
 from django.db import models
 
 from apps.core.models import BaseModel
-from apps.task.models import CompetitionTaskSubmission
 
 
 class Reviewer(BaseModel):
@@ -25,22 +24,24 @@ class ReviewStatusChoices(models.TextChoices):
 
 
 class Review(BaseModel):
-    reviewer = models.ForeignKey(Reviewer, on_delete=models.CASCADE,
-                                 verbose_name="проверяющий")
+    reviewer = models.ForeignKey(
+        Reviewer, on_delete=models.CASCADE, verbose_name="проверяющий"
+    )
     submission = models.ForeignKey(
-        CompetitionTaskSubmission,
+        "task.CompetitionTaskSubmission",
         on_delete=models.CASCADE,
         related_name="reviews",
-        verbose_name="посылка"
+        verbose_name="посылка",
     )
 
-    evaluation = models.JSONField(default=list, null=True, blank=True,
-                                  verbose_name="выполнение")
+    evaluation = models.JSONField(
+        default=list, null=True, blank=True, verbose_name="выполнение"
+    )
     state = models.CharField(
         choices=ReviewStatusChoices.choices,
         default=ReviewStatusChoices.NOT_CHECKED.value,
         max_length=11,
-        verbose_name="состояние"
+        verbose_name="состояние",
     )
 
     def __str__(self):

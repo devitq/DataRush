@@ -1,5 +1,6 @@
 from datetime import datetime
 from http import HTTPStatus as status
+from statistics import median
 from uuid import UUID
 
 from django.http import HttpRequest
@@ -84,14 +85,21 @@ def evaluate_submission(
     review.evaluation = evaluation
     review.state = ReviewStatusChoices.CHECKED.value
     review.submission.checked_at = datetime.now()
-
-    points = 0
-    for criterea in evaluation:
-        points += criterea["mark"]
-    review.submission.earned_points = (
-        points  # TODO: оценка не от последнего проверяющего а средняя по всем
-    )
     review.save()
+
+    submission_evaluations = Review.objects.filter(
+        submission=submission
+    ).values_list("evaluation", flat=True)
+
+    marks = []
+    for evaluation in submission_evaluations:
+        mark = 0
+        for criterea in evaluation:
+            mark += criterea["mark"]
+        marks.append(mark)
+    earned_points = median(marks)
+
+    review.submission.earned_points = earned_points
 
     all_checked = not submission.reviews.exclude(
         state=ReviewStatusChoices.CHECKED
@@ -100,5 +108,6 @@ def evaluate_submission(
         review.submission.status = (
             CompetitionTaskSubmission.StatusChoices.CHECKED.value
         )
-        review.submission.save()
+    review.submission.save()
+
     return status.OK, review.submission

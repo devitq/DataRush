@@ -1,53 +1,88 @@
 import { useState } from "react";
 import { useParams, Navigate } from "react-router-dom";
-import { Task } from "@/shared/types";
-import { mockSolutions, mockTasks } from "@/shared/mocks/mocks";
 import CompetitionHeader from "./components/CompetitionHeader";
 import TaskContent from "./components/TaskContent";
 import TaskSolution from "./modules/TaskSolution";
+import { getCompetitionTasks, submitTaskSolution } from "@/shared/api/session";
+import { Loader2 } from "lucide-react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 const CompetitionSession = () => {
   const { id, taskId } = useParams<{ id: string; taskId?: string }>();
-  const [tasks] = useState<Task[]>(mockTasks);
   const [answer, setAnswer] = useState("");
+  const competitionId = id || "";
+  const queryClient = useQueryClient();
 
-  const currentTask = tasks.find(t => t.id === taskId) || null;
+  const tasksQuery = useQuery({
+    queryKey: ["competitionTasks", competitionId],
+    queryFn: () => getCompetitionTasks(competitionId),
+    enabled: !!competitionId,
+  });
 
-  if (!taskId && tasks.length > 0) {
-    return <Navigate to={`/competition/${id}/tasks/${tasks[0].id}`} replace />;
+  const submitMutation = useMutation({
+    mutationFn: () => submitTaskSolution(competitionId, taskId || "", answer),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ 
+        queryKey: ['submissionHistory', competitionId, taskId] 
+      });
+      setAnswer("");
+    }
+  });
+
+  const tasks = tasksQuery.data || [];
+  const isLoading = tasksQuery.isLoading;
+  const error = tasksQuery.error ? "Не удалось загрузить задания. Пожалуйста, попробуйте позже." : null;
+
+  const currentTask = tasks.find((t) => t.id === taskId) || null;
+
+  if (!taskId && tasks.length > 0 && !isLoading) {
+    return (
+      <Navigate
+        to={`/competition/${competitionId}/tasks/${tasks[0].id}`}
+        replace
+      />
+    );
   }
 
   const handleSubmit = () => {
-    console.log("Submitting answer:", answer);
+    console.log(currentTask, competitionId, answer)
+    if (!currentTask || !competitionId || !answer.trim()) return;
+    submitMutation.mutate();
   };
-  
 
   return (
-    <div className="flex flex-col min-h-screen">
-      <CompetitionHeader 
+    <div className="flex min-h-screen flex-col">
+      <CompetitionHeader
         title="Олимпиада DANO 2025. Индивидуальный этап"
-        tasks={tasks} 
-        competitionId={id || ""}  
+        tasks={tasks}
+        competitionId={competitionId}
       />
-      
+
       <main className="flex-1 bg-[#F8F8F8] pb-8">
-        <div className="max-w-6xl mx-auto px-4 py-6">
-          {currentTask ? (
-            <div className="flex flex-col md:flex-row gap-6 font-hse-sans">
+        <div className="mx-auto max-w-6xl px-4 py-6">
+          {isLoading ? (
+            <div className="flex h-40 flex-col items-center justify-center rounded-lg bg-white">
+              <Loader2 className="mb-2 h-8 w-8 animate-spin text-gray-400" />
+              <p className="font-hse-sans text-gray-500">Загрузка заданий...</p>
+            </div>
+          ) : error ? (
+            <div className="flex h-40 items-center justify-center rounded-lg bg-white">
+              <p className="font-hse-sans text-red-500">{error}</p>
+            </div>
+          ) : currentTask ? (
+            <div className="font-hse-sans flex flex-col gap-6 md:flex-row">
               <TaskContent task={currentTask} />
-              <TaskSolution 
+              <TaskSolution
                 task={currentTask}
-                solutions={mockSolutions}
+                solutions={[]}
                 answer={answer}
                 setAnswer={setAnswer}
                 onSubmit={handleSubmit}
               />
             </div>
           ) : (
-            <div className="flex justify-center items-center h-40 bg-white rounded-lg">
-              <p className="font-hse-sans text-gray-500">
-                Загрузка задания...
-              </p>
+            <div className="flex h-40 items-center justify-center rounded-lg bg-white">
+              <p className="font-hse-sans text-gray-500">Задание не найдено</p>
             </div>
           )}
         </div>

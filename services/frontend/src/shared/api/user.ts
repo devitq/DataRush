@@ -1,6 +1,6 @@
-import { apiFetch } from ".";
+import { userFetch } from ".";
 import { User } from "../types/user";
 
 export const getCurrentUser = async () => {
-  return await apiFetch<User>("/me");
+  return await userFetch<User>("/me");
 };
