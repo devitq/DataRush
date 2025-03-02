@@ -45,12 +45,10 @@ class CompetitionEndpointTests(TestCase):
         self.assertEqual(response.status_code, 200)
         data = response.json()
 
-        # Validate required fields
         self.assertEqual(data["id"], str(self.competition.id))
         self.assertEqual(data["title"], "AI Challenge")
         self.assertEqual(data["type"], "edu")
 
-        # Validate optional null fields
         self.assertIsNone(data["image_url"])
         self.assertIsNone(data["start_date"])
         self.assertIsNone(data["end_date"])
@@ -85,8 +83,8 @@ class CompetitionEndpointTests(TestCase):
     def test_malformed_auth_header(self):
         cases = [
             ("InvalidScheme valid_token_123", 401),
-            ("Bearer", 401),  # Missing token
-            ("", 401),  # No header
+            ("Bearer", 401),
+            ("", 401),
         ]
 
         for header, expected_status in cases:
@@ -113,7 +111,6 @@ class CompetitionsEndpointTests(TestCase):
         ).json()
         token = resp["token"]
 
-        # Create test competitions
         now = datetime.now(tz=pytz.utc)
         self.competitions = []
         for i in range(1, 6):
