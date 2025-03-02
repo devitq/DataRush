@@ -118,7 +118,6 @@ const CompetitionSession = () => {
                 selectedFile={selectedFile}
                 setSelectedFile={setSelectedFile}
                 onSubmit={handleSubmit}
-                isSubmitting={submitMutation.isPending}
               />
             </div>
           ) : (

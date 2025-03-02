@@ -132,7 +132,6 @@ const TaskSolution: React.FC<TaskSolutionProps> = ({
           fileInputRef={fileInputRef}
           existingFileUrl={selectedSolutionUrl}
           onClearExistingFile={handleClearExistingFile}
-          isLoading={isSubmitting}
         />
       )}
       
