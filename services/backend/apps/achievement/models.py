@@ -17,17 +17,8 @@ class Achievement(BaseModel):
         upload_to=image_url_upload_to,
     )
 
-    type = models.CharField(
-        max_length=20,
-        choices=AchievementType.choices,
-        verbose_name="тип",
-        help_text="За какой тип достижений будет выдаваться ачивка",
-        default=AchievementType.CORRECT_TASKS,
-    )
-    need_count = models.IntegerField(
-        verbose_name="кол-во того, что нужно для получения ачивки",
-        help_text="Здесь нужно указать количество действий, необходимое для получения ачивок. Например, если вы указали в предыдущем пункте \"Выполненные задания\" а тут 5, то ачивка будет выдаваться за 5 решенных заданий",
-        default=5
+    slug = models.SlugField(
+        verbose_name="слаг", unique=True
     )
 
     def __str__(self):
