@@ -29,4 +29,4 @@ class HistorySubmissionOut(ModelSchema):
 
     class Meta:
         model = CompetitionTaskSubmission
-        fields = ("id", "earned_points", "timestamp")
+        fields = ("id", "earned_points", "timestamp", "content",)
