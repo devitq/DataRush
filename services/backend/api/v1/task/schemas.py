@@ -2,11 +2,20 @@ from typing import Literal
 from uuid import UUID
 
 from ninja import ModelSchema, Schema
+from pydantic import Field
 
 from apps.task.models import CompetitionTask, CompetitionTaskSubmission, CompetitionTaskAttachment
 
 
 class TaskOutSchema(ModelSchema):
+    status: Literal["sent", "checked", "checking", "not_submitted"] = None
+
+    @staticmethod
+    def resolve_status(self, context) -> Literal["sent", "checked", "checking", "not_submitted"]:
+        if submission := CompetitionTaskSubmission.objects.filter(task=self, user=context.get("request").auth).first():
+            return submission.status
+        return "not_submitted"
+
     class Meta:
         model = CompetitionTask
         fields = [

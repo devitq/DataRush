@@ -3,6 +3,7 @@ from uuid import uuid4
 from django.db import models
 from django.db.models import Count, Q
 from tinymce.models import HTMLField
+from martor.models import MartorField
 
 from apps.competition.models import Competition
 from apps.core.models import BaseModel
@@ -24,7 +25,7 @@ class CompetitionTask(BaseModel):
     )
     competition = models.ForeignKey(Competition, on_delete=models.CASCADE)
     title = models.CharField(verbose_name="заголовок", max_length=50)
-    description = HTMLField(verbose_name="описание")
+    description = MartorField(verbose_name="описание")
     max_attempts = models.PositiveSmallIntegerField(null=True, blank=True)
     type = models.CharField(
         choices=CompetitionTaskType, max_length=8, verbose_name="тип проверки"
@@ -57,6 +58,7 @@ class CompetitionTask(BaseModel):
         verbose_name="ревьюверы",
         help_text="Справа отображаются действующие проверяющие, слева - доступные для выбора. Для перемещения можно кликнуть 2 раза по проверяющему"
     )
+    submission_reviewers_count = models.PositiveSmallIntegerField(default=1, null=True, blank=True)
 
     def __str__(self):
         return self.title
@@ -152,8 +154,8 @@ class CompetitionTaskSubmission(BaseModel):
         if not self.task.reviewers.exists():
             return
 
-        reviewer = (
-            self.task.reviewers.annotate(
+        reviewers_count = self.task.submission_reviewers_count
+        reviewers = self.task.reviewers.annotate(
                 pending_count=Count(
                     "review",
                     filter=Q(
@@ -163,11 +165,10 @@ class CompetitionTaskSubmission(BaseModel):
                         ]
                     ),
                 )
+            ).order_by("pending_count")[:reviewers_count] # да это медленно работает и чо
+
+        for reviewer in reviewers:
+            Review.objects.create(
+                reviewer=reviewer,
+                submission=self,
             )
-            .order_by("pending_count")
-            .first()
-        )
-        review = Review.objects.create(
-            reviewer=reviewer,
-            submission=self,
-        )

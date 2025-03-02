@@ -105,6 +105,7 @@ class Command(BaseCommand):
                     description=description,
                     type=task_type,
                     points=random.randint(1, 10),
+                    submission_reviewers_count=random.randint(2, 10),
                     max_attempts=random.randint(1, 10),
                 )
                 tasks.append(task)
