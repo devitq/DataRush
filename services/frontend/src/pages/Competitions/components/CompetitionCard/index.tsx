@@ -22,7 +22,7 @@ export function CompetitionCard({
       <div className="relative h-full overflow-hidden">
         {competition.image_url && (
           <img
-            src={competition.image_url}
+            src={competition.image_url ? competition.image_url : '/DANO.png'}
             alt={competition.title}
             className="h-full w-full object-cover object-center"
           />

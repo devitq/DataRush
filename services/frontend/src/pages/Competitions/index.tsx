@@ -112,12 +112,5 @@ const SectionTitle = ({ children }: { children: React.ReactNode }) => {
   return <h1 className="w-full text-3xl font-semibold">{children}</h1>;
 };
 
-const EmptyState = ({ message }: { message: string }) => {
-  return (
-    <div className="flex justify-center items-center p-12 bg-gray-50 rounded-lg">
-      <p className="font-hse-sans text-gray-500">{message}</p>
-    </div>
-  );
-};
 
 export default CompetitionsPage;
