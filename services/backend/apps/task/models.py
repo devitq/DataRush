@@ -19,9 +19,7 @@ class CompetitionTask(BaseModel):
     def answer_file_upload_to(instance, filename) -> str:
         return f"tasks/{instance.id}/answer/{uuid4()}/{filename}"
 
-    in_competition_position = models.PositiveSmallIntegerField(
-        null=True, blank=True
-    )
+    in_competition_position = models.PositiveSmallIntegerField()
     competition = models.ForeignKey(Competition, on_delete=models.CASCADE)
     title = models.CharField(verbose_name="заголовок", max_length=50)
     description = MartorField(verbose_name="описание")
