@@ -6,14 +6,14 @@ interface FileSolutionProps {
   selectedFile: File | null;
   setSelectedFile: (file: File | null) => void;
   fileInputRef: React.RefObject<HTMLInputElement>;
-  fileUrl?: string | null; 
+  existingFileUrl?: string | null; 
 }
 
 const FileSolution: React.FC<FileSolutionProps> = ({ 
   selectedFile, 
   setSelectedFile, 
   fileInputRef,
-  fileUrl = null
+  existingFileUrl = null
 }) => {
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
@@ -44,7 +44,13 @@ const FileSolution: React.FC<FileSolutionProps> = ({
     }
   };
 
-  const fileName = selectedFile ? selectedFile.name : fileUrl ? fileUrl.split('/').pop() || 'file' : '';
+  const fileName = selectedFile 
+    ? selectedFile.name 
+    : existingFileUrl 
+      ? existingFileUrl.split('/').pop() || 'file' 
+      : '';
+
+  const hasFile = !!selectedFile || !!existingFileUrl;
 
   return (
     <>
@@ -56,16 +62,16 @@ const FileSolution: React.FC<FileSolutionProps> = ({
         accept=".jpg,.jpeg,.png,.pptx,.docx,.pdf,.xlsx,.txt"
       />
       
-      {(selectedFile || fileUrl) ? (
+      {hasFile ? (
         <div className="bg-white rounded-lg p-6 flex flex-col items-center justify-center min-h-[180px]">
           <div className="flex flex-col items-center">
             <FileIcon size={28} className="text-black mb-2" />
             <span className="text-sm text-gray-700 font-medium mb-1 font-hse-sans">{fileName}</span>
             
             <div className="flex items-center mt-2">
-              {fileUrl && (
+              {existingFileUrl && !selectedFile && (
                 <a 
-                  href={fileUrl}
+                  href={existingFileUrl}
                   download
                   className="flex items-center text-blue-500 text-sm mr-3 hover:text-blue-600"
                 >
@@ -78,7 +84,7 @@ const FileSolution: React.FC<FileSolutionProps> = ({
                 className="text-blue-500 text-sm p-0 h-auto hover:bg-transparent hover:text-blue-600 font-hse-sans"
                 onClick={() => setSelectedFile(null)}
               >
-                {fileUrl ? "Выбрать другой файл" : "Очистить"}
+                {!selectedFile && existingFileUrl ? "Выбрать другой файл" : "Очистить"}
               </Button>
             </div>
           </div>
