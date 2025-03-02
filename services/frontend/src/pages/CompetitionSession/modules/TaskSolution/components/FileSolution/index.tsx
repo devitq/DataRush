@@ -20,7 +20,6 @@ const FileSolution: React.FC<FileSolutionProps> = ({
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
       setSelectedFile(event.target.files[0]);
-      // Clear existing file URL when a new file is selected
       if (existingFileUrl && onClearExistingFile) {
         onClearExistingFile();
       }
@@ -47,25 +46,20 @@ const FileSolution: React.FC<FileSolutionProps> = ({
     
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
       setSelectedFile(e.dataTransfer.files[0]);
-      // Clear existing file URL when a new file is dropped
       if (existingFileUrl && onClearExistingFile) {
         onClearExistingFile();
       }
     }
   };
 
-  // Handle clearing the file
   const handleClearFile = () => {
     setSelectedFile(null);
-    // Also clear the existing file URL if it exists
     if (existingFileUrl && onClearExistingFile) {
       onClearExistingFile();
     }
   };
 
-  // Handle selecting a new file when an existing file is shown
   const handleSelectNewFile = () => {
-    // Just trigger the file input click - the actual clearing will happen in handleFileChange
     fileInputRef.current?.click();
   };
 
@@ -98,7 +92,7 @@ const FileSolution: React.FC<FileSolutionProps> = ({
                 <a 
                   href={existingFileUrl}
                   download
-                  className="flex items-center text-blue-500 text-sm mr-3 hover:text-blue-600"
+                  className="flex items-center "
                 >
                   <Download size={16} className="mr-1" />
                   Скачать
@@ -108,7 +102,7 @@ const FileSolution: React.FC<FileSolutionProps> = ({
               {selectedFile ? (
                 <Button 
                   variant="ghost" 
-                  className="text-blue-500 text-sm p-0 h-auto hover:bg-transparent hover:text-blue-600 font-hse-sans"
+                  className="text-sm p-0 h-auto hover:bg-transparent font-hse-sans"
                   onClick={handleClearFile}
                 >
                   Очистить
@@ -117,14 +111,14 @@ const FileSolution: React.FC<FileSolutionProps> = ({
                 <div className="flex gap-3">
                   <Button 
                     variant="ghost" 
-                    className="text-blue-500 text-sm p-0 h-auto hover:bg-transparent hover:text-blue-600 font-hse-sans"
+                    className="text-sm p-0 h-auto hover:bg-transparent font-hse-sans"
                     onClick={handleSelectNewFile}
                   >
                     Выбрать другой файл
                   </Button>
                   <Button 
                     variant="ghost" 
-                    className="text-red-500 text-sm p-0 h-auto hover:bg-transparent hover:text-red-600 font-hse-sans"
+                    className="text-sm p-0 h-auto hover:bg-transparent font-hse-sans"
                     onClick={handleClearFile}
                   >
                     Очистить
