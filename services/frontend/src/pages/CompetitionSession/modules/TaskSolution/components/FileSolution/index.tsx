@@ -7,17 +7,22 @@ interface FileSolutionProps {
   setSelectedFile: (file: File | null) => void;
   fileInputRef: React.RefObject<HTMLInputElement>;
   existingFileUrl?: string | null; 
+  onClearExistingFile?: () => void; // New prop to clear existing file URL
 }
 
 const FileSolution: React.FC<FileSolutionProps> = ({ 
   selectedFile, 
   setSelectedFile, 
   fileInputRef,
-  existingFileUrl = null
+  existingFileUrl = null,
+  onClearExistingFile
 }) => {
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
       setSelectedFile(event.target.files[0]);
+      if (existingFileUrl && onClearExistingFile) {
+        onClearExistingFile();
+      }
     }
   };
 
@@ -41,7 +46,21 @@ const FileSolution: React.FC<FileSolutionProps> = ({
     
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
       setSelectedFile(e.dataTransfer.files[0]);
+      if (existingFileUrl && onClearExistingFile) {
+        onClearExistingFile();
+      }
     }
+  };
+
+  const handleClearFile = () => {
+    setSelectedFile(null);
+    if (existingFileUrl && onClearExistingFile) {
+      onClearExistingFile();
+    }
+  };
+
+  const handleSelectNewFile = () => {
+    fileInputRef.current?.click();
   };
 
   const fileName = selectedFile 
@@ -73,19 +92,39 @@ const FileSolution: React.FC<FileSolutionProps> = ({
                 <a 
                   href={existingFileUrl}
                   download
-                  className="flex items-center text-blue-500 text-sm mr-3 hover:text-blue-600"
+                  className="flex items-center "
                 >
                   <Download size={16} className="mr-1" />
                   Скачать
                 </a>
               )}
-              <Button 
-                variant="ghost" 
-                className="text-blue-500 text-sm p-0 h-auto hover:bg-transparent hover:text-blue-600 font-hse-sans"
-                onClick={() => setSelectedFile(null)}
-              >
-                {!selectedFile && existingFileUrl ? "Выбрать другой файл" : "Очистить"}
-              </Button>
+              
+              {selectedFile ? (
+                <Button 
+                  variant="ghost" 
+                  className="text-sm p-0 h-auto hover:bg-transparent font-hse-sans"
+                  onClick={handleClearFile}
+                >
+                  Очистить
+                </Button>
+              ) : existingFileUrl ? (
+                <div className="flex gap-3">
+                  <Button 
+                    variant="ghost" 
+                    className="text-sm p-0 h-auto hover:bg-transparent font-hse-sans"
+                    onClick={handleSelectNewFile}
+                  >
+                    Выбрать другой файл
+                  </Button>
+                  <Button 
+                    variant="ghost" 
+                    className="text-sm p-0 h-auto hover:bg-transparent font-hse-sans"
+                    onClick={handleClearFile}
+                  >
+                    Очистить
+                  </Button>
+                </div>
+              ) : null}
             </div>
           </div>
         </div>

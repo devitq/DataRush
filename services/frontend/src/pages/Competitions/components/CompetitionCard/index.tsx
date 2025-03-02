@@ -55,7 +55,7 @@ export function CompetitionCard({
                 <span>•</span>
                 <span className="text-primary-foreground">
                   {competition.state === CompetitionState.STARTED
-                    ? "В прогрессе"
+                    ? "Проводится сейчас"
                     : "Завершено"}
                 </span>
               </>
