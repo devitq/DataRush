@@ -6,10 +6,12 @@ import TaskSolution from "./modules/TaskSolution";
 import { getCompetitionTasks, submitTaskSolution } from "@/shared/api/session";
 import { Loader2 } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { TaskType } from "@/shared/types/task";
 
 const CompetitionSession = () => {
   const { id, taskId } = useParams<{ id: string; taskId?: string }>();
   const [answer, setAnswer] = useState("");
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const competitionId = id || "";
   const queryClient = useQueryClient();
 
@@ -20,12 +22,27 @@ const CompetitionSession = () => {
   });
 
   const submitMutation = useMutation({
-    mutationFn: () => submitTaskSolution(competitionId, taskId || "", answer),
+    mutationFn: () => {
+      if (!currentTask || !competitionId) throw new Error("Missing task or competition ID");
+      
+      if (currentTask.type === TaskType.FILE) {
+        if (!selectedFile) throw new Error("No file selected");
+        return submitTaskSolution(competitionId, taskId || "", selectedFile);
+      } else {
+        if (!answer.trim()) throw new Error("Answer is empty");
+        return submitTaskSolution(competitionId, taskId || "", answer);
+      }
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ 
-        queryKey: ['submissionHistory', competitionId, taskId] 
+        queryKey: ['solutionHistory', competitionId, taskId] 
       });
+      
       setAnswer("");
+      setSelectedFile(null);
+    },
+    onError: (error) => {
+      console.error("Error submitting solution:", error);
     }
   });
 
@@ -45,8 +62,18 @@ const CompetitionSession = () => {
   }
 
   const handleSubmit = () => {
-    console.log(currentTask, competitionId, answer)
-    if (!currentTask || !competitionId || !answer.trim()) return;
+    if (!currentTask || !competitionId) return;
+    
+    if (currentTask.type === TaskType.FILE && !selectedFile) {
+      console.error("No file selected");
+      return;
+    }
+    
+    if (currentTask.type !== TaskType.FILE && !answer.trim()) {
+      console.error("Answer is empty");
+      return;
+    }
+    
     submitMutation.mutate();
   };
 
@@ -77,6 +104,8 @@ const CompetitionSession = () => {
                 solutions={[]}
                 answer={answer}
                 setAnswer={setAnswer}
+                selectedFile={selectedFile}
+                setSelectedFile={setSelectedFile}
                 onSubmit={handleSubmit}
               />
             </div>

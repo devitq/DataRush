@@ -15,17 +15,20 @@ interface TaskSolutionProps {
   solutions: Solution[];
   answer: string;
   setAnswer: (value: string) => void;
+  selectedFile: File | null;
+  setSelectedFile: (file: File | null) => void;
   onSubmit: () => void;
 }
 
 const TaskSolution: React.FC<TaskSolutionProps> = ({ 
   task, 
   solutions = [],
-  answer, 
-  setAnswer, 
-  onSubmit, 
+  answer,
+  setAnswer,
+  selectedFile,
+  setSelectedFile, 
+  onSubmit,
 }) => {
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const { id: competitionId } = useParams<{ id: string }>();
