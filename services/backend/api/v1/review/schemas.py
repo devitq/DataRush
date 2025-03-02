@@ -26,7 +26,6 @@ class CriteriaOut(Schema):
     name: str
     slug: str
     max_value: int
-    min_value: int
 
 
 class SubmissionOut(ModelSchema):
