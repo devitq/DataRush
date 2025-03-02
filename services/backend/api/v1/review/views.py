@@ -83,7 +83,7 @@ def evaluate_submission(
     evaluation = evaluation_info.dict()["evaluation"]
     review.evaluation = evaluation
     review.state = ReviewStatusChoices.CHECKED.value
-    review.submission.reviewed_at = datetime.now()
+    review.submission.checked_at = datetime.now()
 
     points = 0
     for criterea in evaluation:
