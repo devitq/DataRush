@@ -8,6 +8,7 @@ from api.v1.ping.schemas import PingOut
 from api.v1.schemas import ForbiddenError, NotFoundError, UnauthorizedError
 from api.v1.task.schemas import (
     HistorySubmissionOut,
+    TaskAttachmentSchema,
     TaskOutSchema,
     TaskSubmissionOut,
 )
@@ -15,6 +16,7 @@ from apps.competition.models import State
 from apps.task.models import (
     Competition,
     CompetitionTask,
+    CompetitionTaskAttachment,
     CompetitionTaskSubmission,
 )
 
@@ -141,3 +143,17 @@ def get_submissions_history(request, competition_id: UUID, task_id: UUID):
     )
 
     return status.OK, submissions_history
+
+
+@router.get(
+    "competitions/{competition_id}/tasks/{task_id}/attachments",
+    response={
+        status.OK: list[TaskAttachmentSchema],
+        status.UNAUTHORIZED: UnauthorizedError,
+    },
+)
+def get_task_attachments(request, competition_id: UUID, task_id: UUID):
+    task = get_object_or_404(CompetitionTask, id=task_id)
+    return status.OK, CompetitionTaskAttachment.objects.filter(
+        competition_id=competition_id, task=task, user=request.auth
+    )

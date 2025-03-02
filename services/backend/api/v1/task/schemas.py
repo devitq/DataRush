@@ -3,7 +3,7 @@ from uuid import UUID
 
 from ninja import ModelSchema, Schema
 
-from apps.task.models import CompetitionTask, CompetitionTaskSubmission
+from apps.task.models import CompetitionTask, CompetitionTaskSubmission, CompetitionTaskAttachment
 
 
 class TaskOutSchema(ModelSchema):
@@ -30,3 +30,9 @@ class HistorySubmissionOut(ModelSchema):
     class Meta:
         model = CompetitionTaskSubmission
         fields = ("id", "earned_points", "timestamp", "content",)
+
+
+class TaskAttachmentSchema(ModelSchema):
+    class Meta:
+        model = CompetitionTaskAttachment
+        fields = ("id", "file", "public",)

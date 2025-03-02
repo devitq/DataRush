@@ -5,7 +5,6 @@ from tinymce.models import HTMLField
 
 from apps.competition.models import Competition
 from apps.core.models import BaseModel
-from apps.task.validators import ContestTaskCriteriesValidator
 from apps.user.models import User
 
 
