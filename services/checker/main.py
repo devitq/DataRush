@@ -21,25 +21,8 @@ ALLOWED_FILENAME_CHARS = r"[^a-zA-Z0-9_\-.]"
 
 app = FastAPI()
 docker_client = docker.from_env()
-print(docker_client.login(
-    username=config.REGISTRY_LOGIN,
-    password=config.REGISTRY_PASSWORD,
-    registry=config.REGISTRY_URL,
-))
-print(config.REGISTRY_LOGIN, config.REGISTRY_PASSWORD)
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
-
-
-@app.on_event("startup")
-async def pull_docker_image():
-    client = docker.from_env()
-    image_name = config.DOCKER_IMAGE
-    try:
-        client.images.pull(image_name)
-        print(f"Successfully pulled {image_name}")
-    except docker.errors.DockerException as e:
-        print(f"Error pulling {image_name}: {e}")
 
 
 class FileDetails(BaseModel):
