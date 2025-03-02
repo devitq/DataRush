@@ -113,6 +113,7 @@ def submit_task(
             status=CompetitionTaskSubmission.StatusChoices.SENT,
             content=content,
         )
+        submission.send_on_review()
     if task.type == CompetitionTask.CompetitionTaskType.CHECKER:
         submission = CompetitionTaskSubmission.objects.create(
             user=user,

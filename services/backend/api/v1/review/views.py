@@ -41,7 +41,11 @@ def get_submission(
     review = Review.objects.get(reviewer=reviewer, submission=submission)
     if review.state == ReviewStatusChoices.NOT_CHECKED.value:
         review.state = ReviewStatusChoices.CHECKING.value
+        review.submission.state = (
+            CompetitionTaskSubmission.StatusChoices.CHECKING.value
+        )
         review.save()
+        review.submission.save()
 
     return status.OK, submission
 
@@ -84,8 +88,17 @@ def evaluate_submission(
     points = 0
     for criterea in evaluation:
         points += criterea["mark"]
-    review.submission.earned_points = points
-
+    review.submission.earned_points = (
+        points  # TODO: оценка не от последнего проверяющего а средняя по всем
+    )
     review.save()
 
+    all_checked = not submission.reviews.exclude(
+        state=ReviewStatusChoices.CHECKED
+    ).exists()
+    if all_checked:
+        review.submission.status = (
+            CompetitionTaskSubmission.StatusChoices.CHECKED.value
+        )
+        review.submission.save()
     return status.OK, review.submission

@@ -1,7 +1,6 @@
 from django.db import models
 
 from apps.core.models import BaseModel
-from apps.task.models import CompetitionTaskSubmission
 
 
 class Reviewer(BaseModel):
@@ -20,7 +19,7 @@ class ReviewStatusChoices(models.TextChoices):
 class Review(BaseModel):
     reviewer = models.ForeignKey(Reviewer, on_delete=models.CASCADE)
     submission = models.ForeignKey(
-        CompetitionTaskSubmission,
+        "task.CompetitionTaskSubmission",
         on_delete=models.CASCADE,
         related_name="reviews",
     )

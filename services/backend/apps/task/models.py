@@ -1,10 +1,12 @@
 from uuid import uuid4
 
 from django.db import models
+from django.db.models import Count, Q
 from tinymce.models import HTMLField
 
 from apps.competition.models import Competition
 from apps.core.models import BaseModel
+from apps.review.models import Review, Reviewer, ReviewStatusChoices
 from apps.task.validators import ContestTaskCriteriesValidator
 from apps.user.models import User
 
@@ -55,6 +57,9 @@ class CompetitionTask(BaseModel):
         null=True,
         verbose_name="критерии",
     )
+
+    # only when "review" type
+    reviewers = models.ManyToManyField(Reviewer, blank=True)
 
     def clean(self):
         ContestTaskCriteriesValidator()(self)
@@ -116,3 +121,27 @@ class CompetitionTaskSubmission(BaseModel):
 
     reviewed_at = models.DateTimeField(null=True, blank=True)
     timestamp = models.DateTimeField(auto_now_add=True)
+
+    def send_on_review(self):
+        if not self.task.reviewers.exists():
+            return
+
+        reviewer = (
+            self.task.reviewers.annotate(
+                pending_count=Count(
+                    "review",
+                    filter=Q(
+                        review__state__in=[
+                            ReviewStatusChoices.NOT_CHECKED,
+                            ReviewStatusChoices.CHECKING,
+                        ]
+                    ),
+                )
+            )
+            .order_by("pending_count")
+            .first()
+        )
+        review = Review.objects.create(
+            reviewer=reviewer,
+            submission=self,
+        )
