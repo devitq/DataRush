@@ -71,10 +71,12 @@ class CompetitionTaskAttachment(BaseModel):
     def file_upload_at(instance, filename):
         return f"/attachment/{instance.id}/file"
 
-    task = models.ForeignKey(CompetitionTask, on_delete=models.CASCADE)
-    file = models.FileField(upload_to=file_upload_at)
-    bind_at = models.FilePathField()
-    public = models.BooleanField(default=False)
+    task = models.ForeignKey(CompetitionTask, on_delete=models.CASCADE,
+                             verbose_name="задание")
+    file = models.FileField(upload_to=file_upload_at,
+                            verbose_name="файл")
+    bind_at = models.FilePathField(verbose_name="путь сохранения")
+    public = models.BooleanField(default=False, verbose_name="публичный")
 
 
 class CompetitionTaskSubmission(BaseModel):
@@ -117,3 +119,27 @@ class CompetitionTaskSubmission(BaseModel):
     checked_at = models.DateTimeField(null=True, blank=True)
     plagiarism_checked = models.BooleanField(default=False)
     timestamp = models.DateTimeField(auto_now_add=True)
+
+    def send_on_review(self):
+        if not self.task.reviewers.exists():
+            return
+
+        reviewer = (
+            self.task.reviewers.annotate(
+                pending_count=Count(
+                    "review",
+                    filter=Q(
+                        review__state__in=[
+                            ReviewStatusChoices.NOT_CHECKED,
+                            ReviewStatusChoices.CHECKING,
+                        ]
+                    ),
+                )
+            )
+            .order_by("pending_count")
+            .first()
+        )
+        review = Review.objects.create(
+            reviewer=reviewer,
+            submission=self,
+        )

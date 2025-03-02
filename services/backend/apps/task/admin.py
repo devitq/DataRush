@@ -11,7 +11,6 @@ class CompletionAttachmentInline(admin.StackedInline):
 @admin.register(CompetitionTask)
 class CompetitionTaskAdmin(admin.ModelAdmin):
     list_display = ("title", "type", "points")
-    inlines = [CompletionAttachmentInline]
 
 
 class CompetitionTaskInline(admin.StackedInline):
