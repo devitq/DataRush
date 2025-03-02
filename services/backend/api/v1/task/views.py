@@ -35,6 +35,7 @@ router = Router(tags=["competition"])
 )
 def start_competition(request, competition_id: UUID) -> PingOut:
     competition = get_object_or_404(Competition, pk=competition_id)
+    competition.participants.add(request.auth)
     state_obj, _ = State.objects.update_or_create(
         user=request.auth, competition=competition, state="started"
     )
