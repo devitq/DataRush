@@ -73,7 +73,7 @@ class SubmissionOut(ModelSchema):
             "stdout",
             "result",
             "earned_points",
-            "reviewed_at",
+            "checked_at",
         )
 
 

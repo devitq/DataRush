@@ -16,6 +16,8 @@ class TaskOutSchema(ModelSchema):
             "description",
             "type",
             "in_competition_position",
+            "points",
+            "attachments",
         ]
 
 
@@ -28,4 +30,4 @@ class HistorySubmissionOut(ModelSchema):
 
     class Meta:
         model = CompetitionTaskSubmission
-        fields = ("id", "earned_points", "timestamp")
+        fields = ("id", "earned_points", "timestamp", "content",)
