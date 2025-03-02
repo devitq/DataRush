@@ -64,15 +64,13 @@ const CompetitionPage = () => {
       </Link>
 
       <div className="flex flex-col gap-6">
-        {competition.image_url && (
-          <div className="aspect-2 h-auto w-full overflow-hidden rounded-xl">
-            <img
-              src={competition.image_url}
-              alt={competition.title}
-              className="h-full w-full object-cover object-center"
-            />
-          </div>
-        )}
+        <div className="aspect-2 h-auto w-full overflow-hidden rounded-xl">
+          <img
+            src={competition.image_url ? competition.image_url : '/DANO.png'}
+            alt={competition.title}
+            className="h-full w-full object-cover object-center"
+          />
+        </div>
 
         <div className="flex flex-col-reverse gap-8 md:flex-row">
           <div className="flex flex-1 flex-col gap-5">
@@ -89,7 +87,7 @@ const CompetitionPage = () => {
               onClick={handleStart} 
               disabled={startMutation.isPending}
             >
-              {startMutation.isPending ? "Загрузка..." : "Начать"}
+              {startMutation.isPending ? "Загрузка..." : "Приступить к выполнению"}
             </Button>
           </div>
         </div>
