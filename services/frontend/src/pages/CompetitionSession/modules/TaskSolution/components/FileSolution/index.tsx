@@ -99,7 +99,7 @@ const FileSolution: React.FC<FileSolutionProps> = ({
                 </a>
               )}
               
-              {selectedFile ? (
+              {selectedFile || existingFileUrl ? (
                 <Button 
                   variant="ghost" 
                   className="text-sm p-0 h-auto hover:bg-transparent font-hse-sans"
@@ -107,23 +107,6 @@ const FileSolution: React.FC<FileSolutionProps> = ({
                 >
                   Очистить
                 </Button>
-              ) : existingFileUrl ? (
-                <div className="flex gap-3">
-                  <Button 
-                    variant="ghost" 
-                    className="text-sm p-0 h-auto hover:bg-transparent font-hse-sans"
-                    onClick={handleSelectNewFile}
-                  >
-                    Выбрать другой файл
-                  </Button>
-                  <Button 
-                    variant="ghost" 
-                    className="text-sm p-0 h-auto hover:bg-transparent font-hse-sans"
-                    onClick={handleClearFile}
-                  >
-                    Очистить
-                  </Button>
-                </div>
               ) : null}
             </div>
           </div>
