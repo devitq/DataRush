@@ -376,6 +376,12 @@ services:
       context: ./services/checker
       dockerfile: Dockerfile
     restart: unless-stopped
+    ports:
+      - name: web
+        target: 8000
+        published: 8009
+        host_ip: 0.0.0.0
+        protocol: tcp
     volumes:
       - type: bind
         source: /var/run/docker.sock
