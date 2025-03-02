@@ -21,8 +21,8 @@ class CompetitionEndpointTests(TestCase):
         self.competition = Competition.objects.create(
             title="AI Challenge",
             description="Machine Learning Competition",
-            type="solo",
-            participation_type="edu",
+            type="edu",
+            participation_type="solo",
         )
 
         resp = self.client.post(
@@ -34,13 +34,10 @@ class CompetitionEndpointTests(TestCase):
 
         self.valid_headers = {"HTTP_AUTHORIZATION": f"Bearer {token}"}
 
-    # --- Helper methods ---
     def get_url(self, competition_id):
         return f"/api/v1/competition/{competition_id}"
 
-    # --- Test Cases ---
     def test_get_competition_success(self):
-        """Authenticated user gets competition details (200 OK)"""
         response = self.client.get(
             self.get_url(self.competition.id), **self.valid_headers
         )
@@ -51,7 +48,7 @@ class CompetitionEndpointTests(TestCase):
         # Validate required fields
         self.assertEqual(data["id"], str(self.competition.id))
         self.assertEqual(data["title"], "AI Challenge")
-        self.assertEqual(data["type"], "solo")
+        self.assertEqual(data["type"], "edu")
 
         # Validate optional null fields
         self.assertIsNone(data["image_url"])
@@ -59,20 +56,17 @@ class CompetitionEndpointTests(TestCase):
         self.assertIsNone(data["end_date"])
 
     def test_invalid_uuid_format(self):
-        """Invalid UUID format returns 400 Bad Request"""
         response = self.client.get(
             self.get_url("invalid-id"), **self.valid_headers
         )
         self.assertEqual(response.status_code, 400)
 
     def test_unauthenticated_access(self):
-        """Missing auth token returns 401 Unauthorized"""
         response = self.client.get(self.get_url(self.competition.id))
         self.assertEqual(response.status_code, 401)
         self.assertEqual(response.json()["detail"], "Unauthorized")
 
     def test_nonexistent_competition(self):
-        """Valid UUID but missing competition returns 404"""
         new_uuid = uuid.uuid4()
         response = self.client.get(
             self.get_url(new_uuid), **self.valid_headers
@@ -81,7 +75,6 @@ class CompetitionEndpointTests(TestCase):
         self.assertEqual(response.json()["detail"], "Not Found")
 
     def test_invalid_auth_token(self):
-        """Invalid token returns 401 Unauthorized"""
         response = self.client.get(
             self.get_url(self.competition.id),
             HTTP_AUTHORIZATION="Bearer invalid_token",
@@ -90,7 +83,6 @@ class CompetitionEndpointTests(TestCase):
         self.assertEqual(response.json()["detail"], "Unauthorized")
 
     def test_malformed_auth_header(self):
-        """Malformed Authorization header returns 401"""
         cases = [
             ("InvalidScheme valid_token_123", 401),
             ("Bearer", 401),  # Missing token
@@ -128,11 +120,11 @@ class CompetitionsEndpointTests(TestCase):
             competition = Competition.objects.create(
                 title=f"Competition {i}",
                 description=f"Description {i}",
-                type=Competition.CompetitionType.SOLO,
-                participation_type=(
-                    Competition.CompetitionParticipationType.EDU if i % 2 == 0
-                    else Competition.CompetitionParticipationType.COMPETITIVE
+                type=(
+                    Competition.CompetitionType.EDU if i % 2 == 0
+                    else Competition.CompetitionType.COMPETITIVE
                 ),
+                participation_type=Competition.CompetitionParticipationType.SOLO,
                 start_date=(now + timedelta(days=i)).isoformat(),
                 end_date=(now + timedelta(days=i + 7)).isoformat(),
             )
@@ -149,7 +141,6 @@ class CompetitionsEndpointTests(TestCase):
         return f"{base_url}?{params}" if params else base_url
 
     def test_get_participating_competitions(self):
-        """Test filtering competitions where user is participating"""
         response = self.client.get(
             self.get_url("is_participating=true"),
             **self.valid_headers
@@ -164,17 +155,15 @@ class CompetitionsEndpointTests(TestCase):
         )
 
     def test_competition_type_values(self):
-        """Test competition type choices are respected"""
         response = self.client.get(
             self.get_url("is_participating=true"),
             **self.valid_headers
         )
 
         for item in response.json():
-            self.assertEqual(item["type"], "solo")
+            self.assertEqual(item["type"], "competitive")
 
     def test_participation_type_values(self):
-        """Test participation type alternates between edu/competitive"""
         response = self.client.get(
             self.get_url("is_participating=false"),
             **self.valid_headers
@@ -183,11 +172,10 @@ class CompetitionsEndpointTests(TestCase):
         types = [item["participation_type"] for item in response.json()]
         self.assertCountEqual(
             types,
-            ["competitive", "edu", "competitive"]
+            ["solo", "solo", "solo"]
         )
 
     def test_datetime_formatting(self):
-        """Test start/end date ISO formatting"""
         response = self.client.get(
             self.get_url("is_participating=true"),
             **self.valid_headers
@@ -206,7 +194,6 @@ class CompetitionsEndpointTests(TestCase):
                     self.fail("Invalid end_date format")
 
     def test_competition_metadata(self):
-        """Test competition metadata fields"""
         response = self.client.get(
             self.get_url("is_participating=true"),
             **self.valid_headers
@@ -215,27 +202,25 @@ class CompetitionsEndpointTests(TestCase):
         item = response.json()[0]
         self.assertEqual(item["title"], "Competition 1")
         self.assertEqual(item["description"], "Description 1")
-        self.assertEqual(item["type"], "solo")
-        self.assertEqual(item["participation_type"], "competitive")
+        self.assertEqual(item["type"], "competitive")
+        self.assertEqual(item["participation_type"], "solo")
 
     def test_verbose_name_consistency(self):
-        """Test model verbose names don't affect API schema"""
         response = self.client.get(
             self.get_url("is_participating=true"),
             **self.valid_headers
         )
 
         item = response.json()[0]
-        self.assertNotIn("название", item)  # Russian verbose name
-        self.assertIn("title", item)  # Actual API field name
+        self.assertNotIn("название", item)
+        self.assertIn("title", item)
 
     def test_null_dates_handling(self):
-        """Test competitions with null dates"""
         competition = Competition.objects.create(
             title="No Dates Competition",
             description="Test competition",
-            type=Competition.CompetitionType.SOLO,
-            participation_type=Competition.CompetitionParticipationType.EDU
+            type=Competition.CompetitionType.EDU,
+            participation_type=Competition.CompetitionParticipationType.SOLO
         )
 
         response = self.client.get(
@@ -251,7 +236,6 @@ class CompetitionsEndpointTests(TestCase):
         self.assertIsNone(test_item["end_date"])
 
     def test_participation_status_filtering(self):
-        """Test filtering by participation_type"""
         response = self.client.get(
             self.get_url("is_participating=false"),
             **self.valid_headers
