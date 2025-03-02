@@ -1,4 +1,4 @@
-import { Loading } from "@/components/ui/Loading";
+import { Loading } from "@/components/ui/loading";
 import { getReviewer, getReviewerSubmissions } from "@/shared/api/review";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate, useParams } from "react-router";
