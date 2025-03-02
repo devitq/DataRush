@@ -1,4 +1,4 @@
-export interface Task {
+interface Task {
   id: string;
   title: string;
   description: string;
@@ -7,8 +7,30 @@ export interface Task {
   points: number;
 }
 
+export interface TaskAttachment {
+  id: string;
+  file: string;
+  public: boolean;
+}
+
 enum TaskType {
   INPUT = "input",
   FILE = "file",
   CODE = "code",
 }
+
+enum SolutionStatus {
+  SENT = "sent",
+  CHECKING = "checking",
+  CHECKED = "checked",
+}
+
+interface Solution {
+  id: string,
+  status: SolutionStatus,
+  timestamp: string,
+  earned_points: number
+}
+
+export type {Task, Solution}
+export {TaskType, SolutionStatus}

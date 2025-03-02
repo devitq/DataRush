@@ -1,23 +1,32 @@
 import { useState } from "react";
 import { useParams, Navigate } from "react-router-dom";
-import { mockSolutions } from "@/shared/mocks/mocks";
 import CompetitionHeader from "./components/CompetitionHeader";
 import TaskContent from "./components/TaskContent";
 import TaskSolution from "./modules/TaskSolution";
-import { getCompetitionTasks } from "@/shared/api/session";
+import { getCompetitionTasks, submitTaskSolution } from "@/shared/api/session";
 import { Loader2 } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 const CompetitionSession = () => {
   const { id, taskId } = useParams<{ id: string; taskId?: string }>();
   const [answer, setAnswer] = useState("");
   const competitionId = id || "";
+  const queryClient = useQueryClient();
 
   const tasksQuery = useQuery({
     queryKey: ["competitionTasks", competitionId],
     queryFn: () => getCompetitionTasks(competitionId),
     enabled: !!competitionId,
-    // refetchOnWindowFocus: false, 
+  });
+
+  const submitMutation = useMutation({
+    mutationFn: () => submitTaskSolution(competitionId, taskId || "", answer),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ 
+        queryKey: ['submissionHistory', competitionId, taskId] 
+      });
+      setAnswer("");
+    }
   });
 
   const tasks = tasksQuery.data || [];
@@ -35,14 +44,9 @@ const CompetitionSession = () => {
     );
   }
 
-  const handleSubmit = async () => {
-    if (!currentTask || !competitionId) return;
-
-    try {
-      console.log("Solution submitted successfully");
-    } catch (err) {
-      console.error("Failed to submit solution:", err);
-    }
+  const handleSubmit = () => {
+    if (!currentTask || !competitionId || !answer.trim()) return;
+    submitMutation.mutate();
   };
 
   return (
@@ -69,7 +73,7 @@ const CompetitionSession = () => {
               <TaskContent task={currentTask} />
               <TaskSolution
                 task={currentTask}
-                solutions={mockSolutions}
+                solutions={[]}
                 answer={answer}
                 setAnswer={setAnswer}
                 onSubmit={handleSubmit}
