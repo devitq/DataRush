@@ -15,8 +15,8 @@ export interface TaskAttachment {
 
 enum TaskType {
   INPUT = "input",
-  FILE = "checker",
-  CODE = "review",
+  FILE = "review",
+  CODE = "checker",
 }
 
 enum SolutionStatus {
@@ -29,7 +29,8 @@ interface Solution {
   id: string,
   status: SolutionStatus,
   timestamp: string,
-  earned_points: number
+  earned_points: number,
+  content: string
 }
 
 export type {Task, Solution}

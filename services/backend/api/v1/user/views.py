@@ -11,15 +11,17 @@ from api.v1.schemas import (
     BadRequestError,
     ConflictError,
     ForbiddenError,
-    NotFoundError,
+    NotFoundError, UnauthorizedError,
 )
 from api.v1.user.schemas import (
     LoginSchema,
     RegisterSchema,
     TokenSchema,
     UserSchema,
+    StatSchema
 )
 from apps.user.models import User
+from apps.task.models import CompetitionTaskSubmission, ReviewStatusChoices
 
 router = Router(tags=["user"])
 
@@ -85,3 +87,31 @@ def get_me(request):
 def get_user(request, user_id: str):
     user = get_object_or_404(User, id=user_id)
     return status.OK, user
+
+
+@router.get(
+    "/me/stat",
+    response={
+        status.OK: StatSchema,
+        status.UNAUTHORIZED: UnauthorizedError
+    },
+)
+def get_my_stat(request):
+    user_submissions = CompetitionTaskSubmission.objects.filter(
+        user=request.auth
+    )
+    checked_attempts = user_submissions.filter(status=CompetitionTaskSubmission.StatusChoices.CHECKED).all()
+    success_attempts_cnt = 0
+
+    for attempt in checked_attempts:
+        is_correct = attempt.result.get("correct", None)
+        if is_correct is None:
+            is_correct = attempt.result.get("total_points", 0) > 0
+
+        if is_correct:
+            success_attempts_cnt += 1
+
+    return StatSchema(
+        total_attempts=len(user_submissions),
+        solved_tasks=success_attempts_cnt
+    )

@@ -94,9 +94,9 @@ class CompetitionTaskAttachment(BaseModel):
 
 class CompetitionTaskSubmission(BaseModel):
     class StatusChoices(models.TextChoices):
-        SENT = "sent"
-        CHECKING = "checking"
-        CHECKED = "checked"
+        SENT = "sent", "Отправлено на проверку"
+        CHECKING = "checking", "Проверка"
+        CHECKED = "checked", "Проверено"
 
     def submission_content_upload_to(instance, filename) -> str:
         return f"submissions/{instance.id}/content/{filename}"
