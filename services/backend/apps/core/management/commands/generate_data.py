@@ -8,6 +8,7 @@ from django.core.management.base import BaseCommand
 from django.utils import timezone
 
 from apps.competition.models import Competition, State
+from apps.review.models import Review, Reviewer
 from apps.task.models import CompetitionTask, CompetitionTaskSubmission
 from apps.user.models import User, UserRole
 
@@ -19,10 +20,22 @@ class Command(BaseCommand):
         self.stdout.write("Starting data generation...")
         users = self.create_users(5)
         competitions = self.create_competitions(2, users)
+        self.reviewers = self.create_reviewers(2)
         tasks = self.create_tasks(competitions)
         self.create_submissions(tasks, users)
         self.create_states(competitions, users)
         self.stdout.write("Data generation completed.")
+
+    def create_reviewers(self, count):
+        reviewers = []
+        for i in range(count):
+            name = f"John_{i}"
+            surname = f"Smith_{i}"
+            token = random.randint(100000, 999999)
+            reviewer = Reviewer(name=name, surname=surname, token=token)
+            reviewer.save()
+            reviewers.append(reviewer)
+        return reviewers
 
     def create_users(self, count):
         users = []
@@ -60,8 +73,10 @@ class Command(BaseCommand):
                 description=description,
                 start_date=start_date,
                 end_date=end_date,
-                type="solo",  # assuming only one type for now
-                participation_type=random.choice(["edu", "competitive"]),
+                type=random.choice(
+                    ["edu", "competitive"]
+                ),  # assuming only one type for now
+                participation_type="solo",
             )
             # Add random participants
             selected_users = random.sample(
@@ -89,10 +104,17 @@ class Command(BaseCommand):
                     description=description,
                     type=task_type,
                     points=random.randint(1, 10),
+                    max_attempts=random.randint(1, 10),
                 )
                 tasks.append(task)
                 self.stdout.write(f"Created task: {title} (type: {task_type})")
+        self.add_reviewers_to_task(tasks)
         return tasks
+
+    def add_reviewers_to_task(self, tasks):
+        for task in tasks:
+            task.reviewers.set(self.reviewers)
+            task.save()
 
     def create_submissions(self, tasks, users):
         for task in tasks:

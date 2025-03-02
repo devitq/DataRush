@@ -30,11 +30,16 @@ interface Solution {
   score?: number,
   maxScore?: number,
 }
+
 interface Task {
   id: string;
   number: string;
+  description: string;
+  maxScore: number;
   status: TaskStatus;
   solutionType: SolutionType;
+  requirements?: string;
+  attachments?: string[];
 }
 
 export { CompetitionStatus, TaskStatus };

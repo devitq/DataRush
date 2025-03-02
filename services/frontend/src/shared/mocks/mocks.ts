@@ -57,49 +57,70 @@ const mockTasks: Task[] = [
     id: "1", 
     number: "1.1", 
     status: TaskStatus.Uncleared, 
-    solutionType: "input"
+    solutionType: "input",
+    description: "123",
+    maxScore: 10,
   },
   { 
     id: "2", 
     number: "1.2", 
     status: TaskStatus.Checking, 
-    solutionType: "file"
+    solutionType: "file",
+    description: "123",
+    maxScore: 20,
   },
   { 
     id: "3", 
     number: "1.3", 
     status: TaskStatus.Correct, 
-    solutionType: "code"
+    solutionType: "code",
+    description: "123",
+    maxScore: 20,
   },
   { 
     id: "4", 
     number: "2.1", 
     status: TaskStatus.Partial, 
-    solutionType: "input"
+    solutionType: "input",
+    description: "123",
+    maxScore: 20,
+
   },
   { 
     id: "5", 
     number: "2.2", 
     status: TaskStatus.Wrong, 
-    solutionType: "file"
+    solutionType: "file",
+    description: "123",
+    maxScore: 20,
+
   },
   { 
     id: "6", 
     number: "2.3", 
     status: TaskStatus.Uncleared, 
-    solutionType: "code"
+    solutionType: "code",
+    description: "123",
+    maxScore: 20,
+
   },
   { 
     id: "7", 
     number: "3.1", 
     status: TaskStatus.Checking, 
-    solutionType: "file"
+    solutionType: "file",
+    description: "123",
+    maxScore: 20,
+
   },
   { 
     id: "8", 
     number: "3.2", 
     status: TaskStatus.Correct, 
-    solutionType: "input"
+    solutionType: "input",
+    description: "123",
+    maxScore: 20,
+
   },
 ];
 
@@ -132,5 +153,84 @@ const mockSolutions: Solution[] = [
 
 ];
 
+const mockAchievements = [
+  {
+    id: 1,
+    name: "Первые шаги",
+    description: "Участие в первом соревновании",
+    imageUrl: "/achievements/first-steps.png",
+    unlocked: true,
+  },
+  {
+    id: 2,
+    name: "Восходящая звезда",
+    description: "Победа в соревновании",
+    imageUrl: "/achievements/rising-star.png",
+    unlocked: true,
+  },
+  {
+    id: 3,
+    name: "Мастер кода",
+    description: "Решите 50 задач на программирование",
+    imageUrl: "/achievements/code-master.png",
+    unlocked: true,
+  },
+  {
+    id: 4,
+    name: "Бронзовый призер",
+    description: "Займите 3 место в соревновании",
+    imageUrl: "/achievements/bronze.png",
+    unlocked: true,
+  },
+  {
+    id: 5,
+    name: "Серебряный призер",
+    description: "Займите 2 место в соревновании",
+    imageUrl: "/achievements/silver.png",
+    unlocked: false,
+  },
+  {
+    id: 6,
+    name: "Золотой призер",
+    description: "Займите 1 место в соревновании",
+    imageUrl: "/achievements/gold.png",
+    unlocked: false,
+  },
+  {
+    id: 7,
+    name: "Марафонец",
+    description: "Участвуйте в 10 соревнованиях",
+    imageUrl: "/achievements/marathon.png",
+    unlocked: false,
+  },
+  {
+    id: 8,
+    name: "Идеальное решение",
+    description: "Получите максимальные баллы за все задачи в соревновании",
+    imageUrl: "/achievements/perfect.png",
+    unlocked: false,
+  },
+];
 
-export { mockCompetitions, mockTasks, mockSolutions };
+
+const mockStatistics = {
+  totalCompetitions: 12,
+  completedCompetitions: 8,
+  totalScore: 756,
+  averageScore: 94.5,
+  bestResult: {
+    competition: "Олимпиада DANO 2024",
+    place: 3,
+    score: 97,
+  },
+  totalTasks: 86,
+  solvedTasks: 72,
+  tasksByStatus: {
+    correct: 58,
+    partial: 14,
+    wrong: 9,
+    unattempted: 5,
+  },
+};
+
+export { mockCompetitions, mockTasks, mockSolutions, mockAchievements, mockStatistics };

@@ -1,4 +1,4 @@
-import { Button, buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { DataRushReview } from "@/components/ui/icons/datarush-review";
 import { Reviewer } from "@/shared/types/review";
 import { Link } from "react-router";

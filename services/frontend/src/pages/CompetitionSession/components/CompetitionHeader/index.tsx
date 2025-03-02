@@ -15,7 +15,7 @@ const CompetitionHeader: React.FC<CompetitionHeaderProps> = ({
   competitionId 
 }) => {
   return (
-    <header className="bg-white shadow-sm">
+    <header className="bg-white shadow-sm sticky top-0 z-30 w-full">
       <div className="mx-auto max-w-6xl px-4">
         <div className="py-4 text-center">
           <h1 className="font-hse-sans text-xl font-semibold">
