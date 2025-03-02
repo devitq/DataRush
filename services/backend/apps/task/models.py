@@ -24,7 +24,7 @@ class CompetitionTask(BaseModel):
     )
     competition = models.ForeignKey(Competition, on_delete=models.CASCADE)
     title = models.CharField(verbose_name="заголовок", max_length=50)
-    description = HTMLField(verbose_name="описание", max_length=300)
+    description = HTMLField(verbose_name="описание")
     max_attempts = models.PositiveSmallIntegerField(null=True, blank=True)
     type = models.CharField(
         choices=CompetitionTaskType, max_length=8, verbose_name="тип проверки"
