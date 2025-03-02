@@ -6,7 +6,7 @@ from tinymce.models import HTMLField
 
 from apps.competition.models import Competition
 from apps.core.models import BaseModel
-from apps.review.models import ReviewStatusChoices, Review
+from apps.review.models import Review, ReviewStatusChoices
 from apps.user.models import User
 
 
