@@ -1,11 +1,12 @@
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Clock, Trophy, BookOpen } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { getCompetition, startCompetition } from "@/shared/api/competitions";
 import { getCompetitionTasks } from "@/shared/api/session";
 import { Loading } from "@/components/ui/loading";
+import { CompetitionType } from "@/shared/types/competition";
 
 const CompetitionPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -38,6 +39,19 @@ const CompetitionPage = () => {
       console.error("Failed to start competition:", error);
     }
   });
+  const formatDate = (date?: Date | string) => {
+    if (!date) return "";
+    
+    const dateObj = typeof date === 'string' ? new Date(date) : date;
+    
+    return dateObj.toLocaleString('ru-RU', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+  };
 
   const handleStart = () => {
     startMutation.mutate();
@@ -74,13 +88,50 @@ const CompetitionPage = () => {
 
         <div className="flex flex-col-reverse gap-8 md:flex-row">
           <div className="flex flex-1 flex-col gap-5">
-            <h1 className="text-[34px] leading-11 font-semibold text-balance">
-              {competition.title}
-            </h1>
+            <div>
+              <div className="flex items-center gap-2 mb-2">
+                <div className="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm font-medium flex items-center">
+                  {competition.type === CompetitionType.COMPETITIVE ? (
+                    <>
+                      <Trophy size={14} className="mr-1.5" />
+                      Соревнование
+                    </>
+                  ) : (
+                    <>
+                      <BookOpen size={14} className="mr-1.5" />
+                      Тренировка
+                    </>
+                  )}
+                </div>
+              </div>
+              
+              <h1 className="text-[34px] leading-11 font-semibold text-balance">
+                {competition.title}
+              </h1>
+              
+              {competition.type === CompetitionType.COMPETITIVE && (
+                <div className="mt-3 text-gray-600 font-hse-sans">
+                  {competition.start_date && (
+                    <div className="flex items-center gap-2 mb-1">
+                      <Clock size={16} className="text-gray-500" />
+                      <span>Начало: {formatDate(competition.start_date)}</span>
+                    </div>
+                  )}
+                  {competition.end_date && (
+                    <div className="flex items-center gap-2">
+                      <Clock size={16} className="text-gray-500" />
+                      <span>Окончание: {formatDate(competition.end_date)}</span>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+            
             <div className="prose prose-lg max-w-none text-xl leading-10 font-normal">
               <ReactMarkdown>{competition.description || ""}</ReactMarkdown>
             </div>
           </div>
+          
           <div className="w-full *:w-full md:w-96">
             <Button 
               size={"lg"} 
