@@ -15,7 +15,7 @@ urlpatterns = [
     # tinymce
     path("tinymce/", include("tinymce.urls")),
     # martor
-    path('martor/', include('martor.urls')),
+    path("martor/", include("martor.urls")),
     # Admin urls
     path("admin/", admin.site.urls),
     # API urls

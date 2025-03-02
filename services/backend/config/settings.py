@@ -478,29 +478,38 @@ TINYMCE_DEFAULT_CONFIG = {
         {"start": "######", "format": "h6"},
         {"start": "1. ", "cmd": "InsertOrderedList"},
         {"start": "* ", "cmd": "InsertUnorderedList"},
-        {"start": "- ", "cmd": "InsertUnorderedList"}
-    ]
+        {"start": "- ", "cmd": "InsertUnorderedList"},
+    ],
 }
 
 # martor
 
-MARTOR_THEME = 'bootstrap'
+MARTOR_THEME = "bootstrap"
 
 MARTOR_ENABLE_CONFIGS = {
-    'emoji': 'true',        # to enable/disable emoji icons.
-    'imgur': 'true',        # to enable/disable imgur/custom uploader.
-    'mention': 'false',     # to enable/disable mention
-    'jquery': 'true',       # to include/revoke jquery (require for admin default django)
-    'living': 'false',      # to enable/disable live updates in preview
-    'spellcheck': 'false',  # to enable/disable spellcheck in form textareas
-    'hljs': 'true',         # to enable/disable hljs highlighting in preview
+    "emoji": "true",  # to enable/disable emoji icons.
+    "imgur": "true",  # to enable/disable imgur/custom uploader.
+    "mention": "false",  # to enable/disable mention
+    "jquery": "true",  # to include/revoke jquery (require for admin default django)
+    "living": "false",  # to enable/disable live updates in preview
+    "spellcheck": "false",  # to enable/disable spellcheck in form textareas
+    "hljs": "true",  # to enable/disable hljs highlighting in preview
 }
 
 MARTOR_TOOLBAR_BUTTONS = [
-    'bold', 'italic', 'horizontal', 'heading', 'pre-code',
-    'blockquote', 'unordered-list', 'ordered-list',
-    'link', 'emoji',
-    'direct-mention', 'toggle-maximize', 'help'
+    "bold",
+    "italic",
+    "horizontal",
+    "heading",
+    "pre-code",
+    "blockquote",
+    "unordered-list",
+    "ordered-list",
+    "link",
+    "emoji",
+    "direct-mention",
+    "toggle-maximize",
+    "help",
 ]
 
 # GUID
