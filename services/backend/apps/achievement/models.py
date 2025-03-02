@@ -14,7 +14,7 @@ class Achievement(BaseModel):
         max_length=30, verbose_name="название", unique=True
     )
     description = models.TextField(verbose_name="описание")
-    icon = models.FileField(
+    icon = models.ImageField(
         verbose_name="иконка достижения",
         upload_to=image_url_upload_to,
     )

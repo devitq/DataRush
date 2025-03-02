@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Task } from '@/shared/types/task';
+import { ArrowLeft } from 'lucide-react'; 
 
 interface CompetitionHeaderProps {
   title: string;
@@ -16,10 +17,20 @@ const CompetitionHeader: React.FC<CompetitionHeaderProps> = ({
   return (
     <header className="bg-white shadow-sm sticky top-0 z-30 w-full">
       <div className="mx-auto max-w-6xl px-4">
-        <div className="py-4 text-center">
-          <h1 className="font-hse-sans text-xl font-semibold">
+        <div className="flex items-center justify-between py-4">
+          <Link 
+            to={`/competition/${competitionId}`}
+            className="flex items-center text-gray-600 hover:text-gray-900 transition-colors font-hse-sans text-sm"
+          >
+            <ArrowLeft className="h-4 w-4 mr-1" />
+            Обратно
+          </Link>
+          
+          <h1 className="font-hse-sans text-xl font-semibold text-center flex-1">
             {title}
           </h1>
+          
+          <div className="w-[70px]"></div>
         </div>
         
         <div className="flex items-center justify-center gap-4 pb-4 overflow-x-auto no-scrollbar">

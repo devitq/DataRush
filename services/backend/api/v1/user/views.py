@@ -75,7 +75,7 @@ def get_me(request):
 
 
 @router.get(
-    path="/user/{user_id}",
+    path="/users/{user_id}",
     response={
         status.OK: UserSchema,
         status.BAD_REQUEST: BadRequestError,
