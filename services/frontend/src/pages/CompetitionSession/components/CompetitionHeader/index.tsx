@@ -23,7 +23,6 @@ const CompetitionHeader: React.FC<CompetitionHeaderProps> = ({
             className="flex items-center text-gray-600 hover:text-gray-900 transition-colors font-hse-sans text-sm"
           >
             <ArrowLeft className="h-4 w-4 mr-1" />
-            Обратно
           </Link>
           
           <h1 className="font-hse-sans text-xl font-semibold text-center flex-1">
