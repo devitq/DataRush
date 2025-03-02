@@ -17,7 +17,6 @@ interface TaskSolutionProps {
   selectedFile: File | null;
   setSelectedFile: (file: File | null) => void;
   onSubmit: () => void;
-  isSubmitting?: boolean;
 }
 
 const TaskSolution: React.FC<TaskSolutionProps> = ({ 
@@ -33,6 +32,7 @@ const TaskSolution: React.FC<TaskSolutionProps> = ({
   const [selectedSolutionUrl, setSelectedSolutionUrl] = useState<string | null>(null);
   const [currentSolution, setCurrentSolution] = useState<Solution | null>(null);
   const { id: competitionId } = useParams<{ id: string }>();
+  const previousTaskIdRef = useRef<string | null>(null);
 
   const solutionsQuery = useQuery({
     queryKey: ['solutionHistory', competitionId, task.id],
@@ -44,21 +44,32 @@ const TaskSolution: React.FC<TaskSolutionProps> = ({
 
   useEffect(() => {
     if (solutionHistory.length > 0 && !currentSolution) {
-      setCurrentSolution(solutionHistory[0]);
+      setCurrentSolution(solutionHistory[solutionHistory.length - 1]);
     }
   }, [solutionHistory, currentSolution]);
 
   useEffect(() => {
     if (solutionHistory.length > 0 && currentSolution && 
         solutionHistory[0].id !== currentSolution.id) {
-      setCurrentSolution(solutionHistory[0]);
+      setCurrentSolution(solutionHistory[solutionHistory.length - 1]);
     }
   }, [solutionHistory, currentSolution]);
 
   useEffect(() => {
-    setCurrentSolution(null);
-    setSelectedSolutionUrl(null);
-  }, [task.id]);
+    if (previousTaskIdRef.current !== task.id) {
+      setCurrentSolution(null);
+      setSelectedSolutionUrl(null);
+      
+      setAnswer("");
+      setSelectedFile(null);
+      
+      if (solutionHistory.length > 0 && !solutionsQuery.isLoading) {
+        setCurrentSolution(solutionHistory[solutionHistory.length - 1]);
+      }
+      
+      previousTaskIdRef.current = task.id;
+    }
+  }, [task.id, solutionHistory, solutionsQuery.isLoading, setAnswer, setSelectedFile]);
 
   useEffect(() => {
     const loadSolutionContent = async () => {
@@ -89,8 +100,8 @@ const TaskSolution: React.FC<TaskSolutionProps> = ({
   };
 
   const handleSolutionSelect = (solution: Solution) => {
-    setCurrentSolution(solution); 
-    setIsHistoryOpen(false); 
+    setCurrentSolution(solution);
+    setIsHistoryOpen(false);
   };
 
   const handleClearExistingFile = () => {
@@ -110,7 +121,7 @@ const TaskSolution: React.FC<TaskSolutionProps> = ({
       {task.type === TaskType.INPUT && (
         <InputSolution 
           answer={answer} 
-          setAnswer={setAnswer} 
+          setAnswer={setAnswer}
         />
       )}
       
@@ -121,13 +132,14 @@ const TaskSolution: React.FC<TaskSolutionProps> = ({
           fileInputRef={fileInputRef}
           existingFileUrl={selectedSolutionUrl}
           onClearExistingFile={handleClearExistingFile}
+          isLoading={isSubmitting}
         />
       )}
       
       {task.type === TaskType.CODE && (
         <CodeSolution 
           answer={answer} 
-          setAnswer={setAnswer} 
+          setAnswer={setAnswer}
         />
       )}
       
