@@ -1,49 +1,96 @@
-import { useState } from "react";
-import { Competition, CompetitionStatus } from "@/shared/types";
-import { CompetitionGrid } from "./modules/CompetitionGrid";
+import React, { useState } from "react";
+import { CompetitionGrid } from "./modules/CompetitionsGrid";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { mockCompetitions } from "@/shared/mocks/mocks";
+import { useQuery } from "@tanstack/react-query";
+import { getCompetitions } from "@/shared/api/competitions";
+import { NoCompetitions } from "./modules/NoCompetitions";
+import { TabsContent } from "@radix-ui/react-tabs";
+import { Loading } from "@/components/ui/Loading";
+import { CompetitionState } from "@/shared/types/competition";
+
+enum CompetitionTab {
+  ONGOING = "ongoing",
+  COMPLETED = "completed",
+}
 
 const CompetitionsPage = () => {
-  const [competitions] = useState<Competition[]>(mockCompetitions);
-  const [activeTab, setActiveTab] = useState("ongoing");
+  const [activeTab, setActiveTab] = useState<string>(CompetitionTab.ONGOING);
 
-  const myCompetitions = competitions.filter(
-    (comp) =>
-      comp.status === CompetitionStatus.InProgress ||
-      comp.status === CompetitionStatus.Completed,
+  const activeCompetitionsQuery = useQuery({
+    queryKey: ["active-competitions"],
+    queryFn: async () => getCompetitions(true),
+    retry: 1,
+  });
+
+  const inactiveCompetitionsQuery = useQuery({
+    queryKey: ["inactive-competitions"],
+    queryFn: async () => getCompetitions(false),
+    retry: 1,
+  });
+
+  const startedCompetitions = React.useMemo(
+    () =>
+      (activeCompetitionsQuery.data ?? []).filter(
+        (comp) => comp.state === CompetitionState.STARTED,
+      ),
+    [activeCompetitionsQuery.data],
   );
 
-  const filteredMyCompetitions = myCompetitions.filter((comp) =>
-    activeTab === "ongoing"
-      ? comp.status === CompetitionStatus.InProgress
-      : comp.status === CompetitionStatus.Completed,
+  const finishedCompetitions = React.useMemo(
+    () =>
+      (activeCompetitionsQuery.data ?? []).filter(
+        (comp) => comp.state === CompetitionState.FINISHED,
+      ),
+    [activeCompetitionsQuery.data],
   );
 
-  const availableCompetitions = competitions.filter(
-    (comp) => comp.status === "Не участвую",
-  );
+  if (
+    activeCompetitionsQuery.isLoading ||
+    inactiveCompetitionsQuery.isLoading
+  ) {
+    return <Loading />;
+  }
 
   return (
     <div className="flex flex-col gap-6 sm:gap-8">
-      <Section>
-        <SectionHeader>
-          <SectionTitle>Мои события</SectionTitle>
+      {(activeCompetitionsQuery.data ?? []).length > 0 && (
+        <Section>
           <Tabs value={activeTab} onValueChange={setActiveTab}>
-            <TabsList>
-              <TabsTrigger value="ongoing">В процессе</TabsTrigger>
-              <TabsTrigger value="completed">Завершенные</TabsTrigger>
-            </TabsList>
+            <SectionHeader>
+              <SectionTitle>Мои события</SectionTitle>
+
+              <TabsList>
+                <TabsTrigger value={CompetitionTab.ONGOING}>
+                  В процессе
+                </TabsTrigger>
+                <TabsTrigger value={CompetitionTab.COMPLETED}>
+                  Завершенные
+                </TabsTrigger>
+              </TabsList>
+            </SectionHeader>
+
+            <TabsContent value={CompetitionTab.ONGOING} asChild>
+              <CompetitionGrid competitions={startedCompetitions} />
+            </TabsContent>
+
+            <TabsContent value={CompetitionTab.COMPLETED} asChild>
+              <CompetitionGrid competitions={finishedCompetitions} />
+            </TabsContent>
           </Tabs>
-        </SectionHeader>
-        <CompetitionGrid competitions={filteredMyCompetitions} />
-      </Section>
+        </Section>
+      )}
 
       <Section>
         <SectionHeader>
           <SectionTitle>События</SectionTitle>
         </SectionHeader>
-        <CompetitionGrid competitions={availableCompetitions} />
+        {(inactiveCompetitionsQuery.data ?? []).length > 0 ? (
+          <CompetitionGrid
+            competitions={inactiveCompetitionsQuery.data ?? []}
+          />
+        ) : (
+          <NoCompetitions />
+        )}
       </Section>
     </div>
   );

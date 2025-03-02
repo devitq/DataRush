@@ -1,17 +1,28 @@
-import { useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import ReactMarkdown from "react-markdown";
-import { Competition } from "@/shared/types";
-import { mockCompetitions, mockTasks } from "@/shared/mocks/mocks";
+import { mockTasks } from "@/shared/mocks/mocks";
+import { useQuery } from "@tanstack/react-query";
+import { getCompetition } from "@/shared/api/competitions";
+import { Loading } from "@/components/ui/Loading";
 
 const CompetitionPage = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const [competition] = useState<Competition>(
-    mockCompetitions.find((comp) => comp.id === id)!,
-  );
+
+  const { data: competition, isLoading } = useQuery({
+    queryKey: ["competition", id],
+    queryFn: async () => getCompetition(id || ""),
+  });
+
+  if (isLoading) {
+    return <Loading />;
+  }
+
+  if (!id || !competition) {
+    return <></>;
+  }
 
   const handleContinue = () => {
     if (competition?.id) {
@@ -35,18 +46,20 @@ const CompetitionPage = () => {
       </Link>
 
       <div className="flex flex-col gap-6">
-        <div className="aspect-2 h-auto w-full overflow-hidden rounded-xl">
-          <img
-            src={competition.imageUrl}
-            alt={competition.name}
-            className="h-full w-full object-cover object-center"
-          />
-        </div>
+        {competition.image_url && (
+          <div className="aspect-2 h-auto w-full overflow-hidden rounded-xl">
+            <img
+              src={competition.image_url}
+              alt={competition.title}
+              className="h-full w-full object-cover object-center"
+            />
+          </div>
+        )}
 
         <div className="flex flex-col-reverse gap-8 md:flex-row">
           <div className="flex flex-1 flex-col gap-5">
             <h1 className="text-[34px] leading-11 font-semibold text-balance">
-              {competition.name}
+              {competition.title}
             </h1>
             <div className="prose prose-lg max-w-none text-xl leading-10 font-normal">
               <ReactMarkdown>{competition.description || ""}</ReactMarkdown>
