@@ -373,7 +373,7 @@ services:
   custom_python:
     image: gitlab.prodcontest.ru:5050/team-15/project/custom-python:latest
     entrypoint: [""]
-    command: echo "Image pulled."
+    command: exit 0
 
   checker:
     image: gitlab.prodcontest.ru:5050/team-15/project/checker:latest
