@@ -1,6 +1,7 @@
 from django.contrib.auth.hashers import check_password, make_password
 from django.db import models
 
+from apps.achievement.models import Achievement
 from apps.core.models import BaseModel
 
 
@@ -15,6 +16,9 @@ class User(BaseModel):
     password = models.TextField(verbose_name="пароль")
 
     created_at = models.DateTimeField(auto_now=True)
+
+    achievements = models.ManyToManyField(Achievement, blank=True,
+                                          verbose_name="ачивки пользователя")
 
     @staticmethod
     def make_password(password: str):
