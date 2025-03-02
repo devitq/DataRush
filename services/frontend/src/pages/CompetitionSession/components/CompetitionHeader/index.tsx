@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Task } from '@/shared/types/task';
-import { getTaskBgColor, getTaskTextColor } from '../../utils/utils';
 
 interface CompetitionHeaderProps {
   title: string;

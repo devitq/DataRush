@@ -20,7 +20,7 @@ interface TaskSolutionProps {
 
 const TaskSolution: React.FC<TaskSolutionProps> = ({ 
   task, 
-  solutions,
+  solutions = [],
   answer, 
   setAnswer, 
   onSubmit, 
@@ -42,9 +42,17 @@ const TaskSolution: React.FC<TaskSolutionProps> = ({
     setIsHistoryOpen(true);
   };
 
+  const latestSolution = solutions && solutions.length > 0 ? solutions[0] : null;
+
   return (
     <div className="md:w-[500px] flex flex-col gap-4">
-      <SolutionStatus solution={solutions[0]} maxPoints={task.points}/>
+      {latestSolution ? (
+        <SolutionStatus solution={latestSolution} maxPoints={task.points}/>
+      ) : (
+        <div className="bg-gray-100 rounded-lg p-4 text-gray-600 font-hse-sans">
+          Решение еще не отправлено
+        </div>
+      )}
       
       {task.type === TaskType.INPUT && (
         <InputSolution answer={answer} setAnswer={setAnswer} />
