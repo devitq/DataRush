@@ -5,14 +5,13 @@ from tinymce.models import HTMLField
 
 from apps.competition.models import Competition
 from apps.core.models import BaseModel
-from apps.task.validators import ContestTaskCriteriesValidator
 from apps.user.models import User
 
 
 class CompetitionTask(BaseModel):
     class CompetitionTaskType(models.TextChoices):
         INPUT = "input", "Ввод правильного ответа"
-        CHECKER = "checker", "Вывод кода"
+        CHECKER = "checker", "Ввод кода"
         REVIEW = "review", "Ручная"
 
     def answer_file_upload_to(instance, filename) -> str:
@@ -44,20 +43,10 @@ class CompetitionTask(BaseModel):
     answer_file_path = models.TextField(
         null=True,
         blank=True,
-        verbose_name="куда сохранять решения",
+        verbose_name="куда сделать вывод программы участнику",
+        help_text="Путь до файла в котором ожидается результат. Пример: stdout или ./output.txt",
         default="stdout",
     )
-
-    # only when "review" type
-    # TODO make it more humanize
-    criteries = models.JSONField(
-        blank=True,
-        null=True,
-        verbose_name="критерии",
-    )
-
-    def clean(self):
-        ContestTaskCriteriesValidator()(self)
 
     def __str__(self):
         return self.title
@@ -65,6 +54,17 @@ class CompetitionTask(BaseModel):
     class Meta:
         verbose_name = "задание"
         verbose_name_plural = "задания"
+
+
+class CompetitionTaskCriteria(BaseModel):
+    task = models.ForeignKey(
+        CompetitionTask, on_delete=models.CASCADE, related_name="criteries"
+    )
+
+    name = models.TextField()
+    slug = models.SlugField()
+    description = models.TextField()
+    max_value = models.PositiveSmallIntegerField()
 
 
 class CompetitionTaskAttachment(BaseModel):
@@ -114,5 +114,6 @@ class CompetitionTaskSubmission(BaseModel):
     # just more readable result representation, maybe will be calcuated somehow more complex depends on criteria
     earned_points = models.IntegerField(null=True, blank=True)
 
-    reviewed_at = models.DateTimeField(null=True, blank=True)
+    checked_at = models.DateTimeField(null=True, blank=True)
+    plagiarism_checked = models.BooleanField(default=False)
     timestamp = models.DateTimeField(auto_now_add=True)

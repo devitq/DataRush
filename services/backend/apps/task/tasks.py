@@ -1,4 +1,5 @@
 import ast
+import contextlib
 import hashlib
 import os
 import sys
@@ -6,6 +7,7 @@ import tempfile
 from io import StringIO
 
 from config.celery import app
+from apps.task.models import CompetitionTaskSubmission
 
 ALLOWED_MODULES = {
     "pandas",
@@ -117,7 +119,7 @@ def secure_exec(code_str, result_path, input_files=None):
 
 @app.task(bind=True)
 def analyze_data_task(
-    self, code_str, result_path, expected_bytes, input_files=[]
+    self, code_str, result_path, expected_file_link, submission_id, input_files=[]
 ):
     try:
         validate_code(code_str)
@@ -126,6 +128,10 @@ def analyze_data_task(
 
         result_hash = hashlib.sha256(result_content).hexdigest()
         expected_hash = hashlib.sha256(expected_bytes).hexdigest()
+
+        with contextlib.suppress(CompetitionTaskSubmission.DoesNotExist):
+            submission = CompetitionTaskSubmission.objects.get(id=submission_id)
+            submission.result = {"correct": True}
 
         return {
             "success": True,
