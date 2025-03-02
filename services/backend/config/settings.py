@@ -7,8 +7,9 @@ from pathlib import Path
 
 import django_stubs_ext
 import environ
-from health_check.plugins import plugin_dir
 from django.utils.translation import gettext_lazy as _
+from health_check.plugins import plugin_dir
+
 from integrations.checker.healthcheck import CheckerHealthCheck
 
 BASE_DIR = Path(__file__).resolve().parent.parent

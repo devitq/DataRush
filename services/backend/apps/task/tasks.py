@@ -1,8 +1,7 @@
 import httpx
 from celery import shared_task
-from django.core.files.base import ContentFile
-
 from django.conf import settings
+from django.core.files.base import ContentFile
 
 
 @shared_task(bind=True, max_retries=3)
@@ -40,7 +39,7 @@ def analyze_data_task(self, submission_id):
         )
         submission.status = CompetitionTaskSubmission.StatusChoices.CHECKED
 
-    except httpx.RequestError as e:
+    except httpx.RequestError:
         self.retry(countdown=2**self.request.retries)
     except Exception as e:
         submission.result = {"error": str(e), "success": False}

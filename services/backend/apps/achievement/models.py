@@ -4,9 +4,6 @@ from apps.core.models import BaseModel
 
 
 class Achievement(BaseModel):
-    class AchievementType(models.TextChoices):
-        CORRECT_TASKS = "correct_tasks", "Выполненные задания"
-
     def image_url_upload_to(instance, filename):
         return f"achievements/{instance.id}/icon/{filename}"
 
@@ -27,3 +24,10 @@ class Achievement(BaseModel):
     class Meta:
         verbose_name = "ачивка"
         verbose_name_plural = "ачивки"
+
+
+class UserAchievement(BaseModel):
+    achievement = models.ForeignKey(Achievement, on_delete=models.CASCADE)
+    user = models.ForeignKey("user.User", on_delete=models.CASCADE)
+
+    received_at = models.DateTimeField(auto_now_add=True)
