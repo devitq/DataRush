@@ -376,10 +376,16 @@ services:
       context: ./services/checker
       dockerfile: Dockerfile
     restart: unless-stopped
+    ports:
+      - name: web
+        target: 8000
+        published: 8009
+        host_ip: 0.0.0.0
+        protocol: tcp
     volumes:
       - type: bind
         source: /var/run/docker.sock
-        target: /prometheus
+        target: /var/run/docker.sock
 
   proxy:
     image: docker.io/nginx:1.27-alpine3.21
