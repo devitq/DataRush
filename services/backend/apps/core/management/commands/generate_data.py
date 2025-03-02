@@ -96,7 +96,7 @@ class Command(BaseCommand):
         ]
         for comp in competitions:
             # Create 3 tasks per competition
-            for i in range(1, 4):
+            for i in range(1, 10):
                 task_type = random.choice(task_types)
                 title = f"Task {i} for {comp.title}"
                 description = f"Task description for task {i} in {comp.title}"
@@ -119,6 +119,7 @@ class Command(BaseCommand):
                             description=f"Criteria description {j}",
                             max_value=random.randint(1, 10),
                         )
+                        self.stdout.write(f"Created criteries for: {title}")
                 tasks.append(task)
                 self.stdout.write(f"Created task: {title} (type: {task_type})")
         self.add_reviewers_to_task(tasks)
@@ -149,6 +150,7 @@ class Command(BaseCommand):
                     content=dummy_content,
                 )
                 submission.save()
+                submission.send_on_review()
                 self.stdout.write(
                     f"Created submission for task '{task.title}' by user '{user.username}'"
                 )
