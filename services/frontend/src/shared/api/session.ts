@@ -20,18 +20,18 @@ export const submitTaskSolution = async (
   solution: string | File
 ) => {
   const endpoint = `/competitions/${competitionId}/tasks/${taskId}/submit`;
+  const formData = new FormData();
+
+  // туповатый костыль но для мвп сойдет
   if (typeof solution === 'string') {
-    return await userFetch(endpoint, {
-      method: 'POST',
-      body: { content: solution }
-    });
+    const textFile = new File([solution], 'solution.txt', { type: 'text/plain' });
+    formData.append('content', textFile);
   } else {
-    const formData = new FormData();
-    formData.append('content', solution); 
-    
-    return await userFetch(endpoint, {
-      method: 'POST',
-      body: formData
-    });
+    formData.append('content', solution);
   }
+  
+  return await userFetch(endpoint, {
+    method: 'POST',
+    body: formData
+  });
 };
