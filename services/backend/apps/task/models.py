@@ -18,7 +18,7 @@ class CompetitionTask(BaseModel):
         REVIEW = "review", "Ручная"
 
     def answer_file_upload_to(instance, filename) -> str:
-        return f"/tasks/{instance.id}/answer/{uuid4()}/filename"
+        return f"tasks/{instance.id}/answer/{uuid4()}/{filename}"
 
     in_competition_position = models.PositiveSmallIntegerField(
         null=True, blank=True
@@ -81,7 +81,7 @@ class CompetitionTaskCriteria(BaseModel):
 
 class CompetitionTaskAttachment(BaseModel):
     def file_upload_at(instance, filename):
-        return f"/attachment/{instance.id}/file"
+        return f"attachment/{instance.id}/file/{filename}"
 
     task = models.ForeignKey(CompetitionTask, on_delete=models.CASCADE,
                              verbose_name="задание")
@@ -98,10 +98,10 @@ class CompetitionTaskSubmission(BaseModel):
         CHECKED = "checked"
 
     def submission_content_upload_to(instance, filename) -> str:
-        return f"submissions/{instance.id}/content"
+        return f"submissions/{instance.id}/content/{filename}"
 
     def submission_stdout_upload_to(instance, filename) -> str:
-        return f"/submissions/{instance.id}/stdout"
+        return f"submissions/{instance.id}/stdout/{filename}"
 
     user = models.ForeignKey(User, on_delete=models.CASCADE,
                              verbose_name="пользователь")

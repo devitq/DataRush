@@ -7,7 +7,7 @@ class Achievement(BaseModel):
         CORRECT_TASKS = "correct_tasks", "Выполненные задания"
 
     def image_url_upload_to(instance, filename):
-        return f"/achievements/{instance.id}/icon"
+        return f"achievements/{instance.id}/icon/{filename}"
 
     name = models.CharField(max_length=30, verbose_name="название",
                             unique=True)

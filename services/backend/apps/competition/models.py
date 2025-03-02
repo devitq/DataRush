@@ -15,7 +15,7 @@ class Competition(BaseModel):
         SOLO = "solo", "Индивидуальный"
 
     def image_url_upload_to(instance, filename):
-        return f"/competitions/{instance.id}/image"
+        return f"competitions/{instance.id}/image/{filename}"
 
     title = models.CharField(max_length=100, verbose_name="название")
     description = models.TextField(verbose_name="описание")
