@@ -49,9 +49,6 @@ class CompetitionTask(BaseModel):
         default="stdout",
     )
 
-    attachments = models.ManyToManyField("CompetitionTaskAttachment", blank=True,
-                                         related_name="tasks_attachments")
-
     def __str__(self):
         return self.title
 
