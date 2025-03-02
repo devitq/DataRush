@@ -1,45 +1,41 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useParams, Navigate } from "react-router-dom";
-import { Task, TaskStatus } from "@/shared/types";
-import { mockSolutions } from "@/shared/mocks/mocks"; // Keep mocks for solutions for now
 import CompetitionHeader from "./components/CompetitionHeader";
 import TaskContent from "./components/TaskContent";
 import TaskSolution from "./modules/TaskSolution";
-import { getCompetitionTasks } from "@/shared/api/session";
+import { getCompetitionTasks, submitTaskSolution } from "@/shared/api/session";
 import { Loader2 } from "lucide-react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 const CompetitionSession = () => {
   const { id, taskId } = useParams<{ id: string; taskId?: string }>();
-  const [tasks, setTasks] = useState<Task[]>([]);
   const [answer, setAnswer] = useState("");
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
   const competitionId = id || "";
+  const queryClient = useQueryClient();
 
-  useEffect(() => {
-    const fetchTasks = async () => {
-      try {
-        setLoading(true);
-        const fetchedTasks = await getCompetitionTasks(competitionId);
-        setTasks(fetchedTasks);
-        setError(null);
-      } catch (err) {
-        console.error("Failed to fetch tasks:", err);
-        setError("Не удалось загрузить задания. Пожалуйста, попробуйте позже.");
-      } finally {
-        setLoading(false);
-      }
-    };
+  const tasksQuery = useQuery({
+    queryKey: ["competitionTasks", competitionId],
+    queryFn: () => getCompetitionTasks(competitionId),
+    enabled: !!competitionId,
+  });
 
-    if (competitionId) {
-      fetchTasks();
+  const submitMutation = useMutation({
+    mutationFn: () => submitTaskSolution(competitionId, taskId || "", answer),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ 
+        queryKey: ['submissionHistory', competitionId, taskId] 
+      });
+      setAnswer("");
     }
-  }, [competitionId]);
+  });
+
+  const tasks = tasksQuery.data || [];
+  const isLoading = tasksQuery.isLoading;
+  const error = tasksQuery.error ? "Не удалось загрузить задания. Пожалуйста, попробуйте позже." : null;
 
   const currentTask = tasks.find((t) => t.id === taskId) || null;
 
-  if (!taskId && tasks.length > 0 && !loading) {
+  if (!taskId && tasks.length > 0 && !isLoading) {
     return (
       <Navigate
         to={`/competition/${competitionId}/tasks/${tasks[0].id}`}
@@ -48,14 +44,10 @@ const CompetitionSession = () => {
     );
   }
 
-  const handleSubmit = async () => {
-    if (!currentTask || !competitionId) return;
-
-    try {
-      console.log("Solution submitted successfully");
-    } catch (err) {
-      console.error("Failed to submit solution:", err);
-    }
+  const handleSubmit = () => {
+    console.log(currentTask, competitionId, answer)
+    if (!currentTask || !competitionId || !answer.trim()) return;
+    submitMutation.mutate();
   };
 
   return (
@@ -68,7 +60,7 @@ const CompetitionSession = () => {
 
       <main className="flex-1 bg-[#F8F8F8] pb-8">
         <div className="mx-auto max-w-6xl px-4 py-6">
-          {loading ? (
+          {isLoading ? (
             <div className="flex h-40 flex-col items-center justify-center rounded-lg bg-white">
               <Loader2 className="mb-2 h-8 w-8 animate-spin text-gray-400" />
               <p className="font-hse-sans text-gray-500">Загрузка заданий...</p>
@@ -82,7 +74,7 @@ const CompetitionSession = () => {
               <TaskContent task={currentTask} />
               <TaskSolution
                 task={currentTask}
-                solutions={mockSolutions} // Still using mock solutions
+                solutions={[]}
                 answer={answer}
                 setAnswer={setAnswer}
                 onSubmit={handleSubmit}

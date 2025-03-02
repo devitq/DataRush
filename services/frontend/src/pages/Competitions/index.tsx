@@ -112,4 +112,5 @@ const SectionTitle = ({ children }: { children: React.ReactNode }) => {
   return <h1 className="w-full text-3xl font-semibold">{children}</h1>;
 };
 
+
 export default CompetitionsPage;

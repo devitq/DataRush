@@ -54,6 +54,24 @@ build_backend-staticfiles:
     DOCKERFILE_PATH: "Dockerfile.staticfiles"
     IMAGE_NAME: "$CI_REGISTRY_IMAGE/backend-staticfiles"
 
+build_checker:
+  <<: *build-template
+  rules:
+    - if: '$CI_COMMIT_REF_NAME == "master"'
+  variables:
+    CONTEXT: "${CI_PROJECT_DIR}/services/checker"
+    DOCKERFILE_PATH: "Dockerfile"
+    IMAGE_NAME: "$CI_REGISTRY_IMAGE/checker"
+
+build_custom-python:
+  <<: *build-template
+  rules:
+    - if: '$CI_COMMIT_REF_NAME == "master"'
+  variables:
+    CONTEXT: "${CI_PROJECT_DIR}/services/checker"
+    DOCKERFILE_PATH: "Dockerfile.checker"
+    IMAGE_NAME: "$CI_REGISTRY_IMAGE/custom-python"
+
 build_docs:
   <<: *build-template
   rules:

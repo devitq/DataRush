@@ -20,13 +20,11 @@ export function CompetitionCard({
       className={cn("aspect-square h-full w-auto overflow-hidden", className)}
     >
       <div className="relative h-full overflow-hidden">
-        {competition.image_url && (
-          <img
-            src={competition.image_url}
-            alt={competition.title}
-            className="h-full w-full object-cover object-center"
-          />
-        )}
+        <img
+          src={competition.image_url ? competition.image_url : '/DANO.png'}
+          alt={competition.title}
+          className="h-full w-full object-cover object-center"
+        />
       </div>
 
       <CardContent>

@@ -12,3 +12,9 @@ export const getCompetitions = async (participating?: boolean) => {
 export const getCompetition = async (id: string) => {
   return await userFetch<Competition>(`/competition/${id}`);
 };
+
+export const startCompetition = async (competitionId: string) => {
+  return await userFetch(`/competitions/${competitionId}/start`, {
+    method: 'POST'
+  });
+};

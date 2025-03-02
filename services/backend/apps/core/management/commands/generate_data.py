@@ -8,7 +8,7 @@ from django.core.management.base import BaseCommand
 from django.utils import timezone
 
 from apps.competition.models import Competition, State
-from apps.review.models import Review, Reviewer
+from apps.review.models import Reviewer
 from apps.task.models import CompetitionTask, CompetitionTaskSubmission
 from apps.user.models import User, UserRole
 
@@ -99,11 +99,13 @@ class Command(BaseCommand):
                 title = f"Task {i} for {comp.title}"
                 description = f"Task description for task {i} in {comp.title}"
                 task = CompetitionTask.objects.create(
+                    in_competition_position=i,
                     competition=comp,
                     title=title,
                     description=description,
                     type=task_type,
                     points=random.randint(1, 10),
+                    submission_reviewers_count=random.randint(2, 10),
                     max_attempts=random.randint(1, 10),
                 )
                 tasks.append(task)

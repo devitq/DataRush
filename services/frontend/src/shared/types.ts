@@ -12,6 +12,11 @@ enum TaskStatus {
   Wrong = "wrong"
 }
 
+enum ParticipationType {
+  Solo = "solo",
+  Team = "team"
+}
+
 interface Competition {
   id: string;
   name: string;
@@ -19,6 +24,9 @@ interface Competition {
   isOlympics: boolean;
   status: CompetitionStatus;
   description?: string;
+  startDate: Date;
+  endDate: Date;
+  participationType: ParticipationType
 }
 
 type SolutionType = "input" | "file" | "code";
@@ -42,5 +50,5 @@ interface Task {
   attachments?: string[];
 }
 
-export { CompetitionStatus, TaskStatus };
+export { CompetitionStatus, TaskStatus, ParticipationType };
 export type { Solution, Competition, Task };
