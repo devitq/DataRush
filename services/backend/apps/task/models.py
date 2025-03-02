@@ -57,6 +57,7 @@ class CompetitionTask(BaseModel):
         verbose_name="ревьюверы",
         help_text="Справа отображаются действующие проверяющие, слева - доступные для выбора. Для перемещения можно кликнуть 2 раза по проверяющему"
     )
+    submission_reviewers_count = models.PositiveSmallIntegerField(default=1, null=True, blank=True)
 
     def __str__(self):
         return self.title
@@ -152,8 +153,8 @@ class CompetitionTaskSubmission(BaseModel):
         if not self.task.reviewers.exists():
             return
 
-        reviewer = (
-            self.task.reviewers.annotate(
+        reviewers_count = self.task.submission_reviewers_count
+        reviewers = self.task.reviewers.annotate(
                 pending_count=Count(
                     "review",
                     filter=Q(
@@ -163,11 +164,10 @@ class CompetitionTaskSubmission(BaseModel):
                         ]
                     ),
                 )
+            ).order_by("pending_count")[:reviewers_count] # да это медленно работает и чо
+
+        for reviewer in reviewers:
+            Review.objects.create(
+                reviewer=reviewer,
+                submission=self,
             )
-            .order_by("pending_count")
-            .first()
-        )
-        review = Review.objects.create(
-            reviewer=reviewer,
-            submission=self,
-        )
