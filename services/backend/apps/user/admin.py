@@ -7,3 +7,4 @@ from apps.user.models import User
 class UserAdmin(admin.ModelAdmin):
     list_display = ("email", "username")
     search_fields = ("id", "email", "username")
+    filter_horizontal = ("achievements",)
