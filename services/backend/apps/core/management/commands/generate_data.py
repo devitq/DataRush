@@ -9,7 +9,7 @@ from django.utils import timezone
 
 from apps.competition.models import Competition, State
 from apps.review.models import Reviewer
-from apps.task.models import CompetitionTask, CompetitionTaskSubmission
+from apps.task.models import CompetitionTask, CompetitionTaskSubmission, CompetitionTaskCriteria
 from apps.user.models import User, UserRole
 
 
@@ -91,6 +91,8 @@ class Command(BaseCommand):
         tasks = []
         task_types = [
             CompetitionTask.CompetitionTaskType.INPUT.value,
+            CompetitionTask.CompetitionTaskType.REVIEW.value,
+            CompetitionTask.CompetitionTaskType.INPUT.value
         ]
         for comp in competitions:
             # Create 3 tasks per competition
@@ -108,6 +110,15 @@ class Command(BaseCommand):
                     submission_reviewers_count=random.randint(2, 10),
                     max_attempts=random.randint(1, 10),
                 )
+                if task_type == CompetitionTask.CompetitionTaskType.REVIEW.value:
+                    for j in range(5):
+                        CompetitionTaskCriteria.objects.create(
+                            task=task,
+                            name=f"Criteria_{j}",
+                            slug=f"criteria_{j}",
+                            description=f"Criteria description {j}",
+                            max_value=random.randint(1, 10),
+                        )
                 tasks.append(task)
                 self.stdout.write(f"Created task: {title} (type: {task_type})")
         self.add_reviewers_to_task(tasks)
