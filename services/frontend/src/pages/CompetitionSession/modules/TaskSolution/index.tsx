@@ -43,7 +43,7 @@ const TaskSolution: React.FC<TaskSolutionProps> = ({
     setIsHistoryOpen(true);
   };
 
-  const latestSolution = solutionHistory && solutionHistory.length > 0 ? solutionHistory[0] : null;
+  const latestSolution = solutionHistory && solutionHistory.length > 0 ? solutionHistory[solutionHistory.length - 1] : null;
 
   return (
     <div className="md:w-[500px] flex flex-col gap-4">
