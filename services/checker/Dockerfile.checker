@@ -11,9 +11,4 @@ COPY checker_requirements.txt .
 
 RUN pip install --no-cache-dir -r checker_requirements.txt
 
-RUN useradd -m appuser && chown -R appuser /app
-USER appuser
-
-WORKDIR /app
-
 CMD ["python"]
