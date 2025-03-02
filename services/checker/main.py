@@ -20,7 +20,7 @@ ALLOWED_FILENAME_CHARS = r"[^a-zA-Z0-9_\-.]"
 
 app = FastAPI()
 docker_client = docker.from_env()
-logger = logging.getLoggerQ(__name__)
+logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 docker_client.login(
     username=config.REGISTRY_LOGIN,
