@@ -17,8 +17,9 @@ class User(BaseModel):
 
     created_at = models.DateTimeField(auto_now=True)
 
-    achievements = models.ManyToManyField(Achievement, blank=True,
-                                          verbose_name="ачивки пользователя")
+    achievements = models.ManyToManyField(
+        Achievement, blank=True, verbose_name="ачивки пользователя"
+    )
 
     @staticmethod
     def make_password(password: str):

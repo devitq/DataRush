@@ -87,7 +87,9 @@ def evaluate_submission(
     review.submission.checked_at = datetime.now()
     review.save()
 
-    submission_evaluations = Review.objects.filter(submission=submission).values_list('evaluation', flat=True)
+    submission_evaluations = Review.objects.filter(
+        submission=submission
+    ).values_list("evaluation", flat=True)
 
     marks = []
     for evaluation in submission_evaluations:
@@ -97,9 +99,7 @@ def evaluate_submission(
         marks.append(mark)
     earned_points = median(marks)
 
-    review.submission.earned_points = (
-        earned_points
-    )
+    review.submission.earned_points = earned_points
 
     all_checked = not submission.reviews.exclude(
         state=ReviewStatusChoices.CHECKED

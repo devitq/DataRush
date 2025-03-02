@@ -28,5 +28,3 @@ with open("file.txt") as f:
         print(result)
         self.assertTrue(result["success"])
         self.assertTrue(result["match"])
-    
-    

@@ -5,5 +5,11 @@ from apps.achievement.models import Achievement
 
 @admin.register(Achievement)
 class AchievementAdmin(admin.ModelAdmin):
-    list_display = ("id", "name",)
-    search_fields = ("name", "description",)
+    list_display = (
+        "id",
+        "name",
+    )
+    search_fields = (
+        "name",
+        "description",
+    )
