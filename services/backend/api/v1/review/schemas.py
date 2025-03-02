@@ -37,6 +37,7 @@ class SubmissionOut(ModelSchema):
     submitted_at: datetime = Field(..., alias="timestamp")
     competition: UUID = Field(..., alias="task.competition.id")
     competition_name: str = Field(..., alias="task.competition.title")
+    task_position: int = Field(..., alias="task.in_competition_position")
 
     @staticmethod
     def resolve_criteries(self, context) -> list[CriteriaOut] | None:

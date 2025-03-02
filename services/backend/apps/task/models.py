@@ -51,7 +51,12 @@ class CompetitionTask(BaseModel):
     )
 
     # only when "review" type
-    reviewers = models.ManyToManyField(Reviewer, blank=True)
+    reviewers = models.ManyToManyField(
+        Reviewer,
+        blank=True,
+        verbose_name="ревьюверы",
+        help_text="Справа отображаются действующие проверяющие, слева - доступные для выбора. Для перемещения можно кликнуть 2 раза по проверяющему"
+    )
 
     def __str__(self):
         return self.title
