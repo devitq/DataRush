@@ -19,6 +19,7 @@ from apps.task.models import (
     CompetitionTaskAttachment,
     CompetitionTaskSubmission,
 )
+from apps.task.tasks import analyze_data_task
 
 router = Router(tags=["competition"])
 
@@ -123,6 +124,7 @@ def submit_task(
             status=CompetitionTaskSubmission.StatusChoices.CHECKING,
             content=content,
         )
+        analyze_data_task.delay(submission_id=submission.id)
 
     return TaskSubmissionOut(submission_id=submission.id)
 
@@ -154,6 +156,4 @@ def get_submissions_history(request, competition_id: UUID, task_id: UUID):
 )
 def get_task_attachments(request, competition_id: UUID, task_id: UUID):
     task = get_object_or_404(CompetitionTask, id=task_id)
-    return status.OK, CompetitionTaskAttachment.objects.filter(
-        task=task
-    ).all()
+    return status.OK, CompetitionTaskAttachment.objects.filter(task=task).all()

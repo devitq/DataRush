@@ -1,4 +1,4 @@
-import requests
+import httpx
 from celery import shared_task
 from django.core.files.base import ContentFile
 
@@ -17,7 +17,7 @@ def analyze_data_task(self, submission_id):
             for f in submission.task.attachments.filter(public=True)
         ]
 
-        response = requests.post(
+        response = httpx.post(
             f"{settings.CHECKER_API_ENDPOINT}/execute",
             files=[("files", (f.name, f)) for f in files]
             + [
@@ -40,10 +40,10 @@ def analyze_data_task(self, submission_id):
         )
         submission.status = CompetitionTaskSubmission.StatusChoices.CHECKED
 
-    except requests.exceptions.RequestException as e:
+    except httpx.RequestError as e:
         self.retry(countdown=2**self.request.retries)
     except Exception as e:
-        submission.result = {"error": str(e)}
+        submission.result = {"error": str(e), "success": False}
         submission.status = CompetitionTaskSubmission.StatusChoices.CHECKED
         submission.earned_points = 0
     finally:

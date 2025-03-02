@@ -10,17 +10,23 @@ import tempfile
 import logging
 from urllib.parse import urlparse
 import re
-
-app = FastAPI()
-docker_client = docker.from_env()
-logger = logging.getLogger(__name__)
-logging.basicConfig(level=logging.INFO)
+import config
 
 
-DOCKER_IMAGE = "gitlab.python:3-slim"
 CONTAINER_TIMEOUT = 60
 MAX_FILE_SIZE = 4 * 1024 * 1024
 ALLOWED_FILENAME_CHARS = r"[^a-zA-Z0-9_\-.]"
+
+
+app = FastAPI()
+docker_client = docker.from_env()
+logger = logging.getLoggerQ(__name__)
+logging.basicConfig(level=logging.INFO)
+docker_client.login(
+    username=config.REGISTRY_LOGIN,
+    password=config.REGISTRY_PASSWORD,
+    registry=config.REGISTRY_URL,
+)
 
 
 class FileDetails(BaseModel):
@@ -130,7 +136,7 @@ def run_container_safely(
             volumes[host_path] = {"bind": container_path, "mode": "ro"}
 
         container = docker_client.containers.run(
-            image=DOCKER_IMAGE,
+            image=config.DOCKER_IMAGE,
             command=command,
             volumes=volumes,
             working_dir="/execution",
@@ -164,6 +170,14 @@ def run_container_safely(
                 container.remove(force=True)
             except docker.errors.DockerException:
                 pass
+
+
+def validate_file_path(path: str) -> bool:
+    return (
+        not os.path.isabs(path)
+        and os.path.basename(path) == path
+        and all(c.isalnum() or c in {"_", "-", "."} for c in path)
+    )
 
 
 @app.post("/execute", response_model=ExecutionResponse)
@@ -279,11 +293,3 @@ async def health_check() -> HealthCheckResponse:
         return HealthCheckResponse(status="healthy", docker="connected")
     except docker.errors.DockerException:
         return HealthCheckResponse(status="degraded", docker="unavailable")
-
-
-def validate_file_path(path: str) -> bool:
-    return (
-        not os.path.isabs(path)
-        and os.path.basename(path) == path
-        and all(c.isalnum() or c in {"_", "-", "."} for c in path)
-    )
