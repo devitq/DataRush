@@ -12,20 +12,21 @@ import SolutionHistorySheet from './components/SolutionHistorySheet';
 
 interface TaskSolutionProps {
   task: Task;
-  solutions: Solution[];
   answer: string;
   setAnswer: (value: string) => void;
+  selectedFile: File | null;
+  setSelectedFile: (file: File | null) => void;
   onSubmit: () => void;
 }
 
 const TaskSolution: React.FC<TaskSolutionProps> = ({ 
   task, 
-  solutions = [],
-  answer, 
-  setAnswer, 
-  onSubmit, 
+  answer,
+  setAnswer,
+  selectedFile,
+  setSelectedFile, 
+  onSubmit,
 }) => {
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const { id: competitionId } = useParams<{ id: string }>();
@@ -42,7 +43,7 @@ const TaskSolution: React.FC<TaskSolutionProps> = ({
     setIsHistoryOpen(true);
   };
 
-  const latestSolution = solutions && solutions.length > 0 ? solutions[0] : null;
+  const latestSolution = solutionHistory && solutionHistory.length > 0 ? solutionHistory[0] : null;
 
   return (
     <div className="md:w-[500px] flex flex-col gap-4">

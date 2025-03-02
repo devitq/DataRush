@@ -27,7 +27,7 @@ export const submitTaskSolution = async (
     });
   } else {
     const formData = new FormData();
-    formData.append('file', solution);
+    formData.append('content', solution); 
     
     return await userFetch(endpoint, {
       method: 'POST',
