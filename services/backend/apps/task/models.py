@@ -6,7 +6,7 @@ from tinymce.models import HTMLField
 
 from apps.competition.models import Competition
 from apps.core.models import BaseModel
-from apps.review.models import Review, ReviewStatusChoices
+from apps.review.models import Review, ReviewStatusChoices, Reviewer
 from apps.user.models import User
 
 
@@ -48,6 +48,14 @@ class CompetitionTask(BaseModel):
         verbose_name="куда сделать вывод программы участнику",
         help_text="Путь до файла в котором ожидается результат. Пример: stdout или ./output.txt",
         default="stdout",
+    )
+
+    # only when "review" type
+    reviewers = models.ManyToManyField(
+        Reviewer,
+        blank=True,
+        verbose_name="ревьюверы",
+        help_text="Справа отображаются действующие проверяющие, слева - доступные для выбора. Для перемещения можно кликнуть 2 раза по проверяющему"
     )
 
     def __str__(self):
@@ -107,12 +115,13 @@ class CompetitionTaskSubmission(BaseModel):
 
     # code or text or file
     content = models.FileField(upload_to=submission_content_upload_to,
-                               verbose_name="код/файл посылки")
+                               verbose_name="содержание посылки")
 
     # only if task type is checker
     stdout = models.FileField(
         upload_to=submission_stdout_upload_to, null=True, blank=True,
-        verbose_name="вывод чекера"
+        verbose_name="вывод программы",
+        help_text="Используется только при проверке чекером"
     )
 
     # depends on task type:
@@ -123,21 +132,21 @@ class CompetitionTaskSubmission(BaseModel):
                               verbose_name="результат проверки")
     # just more readable result representation, maybe will be calcuated somehow more complex depends on criteria
     earned_points = models.IntegerField(null=True, blank=True,
-                                        verbose_name="получено баллов")
+                                        verbose_name="баллы за задание")
 
     checked_at = models.DateTimeField(null=True, blank=True,
-                                      verbose_name="дата и время проверки")
+                                      verbose_name="дата проверки")
     plagiarism_checked = models.BooleanField(default=False,
                                              verbose_name="проверено на плагиат")
     timestamp = models.DateTimeField(auto_now_add=True,
                                      verbose_name="дата отправки")
 
-    def __str__(self):
-        return str(self.id)
-
     class Meta:
         verbose_name = "посылка"
         verbose_name_plural = "посылки"
+
+    def __str__(self):
+        return str(self.id)
 
     def send_on_review(self):
         if not self.task.reviewers.exists():
@@ -158,7 +167,7 @@ class CompetitionTaskSubmission(BaseModel):
             .order_by("pending_count")
             .first()
         )
-        Review.objects.create(
+        review = Review.objects.create(
             reviewer=reviewer,
             submission=self,
         )

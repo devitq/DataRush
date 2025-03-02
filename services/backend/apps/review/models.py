@@ -27,7 +27,7 @@ class Review(BaseModel):
     reviewer = models.ForeignKey(Reviewer, on_delete=models.CASCADE,
                                  verbose_name="проверяющий")
     submission = models.ForeignKey(
-        "CompetitionTaskSubmission",
+        "task.CompetitionTaskSubmission",
         on_delete=models.CASCADE,
         related_name="reviews",
         verbose_name="посылка"

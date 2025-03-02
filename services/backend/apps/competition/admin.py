@@ -7,6 +7,7 @@ from apps.task.admin import CompetitionTaskInline
 @admin.register(Competition)
 class CompetitionAdmin(admin.ModelAdmin):
     list_display = (
+        "id",
         "title",
         "end_date",
         "type",

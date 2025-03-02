@@ -1,86 +1,95 @@
-import { useState, useEffect } from "react";
-import { Competition, CompetitionStatus } from "@/shared/types";
-import { CompetitionGrid } from "./modules/CompetitionGrid";
+import React, { useState } from "react";
+import { CompetitionGrid } from "./modules/CompetitionsGrid";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Loader2 } from "lucide-react";
-import { getAllCompetitions } from "@/shared/api/competitions";
+import { useQuery } from "@tanstack/react-query";
+import { getCompetitions } from "@/shared/api/competitions";
+import { NoCompetitions } from "./modules/NoCompetitions";
+import { TabsContent } from "@radix-ui/react-tabs";
+import { Loading } from "@/components/ui/loading";
+import { CompetitionState } from "@/shared/types/competition";
+
+enum CompetitionTab {
+  ONGOING = "ongoing",
+  COMPLETED = "completed",
+}
 
 const CompetitionsPage = () => {
-  const [myCompetitions, setMyCompetitions] = useState<Competition[]>([]);
-  const [availableCompetitions, setAvailableCompetitions] = useState<Competition[]>([]);
-  const [activeTab, setActiveTab] = useState("ongoing");
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<string>(CompetitionTab.ONGOING);
 
-  useEffect(() => {
-    const fetchCompetitions = async () => {
-      try {
-        setLoading(true);
-        const { participating, nonParticipating } = await getAllCompetitions();
-        setMyCompetitions(participating);
-        setAvailableCompetitions(nonParticipating);
-        setError(null);
-      } catch (err) {
-        console.error("Failed to fetch competitions:", err);
-        setError("Не удалось загрузить события. Пожалуйста, попробуйте позже.");
-      } finally {
-        setLoading(false);
-      }
-    };
+  const activeCompetitionsQuery = useQuery({
+    queryKey: ["active-competitions"],
+    queryFn: async () => getCompetitions(true),
+    retry: 1,
+  });
 
-    fetchCompetitions();
-  }, []);
+  const inactiveCompetitionsQuery = useQuery({
+    queryKey: ["inactive-competitions"],
+    queryFn: async () => getCompetitions(false),
+    retry: 1,
+  });
 
-  const filteredMyCompetitions = myCompetitions.filter((comp) =>
-    activeTab === "ongoing"
-      ? comp.status === CompetitionStatus.InProgress
-      : comp.status === CompetitionStatus.Completed,
+  const startedCompetitions = React.useMemo(
+    () =>
+      (activeCompetitionsQuery.data ?? []).filter(
+        (comp) => comp.state === CompetitionState.STARTED,
+      ),
+    [activeCompetitionsQuery.data],
   );
 
-  if (loading) {
-    return (
-      <div className="flex flex-col items-center justify-center h-[400px]">
-        <Loader2 className="h-12 w-12 animate-spin text-gray-400 mb-4" />
-        <p className="font-hse-sans text-gray-500">Загрузка событий...</p>
-      </div>
-    );
-  }
+  const finishedCompetitions = React.useMemo(
+    () =>
+      (activeCompetitionsQuery.data ?? []).filter(
+        (comp) => comp.state === CompetitionState.FINISHED,
+      ),
+    [activeCompetitionsQuery.data],
+  );
 
-  if (error) {
-    return (
-      <div className="flex justify-center items-center h-[400px]">
-        <p className="font-hse-sans text-red-500">{error}</p>
-      </div>
-    );
+  if (
+    activeCompetitionsQuery.isLoading ||
+    inactiveCompetitionsQuery.isLoading
+  ) {
+    return <Loading />;
   }
 
   return (
     <div className="flex flex-col gap-6 sm:gap-8">
-      <Section>
-        <SectionHeader>
-          <SectionTitle>Мои события</SectionTitle>
+      {(activeCompetitionsQuery.data ?? []).length > 0 && (
+        <Section>
           <Tabs value={activeTab} onValueChange={setActiveTab}>
-            <TabsList>
-              <TabsTrigger value="ongoing">В процессе</TabsTrigger>
-              <TabsTrigger value="completed">Завершенные</TabsTrigger>
-            </TabsList>
+            <SectionHeader>
+              <SectionTitle>Мои события</SectionTitle>
+
+              <TabsList>
+                <TabsTrigger value={CompetitionTab.ONGOING}>
+                  В процессе
+                </TabsTrigger>
+                <TabsTrigger value={CompetitionTab.COMPLETED}>
+                  Завершенные
+                </TabsTrigger>
+              </TabsList>
+            </SectionHeader>
+
+            <TabsContent value={CompetitionTab.ONGOING} asChild>
+              <CompetitionGrid competitions={startedCompetitions} />
+            </TabsContent>
+
+            <TabsContent value={CompetitionTab.COMPLETED} asChild>
+              <CompetitionGrid competitions={finishedCompetitions} />
+            </TabsContent>
           </Tabs>
-        </SectionHeader>
-        {filteredMyCompetitions.length > 0 ? (
-          <CompetitionGrid competitions={filteredMyCompetitions} />
-        ) : (
-          <EmptyState message={`У вас нет ${activeTab === "ongoing" ? "текущих" : "завершенных"} событий`} />
-        )}
-      </Section>
+        </Section>
+      )}
 
       <Section>
         <SectionHeader>
           <SectionTitle>События</SectionTitle>
         </SectionHeader>
-        {availableCompetitions.length > 0 ? (
-          <CompetitionGrid competitions={availableCompetitions} />
+        {(inactiveCompetitionsQuery.data ?? []).length > 0 ? (
+          <CompetitionGrid
+            competitions={inactiveCompetitionsQuery.data ?? []}
+          />
         ) : (
-          <EmptyState message="Нет доступных событий" />
+          <NoCompetitions />
         )}
       </Section>
     </div>

@@ -20,8 +20,8 @@ class Command(BaseCommand):
         self.stdout.write("Starting data generation...")
         users = self.create_users(5)
         competitions = self.create_competitions(2, users)
+        self.reviewers = self.create_reviewers(2)
         tasks = self.create_tasks(competitions)
-        self.reviewers = self.create_reviewers(1)
         self.create_submissions(tasks, users)
         self.create_states(competitions, users)
         self.stdout.write("Data generation completed.")
@@ -108,7 +108,13 @@ class Command(BaseCommand):
                 )
                 tasks.append(task)
                 self.stdout.write(f"Created task: {title} (type: {task_type})")
+        self.add_reviewers_to_task(tasks)
         return tasks
+
+    def add_reviewers_to_task(self, tasks):
+        for task in tasks:
+            task.reviewers.set(self.reviewers)
+            task.save()
 
     def create_submissions(self, tasks, users):
         for task in tasks:
@@ -132,15 +138,6 @@ class Command(BaseCommand):
                 submission.save()
                 self.stdout.write(
                     f"Created submission for task '{task.title}' by user '{user.username}'"
-                )
-                self.add_reviewers(submission)
-
-    def add_reviewers(self, submission):
-        for reviewer in self.reviewers:
-            if random.choice([True, False]):
-                Review.objects.create(
-                    submission=submission,
-                    reviewer=reviewer,
                 )
 
     def create_states(self, competitions, users):
