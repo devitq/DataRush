@@ -88,7 +88,7 @@ services:
     image: gitlab.prodcontest.ru:5050/team-15/project/backend:latest
     build:
       context: ./services/backend
-    command: celery -A config worker -l INFO
+    entrypoint: ["/scripts/celery-worker-entrypoint.sh"]
     depends_on:
       redis:
         restart: false
@@ -106,6 +106,10 @@ services:
       retries: 3
       start_period: 10s
       start_interval: 2s
+    volumes:
+      - type: bind
+        source: ./infrastructure/backend/scripts
+        target: /scripts
     restart: unless-stopped
 
   celery-exporter:
