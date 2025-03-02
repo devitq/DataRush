@@ -99,6 +99,7 @@ class Command(BaseCommand):
                 title = f"Task {i} for {comp.title}"
                 description = f"Task description for task {i} in {comp.title}"
                 task = CompetitionTask.objects.create(
+                    in_competition_position=i,
                     competition=comp,
                     title=title,
                     description=description,
