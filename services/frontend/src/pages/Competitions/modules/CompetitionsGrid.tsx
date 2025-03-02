@@ -1,5 +1,5 @@
-import { Competition } from "@/shared/types";
-import { CompetitionCard } from "../../components/CompetitionCard";
+import { Competition } from "@/shared/types/competition";
+import { CompetitionCard } from "../components/CompetitionCard";
 import { Link } from "react-router";
 
 interface CompetitionGridProps {

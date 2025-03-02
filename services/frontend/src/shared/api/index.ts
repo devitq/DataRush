@@ -14,14 +14,14 @@ export class ApiError extends Error {
   }
 }
 
-export const authFetch = ofetch.create({
+export const apiFetch = ofetch.create({
   baseURL: BASE_URL,
   async onResponseError({ response }) {
     throw new ApiError(response);
   },
 });
 
-export const apiFetch = ofetch.create({
+export const userFetch = ofetch.create({
   baseURL: BASE_URL,
   async onRequest({ options }) {
     options.headers.set("Authorization", "Bearer " + getToken());

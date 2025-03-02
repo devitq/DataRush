@@ -37,17 +37,21 @@ const CompetitionSession = () => {
     }
   }, [competitionId]);
 
-  const currentTask = tasks.find(t => t.id === taskId) || null;
+  const currentTask = tasks.find((t) => t.id === taskId) || null;
 
   if (!taskId && tasks.length > 0 && !loading) {
-    return <Navigate to={`/competition/${competitionId}/tasks/${tasks[0].id}`} replace />;
+    return (
+      <Navigate
+        to={`/competition/${competitionId}/tasks/${tasks[0].id}`}
+        replace
+      />
+    );
   }
 
   const handleSubmit = async () => {
     if (!currentTask || !competitionId) return;
-    
-    try {
 
+    try {
       console.log("Solution submitted successfully");
     } catch (err) {
       console.error("Failed to submit solution:", err);
@@ -55,32 +59,28 @@ const CompetitionSession = () => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen">
-      <CompetitionHeader 
+    <div className="flex min-h-screen flex-col">
+      <CompetitionHeader
         title="Олимпиада DANO 2025. Индивидуальный этап"
-        tasks={tasks} 
-        competitionId={competitionId}  
+        tasks={tasks}
+        competitionId={competitionId}
       />
-      
+
       <main className="flex-1 bg-[#F8F8F8] pb-8">
-        <div className="max-w-6xl mx-auto px-4 py-6">
+        <div className="mx-auto max-w-6xl px-4 py-6">
           {loading ? (
-            <div className="flex flex-col items-center justify-center h-40 bg-white rounded-lg">
-              <Loader2 className="h-8 w-8 animate-spin text-gray-400 mb-2" />
-              <p className="font-hse-sans text-gray-500">
-                Загрузка заданий...
-              </p>
+            <div className="flex h-40 flex-col items-center justify-center rounded-lg bg-white">
+              <Loader2 className="mb-2 h-8 w-8 animate-spin text-gray-400" />
+              <p className="font-hse-sans text-gray-500">Загрузка заданий...</p>
             </div>
           ) : error ? (
-            <div className="flex justify-center items-center h-40 bg-white rounded-lg">
-              <p className="font-hse-sans text-red-500">
-                {error}
-              </p>
+            <div className="flex h-40 items-center justify-center rounded-lg bg-white">
+              <p className="font-hse-sans text-red-500">{error}</p>
             </div>
           ) : currentTask ? (
-            <div className="flex flex-col md:flex-row gap-6 font-hse-sans">
+            <div className="font-hse-sans flex flex-col gap-6 md:flex-row">
               <TaskContent task={currentTask} />
-              <TaskSolution 
+              <TaskSolution
                 task={currentTask}
                 solutions={mockSolutions} // Still using mock solutions
                 answer={answer}
@@ -89,10 +89,8 @@ const CompetitionSession = () => {
               />
             </div>
           ) : (
-            <div className="flex justify-center items-center h-40 bg-white rounded-lg">
-              <p className="font-hse-sans text-gray-500">
-                Задание не найдено
-              </p>
+            <div className="flex h-40 items-center justify-center rounded-lg bg-white">
+              <p className="font-hse-sans text-gray-500">Задание не найдено</p>
             </div>
           )}
         </div>
