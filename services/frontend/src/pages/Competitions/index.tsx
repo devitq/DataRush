@@ -5,7 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getCompetitions } from "@/shared/api/competitions";
 import { NoCompetitions } from "./modules/NoCompetitions";
 import { TabsContent } from "@radix-ui/react-tabs";
-import { Loading } from "@/components/ui/Loading";
+import { Loading } from "@/components/ui/loading";
 import { CompetitionState } from "@/shared/types/competition";
 
 enum CompetitionTab {

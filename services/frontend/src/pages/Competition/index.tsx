@@ -5,7 +5,7 @@ import ReactMarkdown from "react-markdown";
 import { mockTasks } from "@/shared/mocks/mocks";
 import { useQuery } from "@tanstack/react-query";
 import { getCompetition } from "@/shared/api/competitions";
-import { Loading } from "@/components/ui/Loading";
+import { Loading } from "@/components/ui/loading";
 
 const CompetitionPage = () => {
   const { id } = useParams<{ id: string }>();
