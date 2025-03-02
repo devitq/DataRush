@@ -132,28 +132,29 @@ class Command(BaseCommand):
 
     def create_submissions(self, tasks, users):
         for task in tasks:
-            # Each task will get between 1 and 3 submissions
-            num_submissions = random.randint(1, 3)
-            for _ in range(num_submissions):
-                user = random.choice(users)
-                # Create a dummy content file
-                dummy_content = ContentFile(
-                    b"Submission content",
-                    name=f"submission_{uuid.uuid4().hex}.txt",
-                )
-                submission = CompetitionTaskSubmission.objects.create(
-                    user=user,
-                    task=task,
-                    earned_points=random.randint(
-                        0, task.points if task.points else 10
-                    ),
-                    content=dummy_content,
-                )
-                submission.save()
-                submission.send_on_review()
-                self.stdout.write(
-                    f"Created submission for task '{task.title}' by user '{user.username}'"
-                )
+            if task.type == CompetitionTask.CompetitionTaskType.REVIEW.value:
+                # Each task will get between 1 and 3 submissions
+                num_submissions = random.randint(1, 3)
+                for _ in range(num_submissions):
+                    user = random.choice(users)
+                    # Create a dummy content file
+                    dummy_content = ContentFile(
+                        b"Submission content",
+                        name=f"submission_{uuid.uuid4().hex}.txt",
+                    )
+                    submission = CompetitionTaskSubmission.objects.create(
+                        user=user,
+                        task=task,
+                        earned_points=random.randint(
+                            0, task.points if task.points else 10
+                        ),
+                        content=dummy_content,
+                    )
+                    submission.save()
+                    submission.send_on_review()
+                    self.stdout.write(
+                        f"Created submission for task '{task.title}' by user '{user.username}'"
+                    )
 
     def create_states(self, competitions, users):
         # For each competition, create a State for some of its participants
