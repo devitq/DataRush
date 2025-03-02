@@ -25,10 +25,6 @@ COPY --from=builder /opt/venv /opt/venv
 
 COPY . .
 
-RUN adduser -D -g '' app && chown -R app:app ./
-
-USER app
-
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PYTHONOPTIMIZE=2 \
