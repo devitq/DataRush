@@ -30,6 +30,8 @@ const TaskSolution: React.FC<TaskSolutionProps> = ({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const [selectedSolutionUrl, setSelectedSolutionUrl] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [currentSolution, setCurrentSolution] = useState<Solution | null>(null);
   const { id: competitionId } = useParams<{ id: string }>();
 
   const solutionsQuery = useQuery({
@@ -39,18 +41,33 @@ const TaskSolution: React.FC<TaskSolutionProps> = ({
   });
 
   const solutionHistory = solutionsQuery.data || [];
-  const latestSolution = solutionHistory && solutionHistory.length > 0 ? solutionHistory[0] : null;
 
+  // Set the current solution to the latest one when the task changes or new solutions arrive
   useEffect(() => {
-    const loadLatestSolution = async () => {
-      if (!latestSolution || !latestSolution.content) return;
+    if (solutionHistory.length > 0 && !currentSolution) {
+      setCurrentSolution(solutionHistory[0]);
+    }
+  }, [solutionHistory, currentSolution, task.id]);
+
+  // Reset current solution when task changes
+  useEffect(() => {
+    setCurrentSolution(null);
+    setSelectedSolutionUrl(null);
+    setAnswer(""); // Reset answer when task changes
+  }, [task.id, setAnswer]);
+
+  // Load the current solution content when it changes
+  useEffect(() => {
+    const loadSolutionContent = async () => {
+      if (!currentSolution || !currentSolution.content) return;
       
+      setIsLoading(true);
       try {
         if (task.type === TaskType.FILE) {
           setSelectedFile(null);
-          setSelectedSolutionUrl(latestSolution.content);
+          setSelectedSolutionUrl(currentSolution.content);
         } else {
-          const response = await fetch(latestSolution.content);
+          const response = await fetch(currentSolution.content);
           if (!response.ok) {
             throw new Error(`Failed to fetch solution content: ${response.status}`);
           }
@@ -58,48 +75,47 @@ const TaskSolution: React.FC<TaskSolutionProps> = ({
           setAnswer(text);
         }
       } catch (error) {
-        console.error('Error loading latest solution content:', error);
+        console.error('Error loading solution content:', error);
       } finally {
+        setIsLoading(false);
       }
     };
 
-    if (latestSolution && !solutionsQuery.isLoading && !solutionsQuery.isError) {
-      loadLatestSolution();
-    }
-  }, [latestSolution, task.id, task.type, setAnswer, setSelectedFile]);
+    loadSolutionContent();
+  }, [currentSolution, task.type, setAnswer, setSelectedFile]);
 
   const handleOpenHistory = () => {
     setIsHistoryOpen(true);
   };
 
-  const handleSolutionSelect = async (solution: Solution) => {
-    if (!solution.content) return;
-    
-    try {
-      if (task.type === TaskType.FILE) {
-        setSelectedFile(null);
-        setSelectedSolutionUrl(solution.content);
-      } else {
-        const response = await fetch(solution.content);
-        if (!response.ok) {
-          throw new Error(`Failed to fetch solution content: ${response.status}`);
-        }
-        const text = await response.text();
-        setAnswer(text);
-      }
-    } catch (error) {
-      console.error('Error loading solution content:', error);
-    } 
+  const handleSolutionSelect = (solution: Solution) => {
+    setCurrentSolution(solution);
+    setIsHistoryOpen(false);
   };
 
   const handleClearExistingFile = () => {
     setSelectedSolutionUrl(null);
   };
 
+  // Handle successful submission
+  const handleSubmitSuccess = (newSolution: Solution) => {
+    // Update the current solution to the newly submitted one
+    setCurrentSolution(newSolution);
+    // Reset form
+    setAnswer("");
+    setSelectedFile(null);
+    setSelectedSolutionUrl(null);
+  };
+
+  const handleSubmit = () => {
+    onSubmit();
+
+  };
+
   return (
     <div className="md:w-[500px] flex flex-col gap-4">
-      {latestSolution ? (
-        <SolutionStatus solution={latestSolution} maxPoints={task.points}/>
+      {currentSolution ? (
+        <SolutionStatus solution={currentSolution} maxPoints={task.points}/>
       ) : (
         <div className="bg-gray-100 rounded-lg p-4 text-gray-600 font-hse-sans">
           Решение еще не отправлено
@@ -120,7 +136,7 @@ const TaskSolution: React.FC<TaskSolutionProps> = ({
           fileInputRef={fileInputRef}
           existingFileUrl={selectedSolutionUrl}
           onClearExistingFile={handleClearExistingFile}
-          isLoading={isInitialLoading}
+          isLoading={isLoading}
         />
       )}
       
@@ -132,7 +148,7 @@ const TaskSolution: React.FC<TaskSolutionProps> = ({
       )}
       
       <ActionButtons 
-        onSubmit={onSubmit} 
+        onSubmit={handleSubmit} 
         onHistoryClick={handleOpenHistory}
       />
       
@@ -142,6 +158,7 @@ const TaskSolution: React.FC<TaskSolutionProps> = ({
         solutions={solutionHistory}
         maxPoints={task.points}
         onSolutionSelect={handleSolutionSelect}
+        currentSolutionId={currentSolution?.id}
       />
     </div>
   );
