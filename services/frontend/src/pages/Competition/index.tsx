@@ -2,40 +2,57 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import ReactMarkdown from "react-markdown";
-import { mockTasks } from "@/shared/mocks/mocks";
-import { useQuery } from "@tanstack/react-query";
-import { getCompetition } from "@/shared/api/competitions";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { getCompetition, startCompetition } from "@/shared/api/competitions";
+import { getCompetitionTasks } from "@/shared/api/session";
 import { Loading } from "@/components/ui/loading";
 
 const CompetitionPage = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const competitionId = id || "";
 
-  const { data: competition, isLoading } = useQuery({
-    queryKey: ["competition", id],
-    queryFn: async () => getCompetition(id || ""),
+  const competitionQuery = useQuery({
+    queryKey: ["competition", competitionId],
+    queryFn: () => getCompetition(competitionId),
+    enabled: !!competitionId,
   });
 
-  if (isLoading) {
+  const startMutation = useMutation({
+    mutationFn: () => startCompetition(competitionId),
+    onSuccess: async () => {
+      try {
+        const tasks = await getCompetitionTasks(competitionId);
+        
+        if (tasks && tasks.length > 0) {
+          navigate(`/competition/${competitionId}/tasks/${tasks[0].id}`);
+        } else {
+          navigate(`/competition/${competitionId}/tasks`);
+        }
+      } catch (error) {
+        console.error("Failed to fetch tasks:", error);
+        navigate(`/competition/${competitionId}/tasks`);
+      }
+    },
+    onError: (error) => {
+      console.error("Failed to start competition:", error);
+    }
+  });
+
+  const handleStart = () => {
+    startMutation.mutate();
+  };
+
+  if (competitionQuery.isLoading) {
     return <Loading />;
   }
 
-  if (!id || !competition) {
+  if (!competitionId || !competitionQuery.data) {
     return <></>;
   }
 
-  const handleContinue = () => {
-    if (competition?.id) {
-      if (mockTasks && mockTasks.length > 0) {
-        const firstTaskId = mockTasks[0].id;
-        navigate(`/competition/${competition.id}/tasks/${firstTaskId}`);
-      } else {
-        navigate(`/competition/${competition.id}/tasks`);
-      }
-    }
-  };
+  const competition = competitionQuery.data;
 
-  console.log(competition)
   return (
     <div className="flex flex-col gap-4">
       <Link
@@ -47,13 +64,15 @@ const CompetitionPage = () => {
       </Link>
 
       <div className="flex flex-col gap-6">
-        <div className="aspect-2 h-auto w-full overflow-hidden rounded-xl">
-          <img
-            src={competition.image_url ? competition.image_url : '/DANO.png'}
-            alt={competition.title}
-            className="h-full w-full object-cover object-center"
-          />
-        </div>
+        {competition.image_url && (
+          <div className="aspect-2 h-auto w-full overflow-hidden rounded-xl">
+            <img
+              src={competition.image_url}
+              alt={competition.title}
+              className="h-full w-full object-cover object-center"
+            />
+          </div>
+        )}
 
         <div className="flex flex-col-reverse gap-8 md:flex-row">
           <div className="flex flex-1 flex-col gap-5">
@@ -65,8 +84,12 @@ const CompetitionPage = () => {
             </div>
           </div>
           <div className="w-full *:w-full md:w-96">
-            <Button size={"lg"} onClick={handleContinue}>
-              Приступить к выполнению
+            <Button 
+              size={"lg"} 
+              onClick={handleStart} 
+              disabled={startMutation.isPending}
+            >
+              {startMutation.isPending ? "Загрузка..." : "Начать"}
             </Button>
           </div>
         </div>
