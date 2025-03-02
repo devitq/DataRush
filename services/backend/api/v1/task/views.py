@@ -2,13 +2,13 @@ from http import HTTPStatus as status
 from uuid import UUID
 
 from django.shortcuts import get_object_or_404
-from ninja import Router
+from ninja import File, Router, UploadedFile
 
 from api.v1.ping.schemas import PingOut
 from api.v1.schemas import ForbiddenError, NotFoundError, UnauthorizedError
 from api.v1.task.schemas import (
+    HistorySubmissionOut,
     TaskOutSchema,
-    TaskSubmissionIn,
     TaskSubmissionOut,
 )
 from apps.competition.models import State
@@ -87,32 +87,56 @@ def get_task(request, competition_id: str, task_id: str) -> TaskOutSchema: ...
     },
 )
 def submit_task(
-    request, competition_id: str, task_id: str, submission: TaskSubmissionIn
-) -> PingOut:
+    request,
+    competition_id: str,
+    task_id: str,
+    content: UploadedFile = File(...),  # TODO: вот это надо переделать
+) -> TaskSubmissionOut:
     user = request.auth
-    competetion = get_object_or_404(Competition, id=competition_id)
+    competition = get_object_or_404(Competition, id=competition_id)
     task = get_object_or_404(
-        CompetitionTask, competetion=competetion, id=task_id
+        CompetitionTask, competition=competition, id=task_id
     )
 
     if task.type == CompetitionTask.CompetitionTaskType.INPUT:
-        CompetitionTaskSubmission.objects.create(
+        submission = CompetitionTaskSubmission.objects.create(
             user=user,
             task=task,
             status=CompetitionTaskSubmission.StatusChoices.CHECKED,
-            result={"correct": submission.content == task.answer_file_path},
+            result={"correct": content == task.answer_file_path},
+            content=content,
         )
     if task.type == CompetitionTask.CompetitionTaskType.REVIEW:
-        CompetitionTaskSubmission.objects.create(
+        submission = CompetitionTaskSubmission.objects.create(
             user=user,
             task=task,
             status=CompetitionTaskSubmission.StatusChoices.SENT,
+            content=content,
         )
     if task.type == CompetitionTask.CompetitionTaskType.CHECKER:
-        CompetitionTaskSubmission.objects.create(
+        submission = CompetitionTaskSubmission.objects.create(
             user=user,
             task=task,
             status=CompetitionTaskSubmission.StatusChoices.CHECKING,
+            content=content,
         )
 
-    return TaskSubmissionOut(id=CompetitionTaskSubmission.id)
+    return TaskSubmissionOut(submission_id=submission.id)
+
+
+@router.get(
+    "competitions/{competition_id}/tasks/{task_id}/history",
+    response={
+        status.OK: list[HistorySubmissionOut],
+        status.UNAUTHORIZED: UnauthorizedError,
+    },
+)
+def get_submissions_history(request, competition_id: UUID, task_id: UUID):
+    task = get_object_or_404(
+        CompetitionTask, competition_id=competition_id, id=task_id
+    )
+    submissions_history = CompetitionTaskSubmission.objects.filter(
+        task=task, user=request.auth
+    )
+
+    return status.OK, submissions_history

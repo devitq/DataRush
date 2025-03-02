@@ -18,6 +18,9 @@ class CompetitionTask(BaseModel):
     def answer_file_upload_to(instance, filename) -> str:
         return f"/tasks/{instance.id}/answer/{uuid4()}/filename"
 
+    in_competition_position = models.PositiveSmallIntegerField(
+        null=True, blank=True
+    )
     competition = models.ForeignKey(Competition, on_delete=models.CASCADE)
     title = models.CharField(verbose_name="заголовок", max_length=50)
     description = HTMLField(verbose_name="описание", max_length=300)
@@ -109,7 +112,7 @@ class CompetitionTaskSubmission(BaseModel):
     # - code: {"correct": boolean}
     result = models.JSONField(default=None, null=True, blank=True)
     # just more readable result representation, maybe will be calcuated somehow more complex depends on criteria
-    earned_points = models.IntegerField()
+    earned_points = models.IntegerField(null=True, blank=True)
 
     reviewed_at = models.DateTimeField(null=True, blank=True)
     timestamp = models.DateTimeField(auto_now_add=True)

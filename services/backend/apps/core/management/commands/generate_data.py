@@ -73,7 +73,9 @@ class Command(BaseCommand):
                 description=description,
                 start_date=start_date,
                 end_date=end_date,
-                type=random.choice(["edu", "competitive"]),  # assuming only one type for now
+                type=random.choice(
+                    ["edu", "competitive"]
+                ),  # assuming only one type for now
                 participation_type="solo",
             )
             # Add random participants

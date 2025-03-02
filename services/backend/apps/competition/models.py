@@ -10,6 +10,7 @@ class Competition(BaseModel):
     class CompetitionType(models.TextChoices):
         EDU = "edu", "Образовательный"
         COMPETITIVE = "competitive", "Соревновательный"
+
     class CompetitionParticipationType(models.TextChoices):
         SOLO = "solo", "Индивидуальный"
 
@@ -60,5 +61,9 @@ class State(BaseModel):
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     competition = models.ForeignKey(Competition, on_delete=models.CASCADE)
-    state = models.CharField(choices=StateChoices.choices, max_length=11, default=StateChoices.NOT_STARTED.value)
+    state = models.CharField(
+        choices=StateChoices.choices,
+        max_length=11,
+        default=StateChoices.NOT_STARTED.value,
+    )
     changed_at = models.DateTimeField(default=datetime.now)

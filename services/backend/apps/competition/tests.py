@@ -103,7 +103,7 @@ class CompetitionsEndpointTests(TestCase):
         self.user = User.objects.create(
             email="user@example.com",
             password=make_password("password123"),
-            username="t1wk4"
+            username="t1wk4",
         )
 
         resp = self.client.post(
@@ -121,7 +121,8 @@ class CompetitionsEndpointTests(TestCase):
                 title=f"Competition {i}",
                 description=f"Description {i}",
                 type=(
-                    Competition.CompetitionType.EDU if i % 2 == 0
+                    Competition.CompetitionType.EDU
+                    if i % 2 == 0
                     else Competition.CompetitionType.COMPETITIVE
                 ),
                 participation_type=Competition.CompetitionParticipationType.SOLO,
@@ -132,9 +133,7 @@ class CompetitionsEndpointTests(TestCase):
                 competition.participants.add(self.user)
             self.competitions.append(competition)
 
-        self.valid_headers = {
-            "HTTP_AUTHORIZATION": f"Bearer {token}"
-        }
+        self.valid_headers = {"HTTP_AUTHORIZATION": f"Bearer {token}"}
 
     def get_url(self, params=None):
         base_url = "/api/v1/competitions"
@@ -142,8 +141,7 @@ class CompetitionsEndpointTests(TestCase):
 
     def test_get_participating_competitions(self):
         response = self.client.get(
-            self.get_url("is_participating=true"),
-            **self.valid_headers
+            self.get_url("is_participating=true"), **self.valid_headers
         )
 
         self.assertEqual(response.status_code, 200)
@@ -151,13 +149,12 @@ class CompetitionsEndpointTests(TestCase):
         self.assertEqual(len(data), 2)
         self.assertEqual(
             {item["id"] for item in data},
-            {str(self.competitions[0].id), str(self.competitions[1].id)}
+            {str(self.competitions[0].id), str(self.competitions[1].id)},
         )
 
     def test_competition_type_values(self):
         response = self.client.get(
-            self.get_url("is_participating=true"),
-            **self.valid_headers
+            self.get_url("is_participating=true"), **self.valid_headers
         )
 
         for item in response.json():
@@ -165,20 +162,15 @@ class CompetitionsEndpointTests(TestCase):
 
     def test_participation_type_values(self):
         response = self.client.get(
-            self.get_url("is_participating=false"),
-            **self.valid_headers
+            self.get_url("is_participating=false"), **self.valid_headers
         )
 
         types = [item["participation_type"] for item in response.json()]
-        self.assertCountEqual(
-            types,
-            ["solo", "solo", "solo"]
-        )
+        self.assertCountEqual(types, ["solo", "solo", "solo"])
 
     def test_datetime_formatting(self):
         response = self.client.get(
-            self.get_url("is_participating=true"),
-            **self.valid_headers
+            self.get_url("is_participating=true"), **self.valid_headers
         )
 
         for item in response.json():
@@ -195,8 +187,7 @@ class CompetitionsEndpointTests(TestCase):
 
     def test_competition_metadata(self):
         response = self.client.get(
-            self.get_url("is_participating=true"),
-            **self.valid_headers
+            self.get_url("is_participating=true"), **self.valid_headers
         )
 
         item = response.json()[0]
@@ -207,8 +198,7 @@ class CompetitionsEndpointTests(TestCase):
 
     def test_verbose_name_consistency(self):
         response = self.client.get(
-            self.get_url("is_participating=true"),
-            **self.valid_headers
+            self.get_url("is_participating=true"), **self.valid_headers
         )
 
         item = response.json()[0]
@@ -220,16 +210,16 @@ class CompetitionsEndpointTests(TestCase):
             title="No Dates Competition",
             description="Test competition",
             type=Competition.CompetitionType.EDU,
-            participation_type=Competition.CompetitionParticipationType.SOLO
+            participation_type=Competition.CompetitionParticipationType.SOLO,
         )
 
         response = self.client.get(
-            self.get_url("is_participating=false"),
-            **self.valid_headers
+            self.get_url("is_participating=false"), **self.valid_headers
         )
 
         test_item = next(
-            item for item in response.json()
+            item
+            for item in response.json()
             if item["id"] == str(competition.id)
         )
         self.assertIsNone(test_item["start_date"])
@@ -237,8 +227,7 @@ class CompetitionsEndpointTests(TestCase):
 
     def test_participation_status_filtering(self):
         response = self.client.get(
-            self.get_url("is_participating=false"),
-            **self.valid_headers
+            self.get_url("is_participating=false"), **self.valid_headers
         )
 
         data = response.json()

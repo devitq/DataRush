@@ -11,11 +11,16 @@ class CompetitionOut(ModelSchema):
     state: Literal["not_started", "started", "finished"]
 
     @staticmethod
-    def resolve_state(self, context) -> Literal["not_started", "started", "finished"]:
-        if not (state := State.objects.filter(user=context.get("request").auth, competition=self).first()):
+    def resolve_state(
+        self, context
+    ) -> Literal["not_started", "started", "finished"]:
+        if not (
+            state := State.objects.filter(
+                user=context.get("request").auth, competition=self
+            ).first()
+        ):
             return "not_started"
         return state.state
-
 
     class Meta:
         model = Competition

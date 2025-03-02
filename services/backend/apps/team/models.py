@@ -1,4 +1,3 @@
-from uuid import uuid4
 
 from django.db import models
 
@@ -8,10 +7,12 @@ from apps.user.models import User
 
 class Team(BaseModel):
     name = models.CharField(max_length=50, verbose_name="название")
-    owner = models.ForeignKey(User, on_delete=models.CASCADE,
-                              verbose_name="владелец")
-    members = models.ManyToManyField(User, related_name="team_members",
-                                     verbose_name="участники")
+    owner = models.ForeignKey(
+        User, on_delete=models.CASCADE, verbose_name="владелец"
+    )
+    members = models.ManyToManyField(
+        User, related_name="team_members", verbose_name="участники"
+    )
 
     def __str__(self):
         return self.name
@@ -22,8 +23,9 @@ class Team(BaseModel):
 
 
 class TeamInvite(BaseModel):
-    team = models.ForeignKey(Team, on_delete=models.CASCADE,
-                             verbose_name="команда")
+    team = models.ForeignKey(
+        Team, on_delete=models.CASCADE, verbose_name="команда"
+    )
     link = models.UUIDField(verbose_name="инвайт")
 
     class Meta:

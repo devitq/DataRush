@@ -1,4 +1,4 @@
-from ninja import ModelSchema, Schema
+from ninja import ModelSchema
 
 from apps.team.models import Team
 
@@ -6,10 +6,18 @@ from apps.team.models import Team
 class CreateTeamSchema(ModelSchema):
     class Meta:
         model = Team
-        fields = ("name", "members",)
+        fields = (
+            "name",
+            "members",
+        )
 
 
 class TeamSchemaOut(ModelSchema):
     class Meta:
         model = Team
-        fields = ("id", "name", "owner", "members", )
+        fields = (
+            "id",
+            "name",
+            "owner",
+            "members",
+        )
