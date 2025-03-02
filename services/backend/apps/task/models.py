@@ -3,6 +3,7 @@ from uuid import uuid4
 from django.db import models
 from django.db.models import Count, Q
 from tinymce.models import HTMLField
+from martor.models import MartorField
 
 from apps.competition.models import Competition
 from apps.core.models import BaseModel
@@ -24,7 +25,7 @@ class CompetitionTask(BaseModel):
     )
     competition = models.ForeignKey(Competition, on_delete=models.CASCADE)
     title = models.CharField(verbose_name="заголовок", max_length=50)
-    description = HTMLField(verbose_name="описание")
+    description = MartorField(verbose_name="описание")
     max_attempts = models.PositiveSmallIntegerField(null=True, blank=True)
     type = models.CharField(
         choices=CompetitionTaskType, max_length=8, verbose_name="тип проверки"
