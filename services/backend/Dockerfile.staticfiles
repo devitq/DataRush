@@ -24,6 +24,4 @@ FROM docker.io/nginx:latest
 
 COPY --from=builder /app/static /usr/share/nginx/html
 
-COPY checker_requirements.txt /usr/share/nginx/html
-
 CMD ["nginx", "-g", "daemon off;"]

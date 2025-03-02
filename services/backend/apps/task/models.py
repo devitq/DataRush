@@ -1,10 +1,12 @@
 from uuid import uuid4
 
 from django.db import models
+from django.db.models import Count, Q
 from tinymce.models import HTMLField
 
 from apps.competition.models import Competition
 from apps.core.models import BaseModel
+from apps.review.models import Review, ReviewStatusChoices
 from apps.user.models import User
 
 
@@ -71,10 +73,12 @@ class CompetitionTaskAttachment(BaseModel):
     def file_upload_at(instance, filename):
         return f"/attachment/{instance.id}/file"
 
-    task = models.ForeignKey(CompetitionTask, on_delete=models.CASCADE)
-    file = models.FileField(upload_to=file_upload_at)
-    bind_at = models.FilePathField()
-    public = models.BooleanField(default=False)
+    task = models.ForeignKey(CompetitionTask, on_delete=models.CASCADE,
+                             verbose_name="задание")
+    file = models.FileField(upload_to=file_upload_at,
+                            verbose_name="файл")
+    bind_at = models.FilePathField(verbose_name="путь сохранения")
+    public = models.BooleanField(default=False, verbose_name="публичный")
 
 
 class CompetitionTaskSubmission(BaseModel):
@@ -89,31 +93,72 @@ class CompetitionTaskSubmission(BaseModel):
     def submission_stdout_upload_to(instance, filename) -> str:
         return f"/submissions/{instance.id}/stdout"
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    task = models.ForeignKey(CompetitionTask, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE,
+                             verbose_name="пользователь")
+    task = models.ForeignKey(CompetitionTask, on_delete=models.CASCADE,
+                             verbose_name="задание")
 
     status = models.CharField(
         choices=StatusChoices.choices,
         default=StatusChoices.SENT,
         max_length=8,
+        verbose_name="статус"
     )
 
     # code or text or file
-    content = models.FileField(upload_to=submission_content_upload_to)
+    content = models.FileField(upload_to=submission_content_upload_to,
+                               verbose_name="код/файл посылки")
 
     # only if task type is checker
     stdout = models.FileField(
-        upload_to=submission_stdout_upload_to, null=True, blank=True
+        upload_to=submission_stdout_upload_to, null=True, blank=True,
+        verbose_name="вывод чекера"
     )
 
     # depends on task type:
     # - input: {"correct": boolean}
     # - file: {"total_points": integer, "by_criteria": ["criteria_name": integer]}
     # - code: {"correct": boolean}
-    result = models.JSONField(default=None, null=True, blank=True)
+    result = models.JSONField(default=None, null=True, blank=True,
+                              verbose_name="результат проверки")
     # just more readable result representation, maybe will be calcuated somehow more complex depends on criteria
-    earned_points = models.IntegerField(null=True, blank=True)
+    earned_points = models.IntegerField(null=True, blank=True,
+                                        verbose_name="получено баллов")
 
-    checked_at = models.DateTimeField(null=True, blank=True)
-    plagiarism_checked = models.BooleanField(default=False)
-    timestamp = models.DateTimeField(auto_now_add=True)
+    checked_at = models.DateTimeField(null=True, blank=True,
+                                      verbose_name="дата и время проверки")
+    plagiarism_checked = models.BooleanField(default=False,
+                                             verbose_name="проверено на плагиат")
+    timestamp = models.DateTimeField(auto_now_add=True,
+                                     verbose_name="дата отправки")
+
+    def __str__(self):
+        return str(self.id)
+
+    class Meta:
+        verbose_name = "посылка"
+        verbose_name_plural = "посылки"
+
+    def send_on_review(self):
+        if not self.task.reviewers.exists():
+            return
+
+        reviewer = (
+            self.task.reviewers.annotate(
+                pending_count=Count(
+                    "review",
+                    filter=Q(
+                        review__state__in=[
+                            ReviewStatusChoices.NOT_CHECKED,
+                            ReviewStatusChoices.CHECKING,
+                        ]
+                    ),
+                )
+            )
+            .order_by("pending_count")
+            .first()
+        )
+        Review.objects.create(
+            reviewer=reviewer,
+            submission=self,
+        )

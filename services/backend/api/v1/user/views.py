@@ -1,3 +1,4 @@
+from datetime import datetime
 from http import HTTPStatus as status
 
 from django.contrib.auth.hashers import check_password, make_password
@@ -35,6 +36,7 @@ router = Router(tags=["user"])
 def sign_up(request, data: RegisterSchema):
     user = User(**data.dict(exclude={"password"}))
     user.password = make_password(data.password)
+    user.created_at = datetime.now()
     user.save()
 
     token = BearerAuth.generate_jwt(user)
