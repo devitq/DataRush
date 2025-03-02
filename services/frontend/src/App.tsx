@@ -32,9 +32,9 @@ const App = () => {
           />
 
           <Route path="/profile" element={<UserProfile />} />
-
-          <Route path="/review/:token" element={<ReviewPage />} />
         </Route>
+
+        <Route path="/review/:token" element={<ReviewPage />} />
       </Routes>
     </QueryClientProvider>
   );

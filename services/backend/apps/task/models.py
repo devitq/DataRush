@@ -182,7 +182,7 @@ class CompetitionTaskSubmission(BaseModel):
         ]  # да это медленно работает и чо
 
         for reviewer in reviewers:
-            Review.objects.create(
+            Review.objects.update_or_create(
                 reviewer=reviewer,
                 submission=self,
             )
