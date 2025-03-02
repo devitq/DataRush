@@ -12,6 +12,7 @@ from apps.task.models import (
 
 class TaskOutSchema(ModelSchema):
     status: Literal["sent", "checked", "checking", "not_submitted"] = None
+    type: Literal["input", "checker", "review"] = None
 
     @staticmethod
     def resolve_status(
@@ -30,7 +31,6 @@ class TaskOutSchema(ModelSchema):
             "competition",
             "title",
             "description",
-            "type",
             "in_competition_position",
             "points",
         ]
