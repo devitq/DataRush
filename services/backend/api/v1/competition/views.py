@@ -13,7 +13,7 @@ router = Router(tags=["competition"])
 
 
 @router.get(
-    "competition/{competition_id}",
+    "competitions/{competition_id}",
     response={
         status.OK: schemas.CompetitionOut,
         status.BAD_REQUEST: global_schemas.BadRequestError,
