@@ -1,5 +1,5 @@
-import { Routes, Route } from "react-router";
 import "./styles/globals.css";
+import { Routes, Route } from "react-router";
 
 import { NavbarLayout } from "./widgets/navbar-layout";
 
@@ -8,6 +8,8 @@ import Competition from "./pages/Competition";
 import CompetitionSession from "./pages/CompetitionSession";
 import LoginPage from "./pages/Login";
 import { AuthLayout } from "./widgets/auth-layout";
+import CompetitionConstructor from "./pages/CompetitionConstructor";
+import UserProfile from "./pages/UserProfile";
 
 const App = () => {
   return (
@@ -24,6 +26,27 @@ const App = () => {
           path="/competition/:id/tasks/:taskId"
           element={<CompetitionSession />}
         />
+
+        <Route
+          path="/constructor/:id"
+          element={<CompetitionConstructor />}
+        />
+
+        <Route
+          path="/constructor/new"
+          element={<CompetitionConstructor />}
+        />
+
+        <Route
+          path="/constructor/:id/tasks/:taskId"
+          element={<CompetitionConstructor />}
+        />
+
+        <Route
+          path="/profile"
+          element={<UserProfile />}
+        />
+
       </Route>
     </Routes>
   );

@@ -24,7 +24,6 @@ export const authFetch = ofetch.create({
 export const apiFetch = ofetch.create({
   baseURL: BASE_URL,
   async onRequest({ options }) {
-    console.log(import.meta.env.VITE_API_ENDPOINT);
     options.headers.set("Authorization", "Bearer " + getToken());
   },
   async onResponseError({ response }) {
