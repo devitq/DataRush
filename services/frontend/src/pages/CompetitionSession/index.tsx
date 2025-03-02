@@ -101,7 +101,6 @@ const CompetitionSession = () => {
               <TaskContent task={currentTask} />
               <TaskSolution
                 task={currentTask}
-                solutions={[]}
                 answer={answer}
                 setAnswer={setAnswer}
                 selectedFile={selectedFile}
