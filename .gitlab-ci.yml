@@ -1,6 +1,7 @@
 stages:
   - build
   - deploy
+  - utils
 
 variables:
   DOCKER_TLS_CERTDIR: /certs
@@ -108,6 +109,40 @@ deploy:
       cd ~/deploy
       docker compose pull > deploy.log 2>&1
       docker compose down >> deploy.log 2>&1
+      docker compose up -d --remove-orphans --force-recreate >> deploy.log 2>&1
+      docker compose ps >> deploy.log 2>&1
+      EOF
+    - ssh $SSH_ADDRESS "docker system prune -a --force"
+  retry: 2
+
+
+reset-compose:
+  image: kroniak/ssh-client:3.19
+  stage: utils
+  when: manual
+  rules:
+    - if: '$CI_COMMIT_REF_NAME == "master"'
+  variables:
+    SSH_HOST: "158.160.172.23"
+    SSH_USER: "ubuntu"
+    SSH_ADDRESS: "$SSH_USER@$SSH_HOST"
+    SSH_PRIVATE_KEY: SSH_PRIVATE_KEY
+  script:
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+    - echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+    - chmod 600 ~/.ssh/id_rsa
+    - ssh-keyscan -H "$SSH_HOST" > /dev/null 2>&1
+
+    - AUTH_COMMAND="echo "$CI_REGISTRY_PASSWORD" | docker login $CI_REGISTRY --username $CI_REGISTRY_USER --password-stdin";
+    - ssh $SSH_ADDRESS "$AUTH_COMMAND"
+    - scp -C -r infrastructure/ compose.yaml $SSH_ADDRESS:~/deploy/
+    - ssh $SSH_ADDRESS "docker -v"
+    - |
+      ssh $SSH_ADDRESS <<'EOF'
+      cd ~/deploy
+      docker compose down -v > deploy.log 2>&1
       docker compose up -d --remove-orphans --force-recreate >> deploy.log 2>&1
       docker compose ps >> deploy.log 2>&1
       EOF

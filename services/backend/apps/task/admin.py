@@ -16,6 +16,8 @@ class CompletionAttachmentInline(admin.StackedInline):
 class CompetitionTaskAdmin(admin.ModelAdmin):
     list_display = ("title", "type", "points")
     filter_horizontal = ("reviewers",)
+    list_filter = ("type",)
+    inlines = (CompletionAttachmentInline,)
 
 
 @admin.register(CompetitionTaskSubmission)
