@@ -23,3 +23,8 @@ class UserSchema(ModelSchema):
     class Meta:
         model = User
         fields = ["id", "email", "username", "created_at", "achievements"]
+
+
+class StatSchema(Schema):
+    total_attempts: int
+    solved_tasks: int

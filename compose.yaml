@@ -375,13 +375,18 @@ services:
     build:
       context: ./services/checker
       dockerfile: Dockerfile
-    restart: unless-stopped
+    env_file:
+      - path: ./infrastructure/checker/.env.template
+        required: true
+      - path: ./infrastructure/checker/.env
+        required: false
     ports:
       - name: web
         target: 8000
         published: 8009
         host_ip: 0.0.0.0
         protocol: tcp
+    restart: unless-stopped
     volumes:
       - type: bind
         source: /var/run/docker.sock

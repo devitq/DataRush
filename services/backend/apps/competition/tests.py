@@ -35,7 +35,7 @@ class CompetitionEndpointTests(TestCase):
         self.valid_headers = {"HTTP_AUTHORIZATION": f"Bearer {token}"}
 
     def get_url(self, competition_id):
-        return f"/api/v1/competition/{competition_id}"
+        return f"/api/v1/competitions/{competition_id}"
 
     def test_get_competition_success(self):
         response = self.client.get(
