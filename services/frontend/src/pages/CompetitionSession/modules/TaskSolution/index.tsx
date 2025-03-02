@@ -44,15 +44,18 @@ const TaskSolution: React.FC<TaskSolutionProps> = ({
     setIsHistoryOpen(true);
   };
 
-  const latestSolution = solutionHistory && solutionHistory.length > 0 ? solutionHistory[solutionHistory.length - 1] : null;
+  const latestSolution = solutionHistory && solutionHistory.length > 0 ? solutionHistory[0] : null;
 
   const handleSolutionSelect = async (solution: Solution) => {
     if (!solution.content) return;
     
-    setSelectedSolutionUrl(solution.content);
-    
     try {
-      if (task.type !== TaskType.FILE) {
+      if (task.type === TaskType.FILE) {
+        // For file tasks, just store the URL
+        setSelectedFile(null); // Clear any selected file first
+        setSelectedSolutionUrl(solution.content);
+      } else {
+        // For INPUT and CODE tasks, fetch the content and set as answer
         const response = await fetch(solution.content);
         if (!response.ok) {
           throw new Error(`Failed to fetch solution content: ${response.status}`);
@@ -63,6 +66,11 @@ const TaskSolution: React.FC<TaskSolutionProps> = ({
     } catch (error) {
       console.error('Error loading solution content:', error);
     } 
+  };
+
+  // Function to clear the existing file URL
+  const handleClearExistingFile = () => {
+    setSelectedSolutionUrl(null);
   };
 
   return (
@@ -85,6 +93,7 @@ const TaskSolution: React.FC<TaskSolutionProps> = ({
           setSelectedFile={setSelectedFile} 
           fileInputRef={fileInputRef}
           existingFileUrl={selectedSolutionUrl}
+          onClearExistingFile={handleClearExistingFile}
         />
       )}
       
