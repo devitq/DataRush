@@ -20,7 +20,7 @@ export const submitTaskSolution = async (
   solution: string | File
 ) => {
   const endpoint = `/competitions/${competitionId}/tasks/${taskId}/submit`;
-  
+  console.log("SUBMIT ", taskId, competitionId, solution)
   if (typeof solution === 'string') {
     return await userFetch(endpoint, {
       method: 'POST',

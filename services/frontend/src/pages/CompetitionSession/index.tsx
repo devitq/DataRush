@@ -45,6 +45,7 @@ const CompetitionSession = () => {
   }
 
   const handleSubmit = () => {
+    console.log(currentTask, competitionId, answer)
     if (!currentTask || !competitionId || !answer.trim()) return;
     submitMutation.mutate();
   };
