@@ -48,6 +48,9 @@ class CompetitionTask(BaseModel):
         default="stdout",
     )
 
+    attachments = models.ManyToManyField("CompetitionTaskAttachment", blank=True,
+                                         related_name="tasks_attachments")
+
     def __str__(self):
         return self.title
 
@@ -71,10 +74,12 @@ class CompetitionTaskAttachment(BaseModel):
     def file_upload_at(instance, filename):
         return f"/attachment/{instance.id}/file"
 
-    task = models.ForeignKey(CompetitionTask, on_delete=models.CASCADE)
-    file = models.FileField(upload_to=file_upload_at)
-    bind_at = models.FilePathField()
-    public = models.BooleanField(default=False)
+    task = models.ForeignKey(CompetitionTask, on_delete=models.CASCADE,
+                             verbose_name="задание")
+    file = models.FileField(upload_to=file_upload_at,
+                            verbose_name="файл")
+    bind_at = models.FilePathField(verbose_name="путь сохранения")
+    public = models.BooleanField(default=False, verbose_name="публичный")
 
 
 class CompetitionTaskSubmission(BaseModel):
