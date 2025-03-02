@@ -11,7 +11,7 @@ class CheckerHealthCheck(BaseHealthCheckBackend):
     def check_status(self) -> None:
         try:
             response = httpx.get(
-                f"{settings.ANTIFRAUD_ADDRESS}/ping", timeout=1
+                f"{settings.CHECKER_API_ENDPOINT}/ping", timeout=1
             )
             if response.status_code >= status.INTERNAL_SERVER_ERROR:
                 self.add_error("Checker service is unaccessible")
