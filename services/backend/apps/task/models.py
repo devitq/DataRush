@@ -79,15 +79,19 @@ class CompetitionTaskCriteria(BaseModel):
 
 
 class CompetitionTaskAttachment(BaseModel):
-    def file_upload_at(instance, filename):
-        return f"attachment/{instance.id}/file/{filename}"
+    def file_upload_at(instance, filename) -> str:
+        return f"attachments/{instance.id}/file/{filename}"
 
     task = models.ForeignKey(
         CompetitionTask, on_delete=models.CASCADE, verbose_name="задание"
     )
     file = models.FileField(upload_to=file_upload_at, verbose_name="файл")
-    bind_at = models.FilePathField(verbose_name="путь сохранения")
+    bind_at = models.CharField(verbose_name="путь сохранения", max_length=255)
     public = models.BooleanField(default=False, verbose_name="публичный")
+
+    class Meta:
+        verbose_name = "вложение"
+        verbose_name_plural = "вложения"
 
 
 class CompetitionTaskSubmission(BaseModel):

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Task, TaskType, Solution } from '@/shared/types/task';
 import { useQuery } from '@tanstack/react-query';
@@ -39,23 +39,47 @@ const TaskSolution: React.FC<TaskSolutionProps> = ({
   });
 
   const solutionHistory = solutionsQuery.data || [];
+  const latestSolution = solutionHistory && solutionHistory.length > 0 ? solutionHistory[0] : null;
+
+  useEffect(() => {
+    const loadLatestSolution = async () => {
+      if (!latestSolution || !latestSolution.content) return;
+      
+      try {
+        if (task.type === TaskType.FILE) {
+          setSelectedFile(null);
+          setSelectedSolutionUrl(latestSolution.content);
+        } else {
+          const response = await fetch(latestSolution.content);
+          if (!response.ok) {
+            throw new Error(`Failed to fetch solution content: ${response.status}`);
+          }
+          const text = await response.text();
+          setAnswer(text);
+        }
+      } catch (error) {
+        console.error('Error loading latest solution content:', error);
+      } finally {
+      }
+    };
+
+    if (latestSolution && !solutionsQuery.isLoading && !solutionsQuery.isError) {
+      loadLatestSolution();
+    }
+  }, [latestSolution, task.id, task.type, setAnswer, setSelectedFile]);
 
   const handleOpenHistory = () => {
     setIsHistoryOpen(true);
   };
-
-  const latestSolution = solutionHistory && solutionHistory.length > 0 ? solutionHistory[0] : null;
 
   const handleSolutionSelect = async (solution: Solution) => {
     if (!solution.content) return;
     
     try {
       if (task.type === TaskType.FILE) {
-        // For file tasks, just store the URL
-        setSelectedFile(null); // Clear any selected file first
+        setSelectedFile(null);
         setSelectedSolutionUrl(solution.content);
       } else {
-        // For INPUT and CODE tasks, fetch the content and set as answer
         const response = await fetch(solution.content);
         if (!response.ok) {
           throw new Error(`Failed to fetch solution content: ${response.status}`);
@@ -68,7 +92,6 @@ const TaskSolution: React.FC<TaskSolutionProps> = ({
     } 
   };
 
-  // Function to clear the existing file URL
   const handleClearExistingFile = () => {
     setSelectedSolutionUrl(null);
   };
@@ -84,7 +107,10 @@ const TaskSolution: React.FC<TaskSolutionProps> = ({
       )}
       
       {task.type === TaskType.INPUT && (
-        <InputSolution answer={answer} setAnswer={setAnswer} />
+        <InputSolution 
+          answer={answer} 
+          setAnswer={setAnswer} 
+        />
       )}
       
       {task.type === TaskType.FILE && (
@@ -94,11 +120,15 @@ const TaskSolution: React.FC<TaskSolutionProps> = ({
           fileInputRef={fileInputRef}
           existingFileUrl={selectedSolutionUrl}
           onClearExistingFile={handleClearExistingFile}
+          isLoading={isInitialLoading}
         />
       )}
       
       {task.type === TaskType.CODE && (
-        <CodeSolution answer={answer} setAnswer={setAnswer} />
+        <CodeSolution 
+          answer={answer} 
+          setAnswer={setAnswer} 
+        />
       )}
       
       <ActionButtons 
