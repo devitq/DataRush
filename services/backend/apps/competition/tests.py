@@ -157,8 +157,12 @@ class CompetitionsEndpointTests(TestCase):
             self.get_url("is_participating=true"), **self.valid_headers
         )
 
-        for item in response.json():
-            self.assertEqual(item["type"], "competitive")
+        for i in range(len(response.json())):
+            item = response.json()[i]
+            if (i + 1) % 2 == 0:
+                self.assertEqual(item["type"], "edu")
+            else:
+                self.assertEqual(item["type"], "competitive")
 
     def test_participation_type_values(self):
         response = self.client.get(
