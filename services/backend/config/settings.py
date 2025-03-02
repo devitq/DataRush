@@ -7,7 +7,9 @@ from pathlib import Path
 
 import django_stubs_ext
 import environ
+from health_check.plugins import plugin_dir
 from django.utils.translation import gettext_lazy as _
+from integrations.checker.healthcheck import CheckerHealthCheck
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -30,18 +32,12 @@ ALLOWED_HOSTS = env(
 
 # Integrations
 
-YANDEX_CLOUD_FOLDER_ID = env("YANDEX_CLOUD_FOLDER_ID", default=None)
-
-YANDEX_CLOUD_API_KEY = env("YANDEX_CLOUD_API_KEY", default=None)
-
-YANDEX_CLOUD_INTEGRATION_ENABLED = (
-    YANDEX_CLOUD_FOLDER_ID and YANDEX_CLOUD_API_KEY
-)
+CHECKER_API_ENDPOINT = env("CHECKER_API_ENDPOINT", default=None)
 
 
 # Register healthchecks
 
-# plugin_dir.register(SomeHealthCheckClass)
+plugin_dir.register(CheckerHealthCheck)
 
 
 # Caching
