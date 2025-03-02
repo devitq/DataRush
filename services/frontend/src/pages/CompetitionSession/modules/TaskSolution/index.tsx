@@ -41,22 +41,17 @@ const TaskSolution: React.FC<TaskSolutionProps> = ({
   });
 
   const solutionHistory = solutionsQuery.data || [];
-  
-  const getLatestSolution = () => {
-    return solutionHistory.length > 0 ? solutionHistory[solutionHistory.length - 1] : null;
-  };
 
   useEffect(() => {
     if (solutionHistory.length > 0 && !currentSolution) {
-      setCurrentSolution(getLatestSolution());
+      setCurrentSolution(solutionHistory[0]);
     }
   }, [solutionHistory, currentSolution]);
 
   useEffect(() => {
-    const latestSolution = getLatestSolution();
-    if (solutionHistory.length > 0 && currentSolution && latestSolution && 
-        latestSolution.id !== currentSolution.id) {
-      setCurrentSolution(latestSolution);
+    if (solutionHistory.length > 0 && currentSolution && 
+        solutionHistory[0].id !== currentSolution.id) {
+      setCurrentSolution(solutionHistory[0]);
     }
   }, [solutionHistory, currentSolution]);
 
@@ -95,7 +90,7 @@ const TaskSolution: React.FC<TaskSolutionProps> = ({
 
   const handleSolutionSelect = (solution: Solution) => {
     setCurrentSolution(solution); 
-    setIsHistoryOpen(false);
+    setIsHistoryOpen(false); 
   };
 
   const handleClearExistingFile = () => {
