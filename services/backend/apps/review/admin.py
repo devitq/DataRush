@@ -4,7 +4,7 @@ from apps.review.models import Review, Reviewer
 
 
 @admin.register(Reviewer)
-class ReviewAdmin(admin.ModelAdmin):
+class ReviewersAdmin(admin.ModelAdmin):
     list_display = ("name", "surname",)
     search_fields = ("name", "surname",)
 
