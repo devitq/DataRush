@@ -370,6 +370,17 @@ services:
     restart: unless-stopped
     shm_size: 4mb
 
+  checker:
+    image: gitlab.prodcontest.ru:5050/team-15/project/checker:latest
+    build:
+      context: ./services/checker
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    volumes:
+      - type: bind
+        source: /var/run/docker.sock
+        target: /prometheus
+
   proxy:
     image: docker.io/nginx:1.27-alpine3.21
     configs:
