@@ -15,8 +15,8 @@ export interface TaskAttachment {
 
 enum TaskType {
   INPUT = "input",
-  FILE = "file",
-  CODE = "code",
+  FILE = "checker",
+  CODE = "review",
 }
 
 enum SolutionStatus {
