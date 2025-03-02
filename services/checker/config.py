@@ -14,5 +14,5 @@ REGISTRY_PASSWORD = os.getenv("REGISTRY_USERNAME", None)
 REGISTRY_URL = os.getenv("REGISTRY_URL", "gitlab.prodcontest.ru:5050")
 
 DOCKER_IMAGE = os.getenv(
-    "IMAGE", default="gitlab.prodcontest.ru:5050/team-15/project/custom-python"
+    "DOCKER_IMAGE", default="gitlab.prodcontest.ru:5050/team-15/project/custom-python"
 )
