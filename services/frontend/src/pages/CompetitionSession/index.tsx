@@ -60,7 +60,6 @@ const CompetitionSession = () => {
       
       setTimeout(() => {
         window.location.reload();
-        setIsReloading(false);
       }, 2500);
     },
     onError: (error) => {
