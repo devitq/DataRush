@@ -1,4 +1,3 @@
-// src/components/competition/CompetitionResultsModal.tsx
 import React from 'react';
 import {
   Dialog,
@@ -12,7 +11,8 @@ import { Loader2 } from 'lucide-react';
 export interface CompetitionResult {
   task_name: string;
   result: number;
-  max_points: number
+  max_points: number;
+  position: number;
 }
 
 interface CompetitionResultsModalProps {
@@ -111,17 +111,19 @@ export const CompetitionResultsModal: React.FC<CompetitionResultsModalProps> = (
               Произошла ошибка при загрузке результатов
             </div>
           ) : results && results.length > 0 ? (
-            results.map((result, index) => (
-              <div 
-                key={index} 
-                className="flex flex-col md:flex-row justify-between items-start md:items-center p-4 bg-gray-50 rounded-lg border"
-              >
-                <div className="font-medium mb-2 md:mb-0">{result.task_name}</div>
-                <div className="text-right">
-                  {renderResultValue(result.result, result.max_points)}
+            [...results]
+              .sort((a, b) => a.position - b.position)
+              .map((result, index) => (
+                <div 
+                  key={index} 
+                  className="flex flex-col md:flex-row justify-between items-start md:items-center p-4 bg-gray-50 rounded-lg border"
+                >
+                  <div className="font-medium mb-2 md:mb-0">{result.task_name}</div>
+                  <div className="text-right">
+                    {renderResultValue(result.result, result.max_points)}
+                  </div>
                 </div>
-              </div>
-            ))
+              ))
           ) : (
             <div className="text-center py-6 text-gray-500">
               Нет доступных результатов

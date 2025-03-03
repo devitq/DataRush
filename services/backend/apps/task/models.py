@@ -91,7 +91,7 @@ class CompetitionTask(BaseModel):
             raise ValidationError({
                 "correct_answer_file": "Загрузите правильный ответ"
             })
-        
+
         # if self.answer_file_path and not self.type == "checker":
         #     raise ValidationError({
         #         "type": "Укажите другой тип задания: этот не совместим с путем правильного ответа"
@@ -100,7 +100,7 @@ class CompetitionTask(BaseModel):
             raise ValidationError({
                 "answer_file_path": "Введите путь правильного ответа - это нужно для корректной работы чекера"
             })
-        
+
         if not self.reviewers and self.type == "review":
             raise ValidationError({
                 "reviewers": "Загрузите ревьюверов - кто будет проверять задания, если не они?"
@@ -109,7 +109,6 @@ class CompetitionTask(BaseModel):
         #     raise ValidationError({
         #         "type": "Проверьте тип - вы ввели ревьюверов, но задание не является ручным"
         #     })
-
 
     def __str__(self):
         return self.title
@@ -150,9 +149,16 @@ class CompetitionTaskAttachment(BaseModel):
         related_name="attachments",
     )
     file = models.FileField(upload_to=file_upload_at, verbose_name="файл")
-    bind_at = models.CharField(verbose_name="путь сохранения", max_length=255, 
-                               validators=[RegexValidator(r"^(?:[a-zA-Z]:\\(?:[^<>:\"\/\\|?*]*\\)*|/(?:[^<>:\"\/\\|?*]+/?)*)$",
-                                                         message="Введите абсолютный путь до папки")])
+    bind_at = models.CharField(
+        verbose_name="путь сохранения",
+        max_length=255,
+        validators=[
+            RegexValidator(
+                r"^(?:[a-zA-Z]:\\(?:[^<>:\"\/\\|?*]*\\)*|/(?:[^<>:\"\/\\|?*]+/?)*)$",
+                message="Введите абсолютный путь до папки",
+            )
+        ],
+    )
     public = models.BooleanField(default=False, verbose_name="публичный")
 
     class Meta:
