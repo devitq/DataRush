@@ -15,7 +15,7 @@ class User(BaseModel):
     username = models.SlugField(unique=True, verbose_name="юзернейм")
     password = models.TextField(verbose_name="пароль")
 
-    created_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now=True, verbose_name="дата создания")
 
     achievements = models.ManyToManyField(
         Achievement, blank=True, verbose_name="ачивки пользователя"
