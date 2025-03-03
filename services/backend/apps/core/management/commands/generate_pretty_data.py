@@ -424,7 +424,6 @@ B — пользователи, которым доступен только о�
                 """.strip(),
                 "type": CompetitionTask.CompetitionTaskType.INPUT.value,
                 "points": 15,
-                "submission_reviewers_count": 2,
                 "max_attempts": 50,
                 "correct_answer_file": ans3,
             },
@@ -434,7 +433,6 @@ B — пользователи, которым доступен только о�
                 "description": "Сколько будет 6 * 7?",
                 "type": CompetitionTask.CompetitionTaskType.INPUT.value,
                 "points": 5,
-                "submission_reviewers_count": 2,
                 "max_attempts": 10,
                 "correct_answer_file": ans3,
             },
@@ -659,14 +657,17 @@ class Command(BaseCommand):
         competitions_objs = []
 
         for i, competition in enumerate(competitions):
-            competition_obj = Competition.objects.create(
-                title=competition["title"],
-                description=competition["description"],
-                start_date=competition["start_date"],
-                end_date=competition["end_date"],
-                type=competition["type"],
-                participation_type=competition["participation_type"],
-            )
+            try:
+                competition_obj = Competition.objects.create(
+                    title=competition["title"],
+                    description=competition["description"],
+                    start_date=competition["start_date"],
+                    end_date=competition["end_date"],
+                    type=competition["type"],
+                    participation_type=competition["participation_type"],
+                )
+            except Exception as e:
+                print(competition)
 
             if competition.get("image"):
                 competition_obj.image_url = competition["image"]
