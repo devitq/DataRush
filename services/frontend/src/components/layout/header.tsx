@@ -28,17 +28,16 @@ export const Header = () => {
         <Link to="/">
           <DataRush />
         </Link>
-
+        
         <div className="flex items-center gap-4">
-          <Link
-            to="/docs/"
-            className="hidden items-center gap-1 text-sm font-medium text-gray-700 transition-colors hover:text-gray-900 md:flex"
-            target="_blank"
+          <a 
+            href="/docs/"
+            className="hidden md:flex text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors items-center gap-1"
           >
             <FileText className="h-4 w-4" />
             Материалы
-          </Link>
-
+          </a>
+          
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <button className="flex cursor-pointer items-center gap-1 rounded-md px-2 py-1 text-left transition-opacity hover:opacity-80">
@@ -52,18 +51,20 @@ export const Header = () => {
               <Link to="/profile">
                 <DropdownMenuItem>Аккаунт</DropdownMenuItem>
               </Link>
-
+              
               <div className="md:hidden">
                 <Link to="/docs" target="_blank">
                   <DropdownMenuItem>
-                    <FileText className="mr-2 h-4 w-4" />
                     Материалы
                   </DropdownMenuItem>
                 </Link>
               </div>
-
+              
               <DropdownMenuSeparator />
-              <DropdownMenuItem variant="destructive" onClick={handleLogout}>
+              <DropdownMenuItem
+                variant="destructive"
+                onClick={handleLogout}
+              >
                 Выйти
               </DropdownMenuItem>
             </DropdownMenuContent>
