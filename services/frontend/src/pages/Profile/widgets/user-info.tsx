@@ -2,7 +2,7 @@ import { User } from "@/shared/types/user";
 
 export const UserInfo = ({ user }: { user: User }) => {
   return (
-    <section className="flex max-w-[420px] flex-1 flex-col gap-6">
+    <section className="flex flex-1 flex-col items-center gap-6 text-center md:max-w-[420px] md:items-start md:text-ellipsis">
       {user.avatar && (
         <div className="aspect-square h-auto w-full max-w-[300px] overflow-hidden rounded-full border">
           <img

@@ -11,7 +11,7 @@ export const UserAchievements = ({
     <section className="flex flex-1 flex-col gap-5">
       <h2 className="text-3xl font-semibold">Достижения</h2>
       {achievements && (
-        <div className="grid grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
           {achievements.map((a) => (
             <AchievementDialog key={a.name} achievement={a}>
               <AchievementCard achievement={a} />

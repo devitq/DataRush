@@ -12,3 +12,8 @@ export interface Achievement {
   received_at: Date;
   icon?: string;
 }
+
+export interface UserStats {
+  total_attempts: number;
+  solved_tasks: number;
+}
