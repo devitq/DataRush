@@ -2,13 +2,14 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Task } from '@/shared/types/task';
 import { ArrowLeft } from 'lucide-react'; 
+import { useNavigate } from 'react-router-dom';
 
 interface CompetitionHeaderProps {
   title: string;
   tasks: Task[];
   competitionId: string;
   setAnswer: (value: string) => void;
-  setSelectedFile: (file: File | null) => void;  // заглушка
+  setSelectedFile: (file: File | null) => void;
 }
 
 const CompetitionHeader: React.FC<CompetitionHeaderProps> = ({ 
@@ -18,11 +19,13 @@ const CompetitionHeader: React.FC<CompetitionHeaderProps> = ({
   setAnswer,
   setSelectedFile
 }) => {
+  const navigate = useNavigate();
 
-  const handleTaskSelect = () => {
-    setAnswer("")
-    setSelectedFile(null)
-    console.log("STOP IT")
+  const handleTaskSelect = (taskId: string) => {
+    setAnswer("");
+    setSelectedFile(null);
+    
+    navigate(`/competition/${competitionId}/tasks/${taskId}`);
   }
 
   return (
@@ -32,7 +35,6 @@ const CompetitionHeader: React.FC<CompetitionHeaderProps> = ({
           <Link 
             to={`/competition/${competitionId}`}
             className="flex items-center text-gray-600 hover:text-gray-900 transition-colors font-hse-sans text-sm"
-            onClick={handleTaskSelect}
           >
             <ArrowLeft className="h-4 w-4 mr-1" />
           </Link>
@@ -46,16 +48,16 @@ const CompetitionHeader: React.FC<CompetitionHeaderProps> = ({
         
         <div className="flex items-center justify-center gap-4 pb-4 overflow-x-auto no-scrollbar">
           {tasks.map((task) => (
-            <Link
-              key={task.id}
-              to={`/competition/${competitionId}/tasks/${task.id}`}
-              className={`text-[var(--color-task-text-uncleared)] bg-[var(--color-task-uncleared)]
-                rounded-lg px-3 py-1.5 font-medium text-sm font-hse-sans cursor-pointer 
-                transition-all hover:brightness-95 flex-shrink-0
-                `}
-            >
-              {task.in_competition_position}
-            </Link>
+          <button
+            key={task.id}
+            className={`text-[var(--color-task-text-uncleared)] bg-[var(--color-task-uncleared)]
+              rounded-lg px-3 py-1.5 font-medium text-sm font-hse-sans cursor-pointer 
+              transition-all hover:brightness-95 flex-shrink-0
+              `}
+            onClick={() => handleTaskSelect(task.id)}
+          >
+            {task.in_competition_position}
+          </button>
           ))}
         </div>
       </div>

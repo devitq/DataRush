@@ -21,7 +21,7 @@ from api.v1.user.schemas import (
     TokenSchema,
     UserSchema,
 )
-from apps.task.models import CompetitionTaskSubmission
+from apps.task.models import CompetitionTaskSubmission, CompetitionTask
 from apps.user.models import User
 
 router = Router(tags=["user"])
@@ -104,9 +104,10 @@ def get_my_stat(request):
     success_attempts_cnt = 0
 
     for attempt in checked_attempts:
-        is_correct = attempt.result.get("correct", None)
-        if is_correct is None:
-            is_correct = attempt.result.get("total_points", 0) > 0
+        if attempt.task.type == CompetitionTask.CompetitionTaskType.REVIEW:
+            is_correct = attempt.earned_points > 0
+        else:
+            is_correct = attempt.result.get("correct", None)
 
         if is_correct:
             success_attempts_cnt += 1

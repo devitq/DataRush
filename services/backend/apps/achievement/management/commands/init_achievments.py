@@ -30,3 +30,13 @@ class Command(BaseCommand):
                     slug="welcome",
                     icon=welcome_icon,
                 )
+
+        if not Achievement.objects.filter(slug="start_competition").exists():
+            with open(f"{icons_dir}/start_competition.png", "rb") as f:
+                start_competition = File(f, name="start_competition.png")
+                Achievement.objects.get_or_create(
+                    name="Да начнётся битва!",
+                    description="Начните соревнование",
+                    slug="start_competition",
+                    icon=start_competition,
+                )
