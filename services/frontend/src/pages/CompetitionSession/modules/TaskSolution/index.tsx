@@ -42,7 +42,6 @@ const TaskSolution: React.FC<TaskSolutionProps> = ({
 
   const solutionHistory = solutionsQuery.data || [];
 
-  // Set initial solution to the last one (most recent) when solutions are loaded
   useEffect(() => {
     if (solutionHistory.length > 0 && !displayedSolution) {
       const latestSolution = solutionHistory[solutionHistory.length - 1];
@@ -50,10 +49,8 @@ const TaskSolution: React.FC<TaskSolutionProps> = ({
     }
   }, [solutionHistory, displayedSolution]);
 
-  // When task changes, reset everything and load the latest solution for the new task
   useEffect(() => {
     if (prevTaskIdRef.current !== task.id) {
-      // Reset states for new task
       setDisplayedSolution(null);
       setSelectedSolutionUrl(null);
       

@@ -11,7 +11,6 @@
 
   const SolutionStatus: React.FC<SolutionStatusProps> = ({ solution, maxPoints }) => {
     const formattedDate = solution.timestamp ? format(parseISO(solution.timestamp), "d MMMM, HH:mm", { locale: ru }) : '';
-    console.log(solution, "SOLUTION STATUS")
     return (
       <div className={`${getSolutionBgColor(solution.status, solution.earned_points, maxPoints)} rounded-lg p-4 relative`}>
         <div className="flex flex-col">

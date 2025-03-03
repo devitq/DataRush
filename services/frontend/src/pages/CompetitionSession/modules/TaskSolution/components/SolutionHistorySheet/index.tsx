@@ -11,7 +11,6 @@ interface SolutionHistorySheetProps {
   solutions: Solution[];
   maxPoints: number;
   onSolutionSelect: (solution: Solution) => void;
-  currentSolutionId?: string;
 }
 
 const SolutionHistorySheet: React.FC<SolutionHistorySheetProps> = ({
@@ -20,7 +19,6 @@ const SolutionHistorySheet: React.FC<SolutionHistorySheetProps> = ({
   solutions,
   maxPoints,
   onSolutionSelect,
-  currentSolutionId
 }) => {
   return (
     <Sheet open={isOpen} onOpenChange={onOpenChange}>
@@ -41,18 +39,12 @@ const SolutionHistorySheet: React.FC<SolutionHistorySheetProps> = ({
             solutions.map((solution, index) => (
               <div 
                 key={solution.id || index} 
-                className={`w-full cursor-pointer transition-transform hover:scale-[1.01] relative 
-                  ${solution.id === currentSolutionId ? 'ring-2 ring-blue-500 rounded-lg' : ''}`}
+                className={`w-full cursor-pointer transition-transform hover:scale-[1.01] relative`}
                 onClick={() => {
                   onSolutionSelect(solution);
                   onOpenChange(false);
                 }}
               >
-                {solution.id === currentSolutionId && (
-                  <div className="absolute top-2 right-2 z-10 bg-blue-500 text-white rounded-full p-1">
-                    <Check size={14} />
-                  </div>
-                )}
                 <SolutionStatus solution={solution} maxPoints={maxPoints} />
               </div>
             ))
