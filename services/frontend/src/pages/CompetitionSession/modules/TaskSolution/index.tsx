@@ -27,7 +27,7 @@ const TaskSolution: React.FC<TaskSolutionProps> = ({
   selectedFile,
   setSelectedFile, 
   onSubmit,
-  isSubmitting = false
+  isSubmitting = false,
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
@@ -69,14 +69,6 @@ const TaskSolution: React.FC<TaskSolutionProps> = ({
       prevTaskIdRef.current = task.id;
     }
   }, [task.id, solutionHistory]);
-
-  // useEffect(() => {
-  //   if (solutionHistory.length > 0 && 
-  //       (!displayedSolution || 
-  //        (solutionHistory[solutionHistory.length - 1].id !== displayedSolution.id))) {
-  //     setDisplayedSolution(solutionHistory[solutionHistory.length - 1]);
-  //   }
-  // }, [solutionHistory, displayedSolution]);
 
   useEffect(() => {
     const loadSolutionContent = async () => {
@@ -122,9 +114,6 @@ const TaskSolution: React.FC<TaskSolutionProps> = ({
     <div className="md:w-[500px] flex flex-col gap-4">
       {displayedSolution ? (
         <>
-          <div className="bg-gray-100 rounded-lg p-4 text-gray-600 font-hse-sans">
-            Результат последней посылки:
-          </div>
           <SolutionStatus key={displayedSolution.id} solution={displayedSolution} maxPoints={task.points}/>
         </>
       ) : (

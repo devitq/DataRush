@@ -1,13 +1,22 @@
 import { buttonVariants } from "@/components/ui/button";
 import { DataRushReview } from "@/components/ui/icons/datarush-review";
 import { Reviewer } from "@/shared/types/review";
-import { Link } from "react-router";
+import { useUserStore } from "@/shared/stores/user";
+import { useNavigate } from "react-router-dom";
 
 interface ReviewHeaderProps {
   reviewer: Reviewer;
 }
 
 export const ReviewHeader = ({ reviewer }: ReviewHeaderProps) => {
+  const clearUser = useUserStore((state) => state.clearUser);
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    clearUser();
+    navigate("/");
+  };
+
   return (
     <header className="flex h-[90px] items-center justify-between gap-4">
       <DataRushReview />
@@ -15,12 +24,12 @@ export const ReviewHeader = ({ reviewer }: ReviewHeaderProps) => {
         <p className="text-right font-semibold">
           {reviewer.name} {reviewer.surname}
         </p>
-        <Link
-          to="/"
+        <button
+          onClick={handleLogout}
           className={buttonVariants({ size: "sm", variant: "secondary" })}
         >
           Выйти
-        </Link>
+        </button>
       </div>
     </header>
   );
