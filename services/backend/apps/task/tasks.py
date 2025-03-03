@@ -12,9 +12,7 @@ from apps.task.models import CompetitionTaskSubmission
 def analyze_data_task(self, submission_id):
     submission = CompetitionTaskSubmission.objects.get(id=submission_id)
     try:
-        code_url = (
-            f"{settings.MINIO_DEFAULT_CUSTOM_ENDPOINT_URL}{submission.path}"
-        )
+        code_url = f"{settings.MINIO_DEFAULT_CUSTOM_ENDPOINT_URL}{submission.content.path}"
         files = [
             {
                 "url": f"{settings.MINIO_DEFAULT_CUSTOM_ENDPOINT_URL}{attachment.path}",
