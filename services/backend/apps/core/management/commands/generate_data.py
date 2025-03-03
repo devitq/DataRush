@@ -6,6 +6,7 @@ from django.contrib.auth.hashers import make_password
 from django.core.files.base import ContentFile
 from django.core.management.base import BaseCommand
 from django.utils import timezone
+from faker import Faker
 
 from apps.competition.models import Competition, State
 from apps.review.models import Reviewer
@@ -16,6 +17,7 @@ from apps.task.models import (
 )
 from apps.user.models import User, UserRole
 
+faker = Faker("ru_RU")
 
 class Command(BaseCommand):
     help = "Generate sample data for Users, Competitions, Tasks, Submissions, and States."
@@ -44,11 +46,10 @@ class Command(BaseCommand):
     def create_users(self, count):
         users = []
         for i in range(1, count + 1):
-            email = f"user{i}@example.com"
-            username = f"user{i}"
-            password = (
-                "password123"  # In production, use proper password handling.
-            )
+            fake_profile = faker.profile()
+            email = fake_profile["email"]
+            username = fake_profile["username"]
+            password = faker.password()
             role = random.choice(
                 [UserRole.STUDENT.value, UserRole.METODIST.value]
             )
@@ -68,7 +69,7 @@ class Command(BaseCommand):
         competitions = []
         now = timezone.now()
         for i in range(1, count + 1):
-            title = f"Competition {i}"
+            title = faker.sentence()
             description = f"Description for competition {i}"
             start_date = now - timedelta(days=random.randint(1, 10))
             end_date = now + timedelta(days=random.randint(1, 10))
