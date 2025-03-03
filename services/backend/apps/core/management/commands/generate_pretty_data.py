@@ -106,7 +106,7 @@ E — коэффициент чувствительности количеств
                 "description": "Найдите максимальную зарплату программиста из датасета на питоне",
                 "type": CompetitionTask.CompetitionTaskType.CHECKER.value,
                 "attachment": dataset,
-                "attachment_path": "dataset",
+                "attachment_path": "/dataset",
                 "points": 25,
                 "submission_reviewers_count": 2,
                 "max_attempts": 50,
@@ -115,7 +115,7 @@ E — коэффициент чувствительности количеств
                 "obj": None,
                 "title": "Задача 3",
                 "attachment": dataset2,
-                "attachment_path": "dataset2",
+                "attachment_path": "/dataset2",
                 "description": """
 Небольшой интернет-магазин собрал данные о действиях пользователей на своем сайте
 за последние несколько месяцев.
@@ -373,7 +373,7 @@ B — пользователи, которым доступен только о�
                 "submission_reviewers_count": 3,
                 "max_attempts": 2,
                 "attachment": dataset,
-                "attachment_path": "dataset",
+                "attachment_path": "/dataset",
                 "criteries": [
                     {
                         "obj": None,
