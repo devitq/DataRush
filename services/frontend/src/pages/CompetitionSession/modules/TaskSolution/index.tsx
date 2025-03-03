@@ -27,7 +27,7 @@ const TaskSolution: React.FC<TaskSolutionProps> = ({
   selectedFile,
   setSelectedFile, 
   onSubmit,
-  isSubmitting = false
+  isSubmitting = false,
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);

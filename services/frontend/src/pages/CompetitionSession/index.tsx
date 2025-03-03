@@ -13,7 +13,7 @@ const CompetitionSession = () => {
   const { id, taskId } = useParams<{ id: string; taskId?: string }>();
   const [answer, setAnswer] = useState("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [submissionSuccess, setSubmissionSuccess] = useState(false);
+  const [isReloading, setIsReloading] = useState(false);
   const competitionId = id || "";
   const queryClient = useQueryClient();
   const navigate = useNavigate();
@@ -47,36 +47,19 @@ const CompetitionSession = () => {
         queryKey: ['solutionHistory', competitionId, taskId] 
       });
       
-      setSubmissionSuccess(true); // Set flag to trigger the timeout
+      // Start the reload countdown
+      setIsReloading(true);
+      
+      // Schedule the page reload
+      setTimeout(() => {
+        navigate(`/competition/${competitionId}/tasks/${taskId}`, { replace: true });
+        setIsReloading(false);
+      }, 5000);
     },
     onError: (error) => {
       console.error("Error submitting solution:", error);
     }
   });
-
-  // Effect to handle the page reload after successful submission
-  useEffect(() => {
-    let timeoutId: number;
-    
-    if (submissionSuccess) {
-      timeoutId = window.setTimeout(() => {
-        // Reload the current page
-        window.location.reload();
-        
-        // Alternative: Use React Router's navigate to refresh
-        // navigate(`/competition/${competitionId}/tasks/${taskId}`, { replace: true });
-        
-        setSubmissionSuccess(false);
-      }, 5000); // 5 seconds timeout
-    }
-    
-    // Clean up timeout when component unmounts or when submissionSuccess changes
-    return () => {
-      if (timeoutId) {
-        window.clearTimeout(timeoutId);
-      }
-    };
-  }, [submissionSuccess, competitionId, taskId, navigate]);
 
   const competition = competitionQuery.data;
   const tasks = tasksQuery.data || [];
@@ -114,6 +97,13 @@ const CompetitionSession = () => {
 
   const competitionTitle = competition?.title || "Загрузка соревнования...";
 
+  useEffect(() => {
+    setAnswer("");
+    setSelectedFile(null);
+  }, [taskId]);
+
+  const isSubmitting = submitMutation.isPending || isReloading;
+
   return (
     <div className="flex min-h-screen flex-col">
       <CompetitionHeader
@@ -148,18 +138,8 @@ const CompetitionSession = () => {
                 selectedFile={selectedFile}
                 setSelectedFile={setSelectedFile}
                 onSubmit={handleSubmit}
-                isSubmitting={submitMutation.isPending}
+                isSubmitting={isSubmitting}
               />
-              {submissionSuccess && (
-                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-                  <div className="bg-white p-6 rounded-lg shadow-xl text-center">
-                    <Loader2 className="h-8 w-8 animate-spin text-blue-500 mx-auto mb-4" />
-                    <p className="font-hse-sans text-gray-700">
-                      Решение отправлено! Страница обновится через несколько секунд...
-                    </p>
-                  </div>
-                </div>
-              )}
             </div>
           ) : (
             <div className="flex h-40 items-center justify-center rounded-lg bg-white">
