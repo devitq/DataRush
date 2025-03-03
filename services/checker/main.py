@@ -88,7 +88,9 @@ async def download_file(
     session: aiohttp.ClientSession, url: str, dest_path: str
 ) -> None:
     try:
-        async with session.get(url, timeout=aiohttp.ClientTimeout(total=30)) as resp:
+        async with session.get(
+            url, timeout=aiohttp.ClientTimeout(total=30)
+        ) as resp:
             if resp.status != 200:
                 raise HTTPException(
                     status_code=status.HTTP_400_BAD_REQUEST,
@@ -266,15 +268,19 @@ async def execute_code(request: ExecutionRequest) -> ExecutionResponse:
 
         result_hash = hashlib.sha256(output.encode()).hexdigest()
 
-        return ExecutionResponse(
+        response = ExecutionResponse(
             success=success,
             hash_match=(
-                result_hash == request.expected_hash if request.expected_hash else None
+                result_hash == request.expected_hash
+                if request.expected_hash
+                else None
             ),
             output=output[:5000],
             result_hash=result_hash,
             error=error[:5000],
         )
+        print(response.model_dump_json())
+        return response
 
 
 @app.get("/health", response_model=HealthCheckResponse)

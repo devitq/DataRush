@@ -15,7 +15,6 @@ def analyze_data_task(self, submission_id):
     submission = CompetitionTaskSubmission.objects.get(id=submission_id)
     try:
         code = submission.content.read()
-        print("YA SSF")
         files = [
             {
                 "url": (
@@ -43,7 +42,7 @@ def analyze_data_task(self, submission_id):
         )
         response.raise_for_status()
         result = response.json()
-        print("HOHOHO")
+        print(result, response.request)
 
         submission.stdout.save("output.txt", ContentFile(result["output"]))
         submission.result = {
@@ -59,6 +58,7 @@ def analyze_data_task(self, submission_id):
     except httpx.RequestError:
         self.retry(countdown=2**self.request.retries)
     except Exception as e:
+        print(e)
         submission.result = {"error": str(e), "success": False}
         submission.status = CompetitionTaskSubmission.StatusChoices.CHECKED
         submission.earned_points = 0

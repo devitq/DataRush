@@ -1,7 +1,9 @@
+from sys import stdout
 from uuid import uuid4
 
 from django.db import models
 from django.db.models import Count, Q
+from django.core.exceptions import ValidationError
 from mdeditor.fields import MDTextField
 
 from apps.competition.models import Competition
@@ -77,6 +79,36 @@ class CompetitionTask(BaseModel):
         blank=True,
         verbose_name="кол-во проверяющих для зачета задачи",
     )
+
+    def clean(self):
+        super().clean()
+        # if self.correct_answer_file and self.type not in ["checker", "input"]:
+        #     raise ValidationError({
+        #         "type": "Если загружен файл правильного ответа, то тип проверки не может быть ручным"
+        #     })
+        if not self.correct_answer_file and self.type != "review":
+            raise ValidationError({
+                "correct_answer_file": "Загрузите правильный ответ"
+            })
+        
+        # if self.answer_file_path and not self.type == "checker":
+        #     raise ValidationError({
+        #         "type": "Укажите другой тип задания: этот не совместим с путем правильного ответа"
+        #     })
+        if not self.answer_file_path and self.type == "checker":
+            raise ValidationError({
+                "answer_file_path": "Введите путь правильного ответа - это нужно для корректной работы чекера"
+            })
+        
+        if not self.reviewers and self.type == "review":
+            raise ValidationError({
+                "reviewers": "Загрузите ревьюверов - кто будет проверять задания, если не они?"
+            })
+        # elif self.reviewers and not self.type == "review":
+        #     raise ValidationError({
+        #         "type": "Проверьте тип - вы ввели ревьюверов, но задание не является ручным"
+        #     })
+
 
     def __str__(self):
         return self.title
