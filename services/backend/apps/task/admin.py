@@ -4,6 +4,7 @@ from apps.task.models import (
     CompetitionTask,
     CompetitionTaskAttachment,
     CompetitionTaskSubmission,
+    CompetitionTaskCriteria
 )
 
 
@@ -12,12 +13,17 @@ class CompletionAttachmentInline(admin.StackedInline):
     extra = 0
 
 
+class CompetitionCriteriaInline(admin.StackedInline):
+    model = CompetitionTaskCriteria
+    extra = 0
+
+
 @admin.register(CompetitionTask)
 class CompetitionTaskAdmin(admin.ModelAdmin):
     list_display = ("title", "type", "points")
     filter_horizontal = ("reviewers",)
     list_filter = ("type",)
-    inlines = (CompletionAttachmentInline,)
+    inlines = (CompletionAttachmentInline, CompetitionCriteriaInline,)
 
 
 @admin.register(CompetitionTaskSubmission)
@@ -37,9 +43,6 @@ class CompetitionTaskSubmissionAdmin(admin.ModelAdmin):
     ordering = ["-timestamp"]
 
     def has_add_permission(self, request, obj=None):
-        return False
-
-    def has_delete_permission(self, request, obj=None):
         return False
 
 

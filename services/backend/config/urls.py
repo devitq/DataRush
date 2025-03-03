@@ -12,10 +12,8 @@ admin.site.index_title = "DataRush"
 
 
 urlpatterns = [
-    # tinymce
-    path("tinymce/", include("tinymce.urls")),
-    # martor
-    path("martor/", include("martor.urls")),
+    # mdeditor
+    path(r'mdeditor/', include('mdeditor.urls')),
     # Admin urls
     path("admin/", admin.site.urls),
     # API urls
