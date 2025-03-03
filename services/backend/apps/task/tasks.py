@@ -21,12 +21,12 @@ def analyze_data_task(self, submission_id):
             {
                 "url": (
                     f"{settings.MINIO_DEFAULT_CUSTOM_ENDPOINT_URL}/"
-                    f"{urlparse(submission.content.url).path}"
+                    f"{urlparse(attachment.file.url).path}"
                 ),
                 "bind_path": attachment.bind_at,
             }
             for attachment in submission.task.attachments.filter(
-                bind_path__isnull=False
+                bind_at__isnull=False
             )
         ]
 
