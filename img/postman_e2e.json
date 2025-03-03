@@ -1,0 +1,768 @@
+{
+	"info": {
+		"_postman_id": "fd33ed4f-84b5-4045-b926-22d989876fb0",
+		"name": "Datarush tests",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "29887339"
+	},
+	"item": [
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Correct registration",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Генерация случайных данных\r",
+									"const randomNamePrefix = `company_${Math.random().toString(36).substring(2, 8)}`;\r",
+									"const randomUsername = `${Math.random().toString(36).substring(3, 9)}`\r",
+									"const randomEmail = `${Math.random().toString(36).substring(2, 8)}@timka.test`;\r",
+									"const randomPassword = `${Math.random().toString(36).substring(2, 12)}!A1`;\r",
+									"\r",
+									"// Формирование тела запроса\r",
+									"const requestData = {\r",
+									"    username: randomUsername,\r",
+									"    email: randomEmail,\r",
+									"    password: randomPassword\r",
+									"};\r",
+									"\r",
+									"// Сохранение данных в переменные окружения\r",
+									"pm.environment.set(\"randomNamePrefix\", randomNamePrefix);\r",
+									"pm.environment.set(\"randomEmail\", randomEmail);\r",
+									"pm.environment.set(\"randomPassword\", randomPassword);\r",
+									"pm.environment.set(\"randomUsername\", randomUsername)\r",
+									"\r",
+									"// Сохранение JSON-объекта в переменную для дальнейшего использования\r",
+									"pm.environment.set(\"requestData\", JSON.stringify(requestData));\r",
+									"pm.environment.set(\"requestNameREGISTRATION\", JSON.stringify(randomNamePrefix));\r",
+									"pm.environment.set(\"requestEmailREGISTRATION\", JSON.stringify(randomEmail));\r",
+									"pm.environment.set(\"requestusernameREGISTRATION\", JSON.stringify(randomUsername))\r",
+									"pm.environment.set(\"requestPasswordREGISTRATION\", JSON.stringify(randomPassword));"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 201', function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"pm.test('Response has token', function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.token).to.be.a('string');\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{{requestData}}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{BASE_HOST}}/v1/sign-up"
+					},
+					"response": []
+				},
+				{
+					"name": "Correct sign in",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const email = pm.environment.get(\"randomEmail\")\r",
+									"const password = pm.environment.get(\"randomPassword\")\r",
+									"\r",
+									"const requestData = {\r",
+									"    email: email,\r",
+									"    password: password\r",
+									"}\r",
+									"pm.environment.set(\"requestData\", JSON.stringify(requestData));\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test('Response has token', function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.token).to.be.a('string');\r",
+									"    pm.environment.set(\"token\", jsonData.token)\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{{requestData}}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{BASE_HOST}}/v1/sign-in"
+					},
+					"response": []
+				},
+				{
+					"name": "Duplicated reg data",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const email = pm.environment.get(\"randomEmail\")\r",
+									"const password = pm.environment.get(\"randomPassword\")\r",
+									"const username = pm.environment.get(\"randomUsername\")\r",
+									"\r",
+									"const requestData = {\r",
+									"    email: email,\r",
+									"    password: password,\r",
+									"    username: username\r",
+									"}\r",
+									"pm.environment.set(\"requestData\", JSON.stringify(requestData));\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 409', function () {\r",
+									"    pm.response.to.have.status(409);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{{requestData}}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{BASE_HOST}}/v1/sign-up"
+					},
+					"response": []
+				},
+				{
+					"name": "Reg without username",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const email = pm.environment.get(\"randomEmail\")\r",
+									"const password = pm.environment.get(\"randomPassword\")\r",
+									"\r",
+									"const requestData = {\r",
+									"    email: email,\r",
+									"    password: password\r",
+									"}\r",
+									"pm.environment.set(\"requestData\", JSON.stringify(requestData));\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 400', function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{{requestData}}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{BASE_HOST}}/v1/sign-up"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Competitions",
+			"item": [
+				{
+					"name": "Get competition with no partipication",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test('Response has only 2 elements', function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.has.length(2,\"Response has non-2 length, try to reset to only test data state\");\r",
+									"    pm.environment.set(\"competition_id\", jsonData[0].id)\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_HOST}}/v1/competitions?is_participating=false",
+							"host": [
+								"{{BASE_HOST}}"
+							],
+							"path": [
+								"v1",
+								"competitions"
+							],
+							"query": [
+								{
+									"key": "is_participating",
+									"value": "false"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get competition with partipication",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test('Response has only 2 elements', function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.has.length(0,\"Response has non-0 length, try to reset to only test data state\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_HOST}}/v1/competitions?is_participating=true",
+							"host": [
+								"{{BASE_HOST}}"
+							],
+							"path": [
+								"v1",
+								"competitions"
+							],
+							"query": [
+								{
+									"key": "is_participating",
+									"value": "true"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get tasks without partipicating in test",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 403', function () {\r",
+									"    pm.response.to.have.status(403);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "{{BASE_HOST}}/v1/competitions/{{competition_id}}/tasks"
+					},
+					"response": []
+				},
+				{
+					"name": "Submit task sol without partipicaating",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 403', function () {\r",
+									"    pm.response.to.have.status(403);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/C:/Users/timka/AppData/Local/Postman/app-11.33.4/libGLESv2.dll"
+								}
+							]
+						},
+						"url": "{{BASE_HOST}}/v1/competitions/{{competition_id}}/tasks/{{task_id}}/submit"
+					},
+					"response": []
+				},
+				{
+					"name": "Partipicate in competition",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"url": "{{BASE_HOST}}/v1/competitions/{{competition_id}}/start"
+					},
+					"response": []
+				},
+				{
+					"name": "Get competition tasks",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test('Response has tasks', function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.environment.set(\"task_id\", jsonData[0].id)\r",
+									"    pm.expect(jsonData).to.has.length(9)\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "{{BASE_HOST}}/v1/competitions/{{competition_id}}/tasks"
+					},
+					"response": []
+				},
+				{
+					"name": "Get task history",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test('Response has token', function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.has.length(0);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "{{BASE_HOST}}/v1/competitions/{{competition_id}}/tasks/{{task_id}}/history"
+					},
+					"response": []
+				},
+				{
+					"name": "Submit task sol",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test('Response has submission id', function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.submission_id).to.be.a('string');\r",
+									"    pm.environment.set(\"sub_id\", jsonData.submission_id)\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/C:/Users/timka/AppData/Local/Postman/app-11.33.4/libGLESv2.dll"
+								}
+							]
+						},
+						"url": "{{BASE_HOST}}/v1/competitions/{{competition_id}}/tasks/{{task_id}}/submit"
+					},
+					"response": []
+				},
+				{
+					"name": "Get task attachments",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test('Response has empty array', function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.has.length(0);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "{{BASE_HOST}}/v1/competitions/{{competition_id}}/tasks/{{task_id}}/attachments"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Revieews",
+			"item": [
+				{
+					"name": "Get reviewer profile",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test('Response has correct data', function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.name).to.eq(pm.environment.get(\"reviewer_name\"));\r",
+									"    pm.expect(jsonData.surname).to.eq(pm.environment.get(\"reviewer_surname\"))\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{BASE_HOST}}/v1/review/{{reviewer_key}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Get submissions",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test('Response has correct data', function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.has.length(0)\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{BASE_HOST}}/v1/review/{{reviewer_key}}/submissions/{{sub_id}}"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Healthcheck",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Status code is 200', function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{BASE_HOST}}/health?format=json",
+					"host": [
+						"{{BASE_HOST}}"
+					],
+					"path": [
+						"health"
+					],
+					"query": [
+						{
+							"key": "format",
+							"value": "json"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "BASE_HOST",
+			"value": "https://prod-team-15-2pc0i3lc.final.prodcontest.ru/api",
+			"type": "string"
+		},
+		{
+			"key": "requestData",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "competition_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "task_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "reviewer_key",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "reviewer_name",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "reviewer_surname",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "sub_id",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
