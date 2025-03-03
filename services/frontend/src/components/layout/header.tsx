@@ -34,7 +34,7 @@ export const Header = () => {
             to="/docs/" 
             className="text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors flex items-center gap-1"
           >
-            Обучающие материалы
+            <FileText className="h-4 w-4" />
           </Link>
           
           <DropdownMenu>
