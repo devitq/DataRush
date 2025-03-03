@@ -120,7 +120,6 @@ def submit_task(
         user_input = content.read()
         correct_answer = task.correct_answer_file.read()
         verdict = user_input == correct_answer
-        print(user_input, correct_answer)
         submission = CompetitionTaskSubmission.objects.create(
             user=user,
             task=task,
@@ -196,14 +195,21 @@ def get_competition_results(request, competition_id: UUID):
     for task in tasks:
         submissions = CompetitionTaskSubmission.objects.filter(
             user=request.auth, task=task
-        ).filter(status="checked").all()
+        ).filter(status="checked").order_by("-earned_points").all()
         if not submissions:
-            result = 0
+            all_submissions_count = CompetitionTaskSubmission.objects.filter(
+                user=request.auth, task=task
+            ).count()
+            if all_submissions_count == 0:
+                result = -2
+            else:
+                result = -1
         else:
             result = submissions[0].earned_points
         data.append(TaskStatusSchema(
             task_name=task.title,
-            result=result
+            result=result,
+            max_points=task.points,
         ))
 
     return status.OK, data

@@ -1,24 +1,33 @@
+import { useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Clock, Trophy, BookOpen, BarChart2, AlertCircle } from "lucide-react";
+import { ArrowLeft, Clock, Trophy, BookOpen, AlertCircle, BarChart2 } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { getCompetition, startCompetition } from "@/shared/api/competitions";
+import { getCompetition, startCompetition, getCompetitionResults } from "@/shared/api/competitions";
 import { getCompetitionTasks } from "@/shared/api/session";
 import { Loading } from "@/components/ui/loading";
 import { CompetitionType } from "@/shared/types/competition";
 import remarkMath from "remark-math";
 import remarkGfm from "remark-gfm";
 import rehypeKatex from "rehype-katex";
+import { CompetitionResultsModal } from "./components/CompetitionResultModal";
 
 const CompetitionPage = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const competitionId = id || "";
+  const [isResultsModalOpen, setIsResultsModalOpen] = useState(false);
 
   const competitionQuery = useQuery({
     queryKey: ["competition", competitionId],
     queryFn: () => getCompetition(competitionId),
+    enabled: !!competitionId,
+  });
+
+  const resultsQuery = useQuery({
+    queryKey: ["competitionResults", competitionId],
+    queryFn: () => getCompetitionResults(competitionId),
     enabled: !!competitionId,
   });
 
@@ -60,10 +69,10 @@ const CompetitionPage = () => {
   const handleStart = () => {
     startMutation.mutate();
   };
-  
-  const handleViewResults = () => {
-    console.log("sorryan");
-  };
+
+  const hasResults = resultsQuery.data && 
+                     resultsQuery.data.length > 0 && 
+                     resultsQuery.data.some(result => result.result !== -2);
 
   if (competitionQuery.isLoading) {
     return <Loading />;
@@ -75,15 +84,6 @@ const CompetitionPage = () => {
 
   const competition = competitionQuery.data;
   
-  const isCompetitionEnded = () => {
-    if (!competition?.end_date) return false;
-    
-    const endDate = new Date(competition.end_date);
-    const now = new Date();
-    
-    return now > endDate;
-  };
-  
   const isCompetitionNotStarted = () => {
     if (!competition?.start_date) return false;
     
@@ -92,9 +92,19 @@ const CompetitionPage = () => {
     
     return now < startDate;
   };
+  
+  // Check if competition has ended
+  const isCompetitionEnded = () => {
+    if (!competition?.end_date) return false;
+    
+    const endDate = new Date(competition.end_date);
+    const now = new Date();
+    
+    return now > endDate;
+  };
 
-  const competitionEnded = isCompetitionEnded();
   const competitionNotStarted = isCompetitionNotStarted();
+  const competitionEnded = isCompetitionEnded();
 
   return (
     <div className="flex flex-col gap-4">
@@ -133,15 +143,15 @@ const CompetitionPage = () => {
                   )}
                 </div>
                 
-                {competitionEnded && competition.type === CompetitionType.COMPETITIVE && (
-                  <div className="bg-red-100 text-red-700 px-3 py-1 rounded-full text-sm font-medium">
-                    Завершено
-                  </div>
-                )}
-                
                 {competitionNotStarted && competition.type === CompetitionType.COMPETITIVE && (
                   <div className="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-sm font-medium">
                     Скоро начнется
+                  </div>
+                )}
+                
+                {competitionEnded && competition.type === CompetitionType.COMPETITIVE && (
+                  <div className="bg-red-100 text-red-700 px-3 py-1 rounded-full text-sm font-medium">
+                    Завершено
                   </div>
                 )}
               </div>
@@ -178,17 +188,8 @@ const CompetitionPage = () => {
             </div>
           </div>
           
-          <div className="w-full *:w-full md:w-96">
-            {competitionEnded && competition.type === CompetitionType.COMPETITIVE ? (
-              <Button 
-                size={"lg"} 
-                onClick={handleViewResults}
-                className="bg-indigo-600 hover:bg-indigo-700"
-              >
-                <BarChart2 size={18} className="mr-2" />
-                Смотреть результаты
-              </Button>
-            ) : competitionNotStarted && competition.type === CompetitionType.COMPETITIVE ? (
+          <div className="w-full *:w-full md:w-96 flex flex-col gap-3">
+            {competitionNotStarted && competition.type === CompetitionType.COMPETITIVE ? (
               <Button 
                 size={"lg"} 
                 disabled={true}
@@ -197,7 +198,7 @@ const CompetitionPage = () => {
                 <AlertCircle size={18} className="mr-2" />
                 Скоро начнется
               </Button>
-            ) : (
+            ) : !competitionEnded ? (
               <Button 
                 size={"lg"} 
                 onClick={handleStart} 
@@ -205,10 +206,36 @@ const CompetitionPage = () => {
               >
                 {startMutation.isPending ? "Загрузка..." : "Приступить к выполнению"}
               </Button>
+            ) : null}
+            
+            {hasResults && (
+              <Button 
+                size={"lg"} 
+                onClick={() => setIsResultsModalOpen(true)}
+                className="bg-indigo-600 hover:bg-indigo-700"
+              >
+                <BarChart2 size={18} className="mr-2" />
+                Посмотреть результаты
+              </Button>
+            )}
+            
+            {competitionEnded && !hasResults && competition.type === CompetitionType.COMPETITIVE && !resultsQuery.isLoading && (
+              <div className="text-center p-4 border rounded-md bg-gray-50">
+                <p className="text-gray-600">Соревнование завершено. Результаты пока не доступны.</p>
+              </div>
             )}
           </div>
         </div>
       </div>
+
+      <CompetitionResultsModal
+        competitionTitle={competition.title}
+        results={resultsQuery.data}
+        isLoading={resultsQuery.isLoading}
+        error={resultsQuery.error}
+        isOpen={isResultsModalOpen}
+        onOpenChange={setIsResultsModalOpen}
+      />
     </div>
   );
 };

@@ -24,3 +24,9 @@ export enum CompetitionType {
 export enum CompetitionParticipationType {
   SOLO = "solo",
 }
+
+export interface CompetitionResult {
+  task_name: string;
+  result: number;
+  max_points: number;
+}
