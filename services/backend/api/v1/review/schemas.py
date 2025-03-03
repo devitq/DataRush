@@ -38,6 +38,7 @@ class SubmissionOut(ModelSchema):
     competition_name: str = Field(..., alias="task.competition.title")
     task_position: int = Field(..., alias="task.in_competition_position")
     task_title: str = Field(..., alias="task.title")
+    description: str = Field(..., alias="task.description")
 
     @staticmethod
     def resolve_criteries(self, context) -> list[CriteriaOut] | None:
