@@ -152,9 +152,9 @@ const CompetitionSession = () => {
               {isReloading && (
                 <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
                   <div className="bg-white p-6 rounded-lg shadow-xl text-center">
-                    <Loader2 className="h-8 w-8 animate-spin text-blue-500 mx-auto mb-4" />
+                    <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
                     <p className="font-hse-sans text-gray-700">
-                      Решение отправлено! Страница обновится через несколько секунд...
+                      Решение отправлено! Пожалуйста, подождите...
                     </p>
                   </div>
                 </div>
