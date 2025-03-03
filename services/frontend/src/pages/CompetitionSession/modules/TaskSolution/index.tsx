@@ -73,8 +73,7 @@ const TaskSolution: React.FC<TaskSolutionProps> = ({
   useEffect(() => {
     if (solutionHistory.length > 0 && 
         (!displayedSolution || 
-         (solutionHistory[solutionHistory.length - 1].id !== displayedSolution.id &&
-          displayedSolution.id === solutionHistory[solutionHistory.length - 2]?.id))) {
+         (solutionHistory[solutionHistory.length - 1].id !== displayedSolution.id))) {
       setDisplayedSolution(solutionHistory[solutionHistory.length - 1]);
     }
   }, [solutionHistory, displayedSolution]);
@@ -82,7 +81,6 @@ const TaskSolution: React.FC<TaskSolutionProps> = ({
   useEffect(() => {
     const loadSolutionContent = async () => {
       if (!displayedSolution || !displayedSolution.content) return;
-      console.log(displayedSolution, solutionHistory, "CHECK")
       try {
         if (task.type === TaskType.FILE) {
           setAnswer(""); 
