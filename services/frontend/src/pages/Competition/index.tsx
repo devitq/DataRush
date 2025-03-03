@@ -7,6 +7,9 @@ import { getCompetition, startCompetition } from "@/shared/api/competitions";
 import { getCompetitionTasks } from "@/shared/api/session";
 import { Loading } from "@/components/ui/loading";
 import { CompetitionType } from "@/shared/types/competition";
+import remarkMath from "remark-math";
+import remarkGfm from "remark-gfm";
+import rehypeKatex from "rehype-katex";
 
 const CompetitionPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -166,7 +169,12 @@ const CompetitionPage = () => {
             </div>
             
             <div className="prose prose-lg max-w-none text-xl leading-10 font-normal">
-              <ReactMarkdown>{competition.description || ""}</ReactMarkdown>
+              <ReactMarkdown
+                remarkPlugins={[remarkMath, remarkGfm]}
+                rehypePlugins={[rehypeKatex]}
+              >
+                {competition.description || ""}
+              </ReactMarkdown>
             </div>
           </div>
           
@@ -186,6 +194,7 @@ const CompetitionPage = () => {
                 disabled={true}
                 className="bg-gray-200 text-gray-500 cursor-not-allowed"
               >
+                <AlertCircle size={18} className="mr-2" />
                 Скоро начнется
               </Button>
             ) : (

@@ -2,6 +2,7 @@ import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
+import remarkGfm from 'remark-gfm'; 
 import 'katex/dist/katex.min.css';
 import { Task } from '@/shared/types/task';
 import { useQuery } from '@tanstack/react-query';
@@ -32,7 +33,7 @@ const TaskContent: React.FC<TaskContentProps> = ({ task }) => {
       
       <div className="prose prose-lg max-w-none text-gray-700 font-hse-sans mb-6">
         <ReactMarkdown
-          remarkPlugins={[remarkMath]}
+          remarkPlugins={[remarkMath, remarkGfm]}
           rehypePlugins={[rehypeKatex]}
         >
           {task.description}
