@@ -19,15 +19,17 @@ docker compose up
 * `/admin/grafana` - графана
 * `/docs` - обучающие материалы по анализу данных
 
-После запуска по методу выше создается пользователь в админке (`/admin/`) с данными ниже:`admin` 
-- `admin` - логин
-- `proooooood` - пароль
+После запуска по методу выше создается пользователь в админке (`/admin/`) с данными ниже:
 
+* `admin` - логин
+* `proooooood` - пароль
 
 ## Тесты
 
-Написаны unit-тесты (на базе Django TestCase) и E2E (Postman коллекция)
+Написаны unit-тесты (на базе Django TestCase) и E2E (Postman коллекция). Они покрывают flow регистрации, просмотра и участия в соревновании.
 
 ![Postman data](img/postman.gif)
 
-![django test]()
+Ниже можно увидеть Coverage тестами бекенда данного приложения
+
+![django test](img/superduperdjangotests.png)

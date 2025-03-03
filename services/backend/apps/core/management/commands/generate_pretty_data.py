@@ -14,7 +14,8 @@ from apps.review.models import Reviewer
 from apps.task.models import (
     CompetitionTask,
     CompetitionTaskCriteria,
-    CompetitionTaskSubmission, CompetitionTaskAttachment,
+    CompetitionTaskSubmission,
+    CompetitionTaskAttachment,
 )
 from apps.user.models import User, UserRole
 
@@ -42,6 +43,15 @@ dataset = ContentFile(
 dataset2 = ContentFile(
     b"it is a dataset",
     name=f"dataset-{uuid.uuid4().hex}.csv",
+)
+
+correct_answer_file = ContentFile(
+    b"42",
+    name=f"answer.txt",
+)
+correct2_answer_file = ContentFile(
+    b"it is a dataset",
+    name=f"answer.txt",
 )
 
 now = timezone.now()
@@ -103,10 +113,11 @@ E — коэффициент чувствительности количеств
             {
                 "obj": None,
                 "title": "Задача 2",
-                "description": "Найдите максимальную зарплату программиста из датасета на питоне",
+                "description": "Найдите максимальную зарплату программиста из датасета на питоне. Программа должна вывести содержимое файла по пути /dataset",
                 "type": CompetitionTask.CompetitionTaskType.CHECKER.value,
+                "correct_answer_file": correct2_answer_file,
                 "attachment": dataset,
-                "attachment_path": "dataset",
+                "attachment_path": "/dataset",
                 "points": 25,
                 "submission_reviewers_count": 2,
                 "max_attempts": 50,
@@ -115,7 +126,7 @@ E — коэффициент чувствительности количеств
                 "obj": None,
                 "title": "Задача 3",
                 "attachment": dataset2,
-                "attachment_path": "dataset2",
+                "attachment_path": "/dataset2",
                 "description": """
 Небольшой интернет-магазин собрал данные о действиях пользователей на своем сайте
 за последние несколько месяцев.
@@ -317,9 +328,10 @@ B — пользователи, которым доступен только о�
 и его характеристики. Однако оплатить товар можно и без захода на карточку
 товара.
 Задача: сравните группы по каждой метрике и сделайте вывод о том, стоит ли
-продолжить внедрение обновленного магазина или нужно вернуть старый
+продолжить внедрение обновленного магазина или нужно вернуть старый. Ответ 42.
                 """.strip(),
                 "type": CompetitionTask.CompetitionTaskType.CHECKER.value,
+                "correct_answer_file": correct_answer_file,
                 "points": 30,
                 "submission_reviewers_count": 2,
             },
@@ -338,7 +350,7 @@ B — пользователи, которым доступен только о�
         "tasks": [
             {
                 "obj": None,
-                "title": "Анализ трендов", # TODO сюда добавить бд
+                "title": "Анализ трендов",  # TODO сюда добавить бд
                 "description": """ 
 Скачайте базу данных со специальной страницы (https://dano.hse.ru/data), изучите ее более
 внимательно: посмотрите на переменные, посчитайте описательные статистики, постройте
@@ -373,7 +385,7 @@ B — пользователи, которым доступен только о�
                 "submission_reviewers_count": 3,
                 "max_attempts": 2,
                 "attachment": dataset,
-                "attachment_path": "dataset",
+                "attachment_path": "/dataset",
                 "criteries": [
                     {
                         "obj": None,
@@ -412,9 +424,8 @@ B — пользователи, которым доступен только о�
                 """.strip(),
                 "type": CompetitionTask.CompetitionTaskType.INPUT.value,
                 "points": 15,
-                "submission_reviewers_count": 2,
                 "max_attempts": 50,
-                "correct_answer_file": ans3
+                "correct_answer_file": ans3,
             },
             {
                 "obj": None,
@@ -422,7 +433,6 @@ B — пользователи, которым доступен только о�
                 "description": "Сколько будет 6 * 7?",
                 "type": CompetitionTask.CompetitionTaskType.INPUT.value,
                 "points": 5,
-                "submission_reviewers_count": 2,
                 "max_attempts": 10,
                 "correct_answer_file": ans3,
             },
@@ -510,8 +520,8 @@ users = [
         "role": UserRole.STUDENT.value,
     },
     {
-        "email": "oleg-tinkov@gmail.com",
-        "username": "oleg-tinkov",
+        "email": "s.bliznyuk@tbank.ru",
+        "username": "s_bliznyuk",
         "password": "password123!",
         "role": UserRole.STUDENT.value,
     },
@@ -601,6 +611,7 @@ reviewers = [
     },
 ]
 
+
 class Command(BaseCommand):
     help = "Generate sample data for Users, Competitions, Tasks, Submissions, and States."
 
@@ -619,9 +630,9 @@ class Command(BaseCommand):
     def create_reviewers(self, count):
         reviewers_objs = []
         for reviewer in reviewers:
-            name = reviewer['name']
-            surname = reviewer['surname']
-            token = reviewer['token']
+            name = reviewer["name"]
+            surname = reviewer["surname"]
+            token = reviewer["token"]
             reviewer_obj = Reviewer(name=name, surname=surname, token=token)
             reviewer_obj.save()
             reviewers_objs.append(reviewer_obj)
@@ -631,11 +642,11 @@ class Command(BaseCommand):
         users_objs = []
         for user in users:
             user_obj, created = User.objects.get_or_create(
-                email=user['email'],
+                email=user["email"],
                 defaults={
-                    "username": user['username'],
-                    "password": make_password(user['password']),
-                    "status": user['role'],
+                    "username": user["username"],
+                    "password": make_password(user["password"]),
+                    "status": user["role"],
                 },
             )
             users_objs.append(user_obj)
@@ -646,20 +657,23 @@ class Command(BaseCommand):
         competitions_objs = []
 
         for i, competition in enumerate(competitions):
-            competition_obj = Competition.objects.create(
-                title=competition['title'],
-                description=competition['description'],
-                start_date=competition['start_date'],
-                end_date=competition['end_date'],
-                type=competition['type'],
-                participation_type=competition['participation_type'],
-            )
+            try:
+                competition_obj = Competition.objects.create(
+                    title=competition["title"],
+                    description=competition["description"],
+                    start_date=competition["start_date"],
+                    end_date=competition["end_date"],
+                    type=competition["type"],
+                    participation_type=competition["participation_type"],
+                )
+            except Exception as e:
+                print(competition)
 
             if competition.get("image"):
-                competition_obj.image_url = competition['image']
+                competition_obj.image_url = competition["image"]
                 competition_obj.save()
 
-            competitions[i]['obj'] = competition_obj
+            competitions[i]["obj"] = competition_obj
             competition_obj.participants.add(*users)
             competitions_objs.append(competition_obj)
             self.stdout.write(f"Created competition: {competition['title']}")
@@ -673,45 +687,53 @@ class Command(BaseCommand):
             CompetitionTask.CompetitionTaskType.INPUT.value,
         ]
         for i, competition in enumerate(competitions):
-            for j, task in enumerate(competition['tasks']):
+            for j, task in enumerate(competition["tasks"]):
                 task_obj = CompetitionTask.objects.create(
-                    in_competition_position=j+1,
-                    competition=competition['obj'],
-                    title=task['title'],
-                    description=task['description'],
-                    type=task['type'],
-                    points=task['points'],
-                    submission_reviewers_count=task['submission_reviewers_count'],
-                    max_attempts=task.get('max_attempts'),
+                    in_competition_position=j + 1,
+                    competition=competition["obj"],
+                    title=task["title"],
+                    description=task["description"],
+                    type=task["type"],
+                    points=task["points"],
+                    submission_reviewers_count=task[
+                        "submission_reviewers_count"
+                    ] if task["type"] == CompetitionTask.CompetitionTaskType.REVIEW.value else None,
+                    correct_answer_file=task["correct_answer_file"] if task["type"] != CompetitionTask.CompetitionTaskType.REVIEW.value else None,
+                    max_attempts=task.get("max_attempts"),
                 )
-                competitions[i]['tasks'][j]['obj'] = task_obj
+                competitions[i]["tasks"][j]["obj"] = task_obj
 
-                if task['type'] == CompetitionTask.CompetitionTaskType.INPUT.value:
-                    task_obj.correct_answer_file = task['correct_answer_file']
+
                 if task.get("attachment"):
                     CompetitionTaskAttachment.objects.create(
                         task=task_obj,
-                        file=task['attachment'],
-                        bind_at=task['attachment_path'],
-                        public=True
+                        file=task["attachment"],
+                        bind_at=task["attachment_path"],
+                        public=True,
                     )
 
                 if (
-                    task['type']
+                    task["type"]
                     == CompetitionTask.CompetitionTaskType.REVIEW.value
                 ):
-                    for k, criteria in enumerate(task['criteries']):
+                    for k, criteria in enumerate(task["criteries"]):
                         criteria_obj = CompetitionTaskCriteria.objects.create(
                             task=task_obj,
-                            name=criteria['name'],
-                            slug=criteria['slug'],
-                            description=criteria['description'],
-                            max_value=criteria['max_value'],
+                            name=criteria["name"],
+                            slug=criteria["slug"],
+                            description=criteria["description"],
+                            max_value=criteria["max_value"],
                         )
-                        competitions[i]['tasks'][j]['criteries'][k]['obj'] = criteria_obj
-                        self.stdout.write(f"Created criteria: {criteria['slug']}")
+                        competitions[i]["tasks"][j]["criteries"][k]["obj"] = (
+                            criteria_obj
+                        )
+                        self.stdout.write(
+                            f"Created criteria: {criteria['slug']}"
+                        )
                 tasks_objs.append(task_obj)
-                self.stdout.write(f"Created task: {task['title']} (type: {task['type']})")
+                self.stdout.write(
+                    f"Created task: {task['title']} (type: {task['type']})"
+                )
         self.add_reviewers_to_task(tasks_objs)
         return tasks_objs
 
@@ -723,22 +745,29 @@ class Command(BaseCommand):
     def create_incorrect_submissions(self, tasks, users):
         for user in users:
             for task in tasks:
-                if task.type == CompetitionTask.CompetitionTaskType.REVIEW.value:
+                if (
+                    task.type
+                    == CompetitionTask.CompetitionTaskType.REVIEW.value
+                ):
                     num_submissions = random.randint(1, 3)
                     for m in range(num_submissions):
                         dummy_content_txt = ContentFile(
-                            b"otvet: 112 sto proc" ,
+                            b"otvet: 112 sto proc",
                             name=f"submission_{uuid.uuid4().hex}.txt",
                         )
 
                         content_dir = f"{settings.BASE_DIR}/apps/core/contents"
-                        with open(f"{content_dir}/presentation.pptx", "rb") as f:
+                        with open(
+                            f"{content_dir}/presentation.pptx", "rb"
+                        ) as f:
                             pptx = File(f, name="presentation.pptx")
                             files = [pptx, pptx, dummy_content_txt]
-                            submission = CompetitionTaskSubmission.objects.create(
-                                user=user,
-                                task=task,
-                                content=random.choice(files),
+                            submission = (
+                                CompetitionTaskSubmission.objects.create(
+                                    user=user,
+                                    task=task,
+                                    content=random.choice(files),
+                                )
                             )
                         submission.save()
                         submission.send_on_review()
@@ -754,7 +783,8 @@ class Command(BaseCommand):
                     competition=comp,
                     defaults={
                         "state": "started",
-                        "changed_at": timezone.now() - timedelta(days=random.randint(1, 30)),
+                        "changed_at": timezone.now()
+                        - timedelta(days=random.randint(1, 30)),
                     },
                 )
                 self.stdout.write(
