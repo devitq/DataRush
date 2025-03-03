@@ -44,6 +44,10 @@ const TaskSolution: React.FC<TaskSolutionProps> = ({
 
   const solutionHistory = solutionsQuery.data || [];
   
+  let lastSolutionPoints = 0;
+  if (solutionHistory.length > 0) {
+    lastSolutionPoints = solutionHistory[solutionHistory.length - 1].earned_points 
+  }
   const maxAttempts = task.max_attempts || -1;
   const submissionsUsed = solutionHistory.length;
   const submissionsLeft = Math.max(0, maxAttempts - submissionsUsed);
@@ -174,6 +178,7 @@ const TaskSolution: React.FC<TaskSolutionProps> = ({
         onHistoryClick={handleOpenHistory}
         isSubmitting={isSubmitting}
         hasSubmissionsLeft={hasSubmissionsLeft}
+        isCleared={task.points === lastSolutionPoints}
       />
       
       <SolutionHistorySheet 

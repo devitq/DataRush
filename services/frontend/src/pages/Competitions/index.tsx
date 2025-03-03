@@ -3,7 +3,11 @@ import { CompetitionGrid } from "./modules/CompetitionsGrid";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useQuery } from "@tanstack/react-query";
 import { getCompetitions } from "@/shared/api/competitions";
-import { NoCompetitions } from "./modules/NoCompetitions";
+import {
+  NoActiveCompetitions,
+  NoCompetitions,
+  NoCompletedCompetitions,
+} from "./modules/NoCompetitions";
 import { TabsContent } from "@radix-ui/react-tabs";
 import { Loading } from "@/components/ui/loading";
 import { CompetitionState } from "@/shared/types/competition";
@@ -54,8 +58,8 @@ const CompetitionsPage = () => {
   return (
     <div className="flex flex-col gap-6 sm:gap-8">
       {(activeCompetitionsQuery.data ?? []).length > 0 && (
-        <Section>
-          <Tabs value={activeTab} onValueChange={setActiveTab}>
+        <Tabs value={activeTab} onValueChange={setActiveTab} asChild>
+          <Section>
             <SectionHeader>
               <SectionTitle>Мои события</SectionTitle>
 
@@ -70,14 +74,22 @@ const CompetitionsPage = () => {
             </SectionHeader>
 
             <TabsContent value={CompetitionTab.ONGOING} asChild>
-              <CompetitionGrid competitions={startedCompetitions} />
+              {startedCompetitions.length > 0 ? (
+                <CompetitionGrid competitions={startedCompetitions} />
+              ) : (
+                <NoActiveCompetitions />
+              )}
             </TabsContent>
 
             <TabsContent value={CompetitionTab.COMPLETED} asChild>
-              <CompetitionGrid competitions={finishedCompetitions} />
+              {finishedCompetitions.length > 0 ? (
+                <CompetitionGrid competitions={finishedCompetitions} />
+              ) : (
+                <NoCompletedCompetitions />
+              )}
             </TabsContent>
-          </Tabs>
-        </Section>
+          </Section>
+        </Tabs>
       )}
 
       <Section>

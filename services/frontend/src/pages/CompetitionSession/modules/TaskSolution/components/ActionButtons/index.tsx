@@ -1,19 +1,21 @@
 import React from 'react';
 import { Button } from "@/components/ui/button";
-import { Loader2 } from "lucide-react";
+import { Loader2, CheckCircle } from "lucide-react";
 
 interface ActionButtonsProps {
   onSubmit: () => void;
   onHistoryClick: () => void;
   isSubmitting?: boolean;
   hasSubmissionsLeft?: boolean;
+  isCleared: boolean;
 }
 
 const ActionButtons: React.FC<ActionButtonsProps> = ({ 
   onSubmit,
   onHistoryClick,
   isSubmitting = false,
-  hasSubmissionsLeft = true
+  hasSubmissionsLeft = true,
+  isCleared
 }) => {
   return (
     <div className="flex gap-8">
@@ -26,7 +28,15 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
         История
       </Button>
       
-      {hasSubmissionsLeft ? (
+      {isCleared ? (
+        <Button 
+          className="font-hse-sans flex-grow bg-green-600 hover:bg-green-700" 
+          disabled={true}
+        >
+          <CheckCircle className="mr-2 h-4 w-4" />
+          Задача сдана!
+        </Button>
+      ) : hasSubmissionsLeft ? (
         <Button 
           onClick={onSubmit}
           className="font-hse-sans flex-grow" 
