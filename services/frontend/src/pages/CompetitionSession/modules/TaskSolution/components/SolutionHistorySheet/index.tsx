@@ -11,7 +11,7 @@ interface SolutionHistorySheetProps {
   solutions: Solution[];
   maxPoints: number;
   onSolutionSelect: (solution: Solution) => void;
-  currentSolutionId?: string | null;
+  currentSolutionId?: string;
 }
 
 const SolutionHistorySheet: React.FC<SolutionHistorySheetProps> = ({
@@ -22,7 +22,6 @@ const SolutionHistorySheet: React.FC<SolutionHistorySheetProps> = ({
   onSolutionSelect,
   currentSolutionId
 }) => {
-  
   return (
     <Sheet open={isOpen} onOpenChange={onOpenChange}>
       <SheetContent className="w-[350px] sm:w-[450px] p-0">
@@ -39,11 +38,15 @@ const SolutionHistorySheet: React.FC<SolutionHistorySheetProps> = ({
         
         <div className="flex flex-col mt-3 space-y-2.5 overflow-y-auto max-h-[calc(100vh-80px)] px-4 pb-4">
           {solutions.length > 0 ? (
-            solutions.map((solution) => (
+            solutions.map((solution, index) => (
               <div 
-                key={solution.id} 
-                className={`w-full cursor-pointer relative ${solution.id === currentSolutionId ? 'ring-2 ring-blue-500 rounded-lg' : ''}`}
-                onClick={() => onSolutionSelect(solution)}
+                key={solution.id || index} 
+                className={`w-full cursor-pointer transition-transform hover:scale-[1.01] relative 
+                  ${solution.id === currentSolutionId ? 'ring-2 ring-blue-500 rounded-lg' : ''}`}
+                onClick={() => {
+                  onSolutionSelect(solution);
+                  onOpenChange(false);
+                }}
               >
                 {solution.id === currentSolutionId && (
                   <div className="absolute top-2 right-2 z-10 bg-blue-500 text-white rounded-full p-1">
