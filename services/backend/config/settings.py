@@ -271,6 +271,8 @@ DEFAULT_CHARSET = "utf-8"
 
 FORCE_SCRIPT_NAME = None
 
+X_FRAME_OPTIONS = "SAMEORIGIN"
+
 INTERNAL_IPS = env(
     "DJANGO_INTERNAL_IPS",
     list,
@@ -438,8 +440,7 @@ INSTALLED_APPS = [
     "django_guid",
     "ninja",
     "minio_storage",
-    "tinymce",
-    "martor",
+    "mdeditor",
     # Internal apps
     "apps.core",
     "apps.user",
@@ -448,65 +449,6 @@ INSTALLED_APPS = [
     "apps.task",
     "apps.team",
     "apps.achievement",
-]
-
-# tinymce
-TINYMCE_DEFAULT_CONFIG = {
-    "theme": "silver",
-    "height": 500,
-    "menubar": False,
-    "plugins": "advlist,autolink,lists,link,image,charmap,print,preview,anchor,"
-    "searchreplace,visualblocks,code,fullscreen,insertdatetime,media,table,paste,"
-    "code,help,wordcount,markdown",
-    "toolbar": "undo redo | formatselect | "
-    "bold italic backcolor | alignleft aligncenter "
-    "alignright alignjustify | bullist numlist outdent indent | "
-    "removeformat | help",
-    "skin": "oxide-dark",
-    "content_css": "dark",
-    "textpattern_patterns": [
-        {"start": "*", "end": "*", "format": "italic"},
-        {"start": "**", "end": "**", "format": "bold"},
-        {"start": "#", "format": "h1"},
-        {"start": "##", "format": "h2"},
-        {"start": "###", "format": "h3"},
-        {"start": "####", "format": "h4"},
-        {"start": "#####", "format": "h5"},
-        {"start": "######", "format": "h6"},
-        {"start": "1. ", "cmd": "InsertOrderedList"},
-        {"start": "* ", "cmd": "InsertUnorderedList"},
-        {"start": "- ", "cmd": "InsertUnorderedList"},
-    ],
-}
-
-# martor
-
-MARTOR_THEME = "bootstrap"
-
-MARTOR_ENABLE_CONFIGS = {
-    "emoji": "true",  # to enable/disable emoji icons.
-    "imgur": "true",  # to enable/disable imgur/custom uploader.
-    "mention": "false",  # to enable/disable mention
-    "jquery": "true",  # to include/revoke jquery (require for admin default django)
-    "living": "false",  # to enable/disable live updates in preview
-    "spellcheck": "false",  # to enable/disable spellcheck in form textareas
-    "hljs": "true",  # to enable/disable hljs highlighting in preview
-}
-
-MARTOR_TOOLBAR_BUTTONS = [
-    "bold",
-    "italic",
-    "horizontal",
-    "heading",
-    "pre-code",
-    "blockquote",
-    "unordered-list",
-    "ordered-list",
-    "link",
-    "emoji",
-    "direct-mention",
-    "toggle-maximize",
-    "help",
 ]
 
 # GUID
