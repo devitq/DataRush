@@ -68,6 +68,7 @@ const FileSolution: React.FC<FileSolutionProps> = ({
       ? existingFileUrl.split('/').pop() || 'file' 
       : '';
 
+  console.log(firstSolution, "IS FIRST SOLUTION")
   const hasFile = !!selectedFile || (!!existingFileUrl && !firstSolution);
 
   return (

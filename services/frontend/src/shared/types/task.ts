@@ -5,6 +5,7 @@ interface Task {
   type: TaskType;
   in_competition_position: number;
   points: number;
+  max_attempts: number;
 }
 
 export interface TaskAttachment {
