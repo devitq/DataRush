@@ -35,6 +35,7 @@ export const Header = () => {
           className="text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors flex items-center gap-1"
         >
           <FileText className="h-4 w-4" />
+          Материалы
         </a>
           
           <DropdownMenu>
