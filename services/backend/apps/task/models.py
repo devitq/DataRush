@@ -34,9 +34,10 @@ class CompetitionTask(BaseModel):
         null=True,
         blank=True,
         verbose_name="файл с правильным ответом",
+        help_text="Имеет смысл только при автоматической (ввод ответа или кода) проверке.",
     )
     points = models.IntegerField(
-        null=True, blank=True, verbose_name="баллы за задание"
+        null=True, blank=True, verbose_name="общий балл за задание"
     )
 
     # only when "checker" type
@@ -44,7 +45,10 @@ class CompetitionTask(BaseModel):
         null=True,
         blank=True,
         verbose_name="куда сделать вывод программы участнику",
-        help_text="Путь до файла в котором ожидается результат. Пример: stdout или ./output.txt",
+        help_text=(
+            "Путь до файла в котором ожидается результат. "
+            "Пример: stdout или ./output.txt. Имеет смысл только при автоматическом типе проверки."
+        ),
         default="stdout",
     )
 
@@ -53,7 +57,11 @@ class CompetitionTask(BaseModel):
         Reviewer,
         blank=True,
         verbose_name="ревьюверы",
-        help_text="Справа отображаются действующие проверяющие, слева - доступные для выбора. Для перемещения можно кликнуть 2 раза по проверяющему",
+        help_text=(
+            "Справа отображаются действующие проверяющие, слева - доступные для выбора. "
+            "Для перемещения можно кликнуть 2 раза по проверяющему. Имеет смысл только"
+            " при ручном типе проверки."
+        ),
     )
     submission_reviewers_count = models.PositiveSmallIntegerField(
         default=1, null=True, blank=True
