@@ -2,7 +2,7 @@ from uuid import uuid4
 
 from django.db import models
 from django.db.models import Count, Q
-from martor.models import MartorField
+from mdeditor.fields import MDTextField
 
 from apps.competition.models import Competition
 from apps.core.models import BaseModel
@@ -19,11 +19,15 @@ class CompetitionTask(BaseModel):
     def answer_file_upload_to(instance, filename) -> str:
         return f"tasks/{instance.id}/answer/{uuid4()}/{filename}"
 
-    in_competition_position = models.PositiveSmallIntegerField()
-    competition = models.ForeignKey(Competition, on_delete=models.CASCADE)
+    in_competition_position = models.PositiveSmallIntegerField(
+        verbose_name="позиция в соревновании"
+    )
+    competition = models.ForeignKey(Competition, on_delete=models.CASCADE,
+                                    verbose_name="привязанное соревнование")
     title = models.CharField(verbose_name="заголовок", max_length=50)
-    description = MartorField(verbose_name="описание")
-    max_attempts = models.PositiveSmallIntegerField(null=True, blank=True)
+    description = MDTextField(verbose_name="описание")
+    max_attempts = models.PositiveSmallIntegerField(null=True, blank=True,
+                                                    verbose_name="максимальное кол-во попыток")
     type = models.CharField(
         choices=CompetitionTaskType, max_length=8, verbose_name="тип проверки"
     )
@@ -56,7 +60,7 @@ class CompetitionTask(BaseModel):
         help_text="Справа отображаются действующие проверяющие, слева - доступные для выбора. Для перемещения можно кликнуть 2 раза по проверяющему",
     )
     submission_reviewers_count = models.PositiveSmallIntegerField(
-        default=1, null=True, blank=True
+        default=1, null=True, blank=True, verbose_name="кол-во проверяющих для зачета задачи"
     )
 
     def __str__(self):
@@ -72,10 +76,25 @@ class CompetitionTaskCriteria(BaseModel):
         CompetitionTask, on_delete=models.CASCADE, related_name="criteries"
     )
 
-    name = models.TextField()
-    slug = models.SlugField()
-    description = models.TextField()
-    max_value = models.PositiveSmallIntegerField()
+    name = models.TextField(
+        verbose_name="название"
+    )
+    slug = models.SlugField(
+        verbose_name="техническое название"
+    )
+    description = models.TextField(
+        verbose_name="описание критерии"
+    )
+    max_value = models.PositiveSmallIntegerField(
+        verbose_name="максимальное кол-во баллов"
+    )
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = "критерий"
+        verbose_name_plural = "критерии"
 
 
 class CompetitionTaskAttachment(BaseModel):
