@@ -163,7 +163,7 @@ const ReviewContent = ({ review }: { review: Review }) => {
     <div className="flex flex-col gap-5">
       <h2 className="text-3xl font-semibold">Ответ</h2>
 
-      <div className="bg-background rounded-xl px-5 py-3 text-lg">
+      <div className="bg-background rounded-xl px-5 py-3 text-lg break-words">
         {extension === "txt" ? (
           content
         ) : (
