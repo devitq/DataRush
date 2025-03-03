@@ -2,6 +2,7 @@ import random
 import uuid
 from datetime import timedelta, datetime
 
+from django.conf import settings
 from django.contrib.auth.hashers import make_password
 from django.core.files.base import ContentFile
 from django.core.management.base import BaseCommand
@@ -60,6 +61,17 @@ E — коэффициент чувствительности количеств
             {
                 "obj": None,
                 "title": "Задача 2",
+                "description": """
+Напишите "hello_dano" на питоне
+""".strip(),
+                "type": CompetitionTask.CompetitionTaskType.CHECKER.value,
+                "points": 25,
+                "submission_reviewers_count": 2,
+                "max_attempts": 50,
+            },
+            {
+                "obj": None,
+                "title": "Задача 3",
                 "description": """Небольшой интернет-магазин собрал данные о действиях пользователей на своем сайте
 за последние несколько месяцев.
 ecommerce_logs.csv — журнал действий пользователей:
@@ -135,17 +147,6 @@ ecommerce_logs.csv — журнал действий пользователей:
                     }
                 ]
             },
-            {
-                "obj": None,
-                "title": "Задача 3",
-                "description": """
-Напишите "hello_dano" на питоне
-""".strip(),
-                "type": CompetitionTask.CompetitionTaskType.CHECKER.value,
-                "points": 25,
-                "submission_reviewers_count": 2,
-                "max_attempts": 50,
-            }
         ]
     },
     {
@@ -196,7 +197,7 @@ ecommerce_logs.csv — журнал действий пользователей:
             },
             {
                 "obj": None,
-                "title": "Задача 4",
+                "title": "Задача 3",
                 "description": """
 Напишите выведите 1+3 на питоне
 """.strip(),
@@ -349,15 +350,19 @@ class Command(BaseCommand):
                 if task.type == CompetitionTask.CompetitionTaskType.REVIEW.value:
                     num_submissions = random.randint(1, 3)
                     for m in range(num_submissions):
-                        dummy_content = ContentFile(
+                        dummy_content_txt = ContentFile(
                             b"otvet: 112 sto proc" ,
                             name=f"submission_{uuid.uuid4().hex}.txt",
                         )
-                        submission = CompetitionTaskSubmission.objects.create(
-                            user=user,
-                            task=task,
-                            content=dummy_content,
-                        )
+
+                        content_dir = f"{settings.BASE_DIR}/apps/core/contents"
+                        with open(f"{content_dir}/presentation.pptx", "rb") as f:
+                            files = [f, f, dummy_content_txt]
+                            submission = CompetitionTaskSubmission.objects.create(
+                                user=user,
+                                task=task,
+                                content=random.choice(files),
+                            )
                         submission.save()
                         submission.send_on_review()
                         self.stdout.write(
