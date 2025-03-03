@@ -81,24 +81,16 @@ const TaskSolution: React.FC<TaskSolutionProps> = ({
 
   useEffect(() => {
     const loadSolutionContent = async () => {
-      // Clear previous inputs when task changes
-      if (prevTaskIdRef.current !== task.id) {
-        setAnswer("");
-        setSelectedFile(null);
-        setSelectedSolutionUrl(null);
-        prevTaskIdRef.current = task.id;
-      }
-      
       if (!displayedSolution || !displayedSolution.content) return;
       
       try {
-        // Only load content for the appropriate task type
         if (task.type === TaskType.FILE) {
-          // For file tasks, we just set the URL - don't touch the answer field
+          setAnswer(""); 
           setSelectedFile(null);
           setSelectedSolutionUrl(displayedSolution.content);
-        } else if (task.type === TaskType.CODE || task.type === TaskType.INPUT) {
-          // For non-file tasks, fetch and set the answer text - don't touch file fields
+        } else {
+          setSelectedFile(null); 
+          setSelectedSolutionUrl(null);
           const response = await fetch(displayedSolution.content);
           if (!response.ok) {
             throw new Error(`Failed to fetch solution content: ${response.status}`);
@@ -112,7 +104,7 @@ const TaskSolution: React.FC<TaskSolutionProps> = ({
     };
   
     loadSolutionContent();
-  }, [displayedSolution, task.id, task.type, setAnswer, setSelectedFile]);
+  }, [displayedSolution, task.type, setAnswer, setSelectedFile]);
 
   const handleOpenHistory = () => {
     setIsHistoryOpen(true);
