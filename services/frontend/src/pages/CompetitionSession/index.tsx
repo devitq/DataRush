@@ -8,6 +8,7 @@ import { getCompetition } from "@/shared/api/competitions";
 import { Loader2 } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { TaskType } from "@/shared/types/task";
+import { CompetitionType } from "@/shared/types/task";
 
 const CompetitionSession = () => {
   const { id, taskId } = useParams<{ id: string; taskId?: string }>();
@@ -97,6 +98,9 @@ const CompetitionSession = () => {
         competitionId={competitionId}
         setAnswer={setAnswer}
         setSelectedFile={setSelectedFile}
+        competitionType={competition?.type}
+        startDate={competition?.start_date}
+        endDate={competition?.end_date}
       />
 
       <main className="flex-1 bg-[#F8F8F8] pb-8">
@@ -120,6 +124,7 @@ const CompetitionSession = () => {
                 selectedFile={selectedFile}
                 setSelectedFile={setSelectedFile}
                 onSubmit={handleSubmit}
+                isSubmitting={submitMutation.isPending}
               />
             </div>
           ) : (
