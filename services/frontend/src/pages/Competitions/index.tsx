@@ -61,10 +61,10 @@ const CompetitionsPage = () => {
 
               <TabsList>
                 <TabsTrigger value={CompetitionTab.ONGOING}>
-                  В процессе
+                  Прохожу
                 </TabsTrigger>
                 <TabsTrigger value={CompetitionTab.COMPLETED}>
-                  Завершенные
+                  Завершено
                 </TabsTrigger>
               </TabsList>
             </SectionHeader>
@@ -111,6 +111,5 @@ const SectionHeader = ({ children }: { children: React.ReactNode }) => {
 const SectionTitle = ({ children }: { children: React.ReactNode }) => {
   return <h1 className="w-full text-3xl font-semibold">{children}</h1>;
 };
-
 
 export default CompetitionsPage;

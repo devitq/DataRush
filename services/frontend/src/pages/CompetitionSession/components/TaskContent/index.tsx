@@ -2,6 +2,7 @@ import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
+import remarkGfm from 'remark-gfm';
 import 'katex/dist/katex.min.css';
 import { Task } from '@/shared/types/task';
 import { useQuery } from '@tanstack/react-query';
@@ -24,18 +25,27 @@ const TaskContent: React.FC<TaskContentProps> = ({ task }) => {
 
   const attachments = attachmentsQuery.data || [];
 
+  const convertToMarkdown = (text: string): string => {
+    if (!text) return '';
+    
+    let markdown = text.replace(/\n/g, '\n\n');
+    return markdown;
+  };
+
+  const markdownText = convertToMarkdown(task.description);
+
   return (
     <div className="flex-1 bg-white rounded-lg p-6">
       <h2 className="text-3xl font-semibold mb-6 font-hse-sans">
-        Задача {task.in_competition_position}
+        {task.title}
       </h2>
       
       <div className="prose prose-lg max-w-none text-gray-700 font-hse-sans mb-6">
         <ReactMarkdown
-          remarkPlugins={[remarkMath]}
+          remarkPlugins={[remarkMath, remarkGfm]}
           rehypePlugins={[rehypeKatex]}
         >
-          {task.description}
+          {markdownText}
         </ReactMarkdown>
       </div>
 

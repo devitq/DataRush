@@ -54,7 +54,7 @@ const TaskSolution: React.FC<TaskSolutionProps> = ({
       const latestSolution = solutionHistory[solutionHistory.length - 1];
       setDisplayedSolution(latestSolution);
     }
-  }, [solutionHistory, displayedSolution]);
+  }, [solutionHistory]);
 
   useEffect(() => {
     if (prevTaskIdRef.current !== task.id) {
@@ -70,19 +70,17 @@ const TaskSolution: React.FC<TaskSolutionProps> = ({
     }
   }, [task.id, solutionHistory]);
 
-  useEffect(() => {
-    if (solutionHistory.length > 0 && 
-        (!displayedSolution || 
-         (solutionHistory[solutionHistory.length - 1].id !== displayedSolution.id &&
-          displayedSolution.id === solutionHistory[solutionHistory.length - 2]?.id))) {
-      setDisplayedSolution(solutionHistory[solutionHistory.length - 1]);
-    }
-  }, [solutionHistory, displayedSolution]);
+  // useEffect(() => {
+  //   if (solutionHistory.length > 0 && 
+  //       (!displayedSolution || 
+  //        (solutionHistory[solutionHistory.length - 1].id !== displayedSolution.id))) {
+  //     setDisplayedSolution(solutionHistory[solutionHistory.length - 1]);
+  //   }
+  // }, [solutionHistory, displayedSolution]);
 
   useEffect(() => {
     const loadSolutionContent = async () => {
       if (!displayedSolution || !displayedSolution.content) return;
-      console.log(displayedSolution, solutionHistory, "CHECK")
       try {
         if (task.type === TaskType.FILE) {
           setAnswer(""); 
@@ -149,7 +147,6 @@ const TaskSolution: React.FC<TaskSolutionProps> = ({
           fileInputRef={fileInputRef}
           existingFileUrl={selectedSolutionUrl}
           onClearExistingFile={handleClearExistingFile}
-          firstSolution={solutionHistory.length > 0}
         />
       )}
       

@@ -1,7 +1,7 @@
 from http import HTTPStatus as status
 from uuid import UUID
 
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, get_list_or_404
 from ninja import File, Router, UploadedFile
 
 from api.v1.ping.schemas import PingOut
@@ -11,6 +11,7 @@ from api.v1.task.schemas import (
     TaskAttachmentSchema,
     TaskOutSchema,
     TaskSubmissionOut,
+    TaskStatusSchema,
 )
 from apps.achievement.models import Achievement, UserAchievement
 from apps.competition.models import State
@@ -178,3 +179,31 @@ def get_submissions_history(request, competition_id: UUID, task_id: UUID):
 def get_task_attachments(request, competition_id: UUID, task_id: UUID):
     task = get_object_or_404(CompetitionTask, id=task_id)
     return status.OK, CompetitionTaskAttachment.objects.filter(task=task).all()
+
+
+@router.get(
+    "competitions/{competition_id}/results",
+    response={
+        status.OK: list[TaskStatusSchema],
+        status.UNAUTHORIZED: UnauthorizedError
+    },
+)
+def get_competition_results(request, competition_id: UUID):
+    tasks = get_list_or_404(CompetitionTask, competition_id=competition_id)
+
+    data = []
+
+    for task in tasks:
+        submissions = CompetitionTaskSubmission.objects.filter(
+            user=request.auth, task=task
+        ).filter(status="checked").all()
+        if not submissions:
+            result = 0
+        else:
+            result = submissions[0].earned_points
+        data.append(TaskStatusSchema(
+            task_name=task.title,
+            result=result
+        ))
+
+    return status.OK, data

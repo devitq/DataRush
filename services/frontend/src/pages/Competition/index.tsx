@@ -1,12 +1,15 @@
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Clock, Trophy, BookOpen } from "lucide-react";
+import { ArrowLeft, Clock, Trophy, BookOpen, BarChart2, AlertCircle } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { getCompetition, startCompetition } from "@/shared/api/competitions";
 import { getCompetitionTasks } from "@/shared/api/session";
 import { Loading } from "@/components/ui/loading";
 import { CompetitionType } from "@/shared/types/competition";
+import remarkMath from "remark-math";
+import remarkGfm from "remark-gfm";
+import rehypeKatex from "rehype-katex";
 
 const CompetitionPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -39,6 +42,7 @@ const CompetitionPage = () => {
       console.error("Failed to start competition:", error);
     }
   });
+  
   const formatDate = (date?: Date | string) => {
     if (!date) return "";
     
@@ -56,6 +60,10 @@ const CompetitionPage = () => {
   const handleStart = () => {
     startMutation.mutate();
   };
+  
+  const handleViewResults = () => {
+    console.log("sorryan");
+  };
 
   if (competitionQuery.isLoading) {
     return <Loading />;
@@ -66,6 +74,27 @@ const CompetitionPage = () => {
   }
 
   const competition = competitionQuery.data;
+  
+  const isCompetitionEnded = () => {
+    if (!competition?.end_date) return false;
+    
+    const endDate = new Date(competition.end_date);
+    const now = new Date();
+    
+    return now > endDate;
+  };
+  
+  const isCompetitionNotStarted = () => {
+    if (!competition?.start_date) return false;
+    
+    const startDate = new Date(competition.start_date);
+    const now = new Date();
+    
+    return now < startDate;
+  };
+
+  const competitionEnded = isCompetitionEnded();
+  const competitionNotStarted = isCompetitionNotStarted();
 
   return (
     <div className="flex flex-col gap-4">
@@ -103,6 +132,18 @@ const CompetitionPage = () => {
                     </>
                   )}
                 </div>
+                
+                {competitionEnded && competition.type === CompetitionType.COMPETITIVE && (
+                  <div className="bg-red-100 text-red-700 px-3 py-1 rounded-full text-sm font-medium">
+                    Завершено
+                  </div>
+                )}
+                
+                {competitionNotStarted && competition.type === CompetitionType.COMPETITIVE && (
+                  <div className="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-sm font-medium">
+                    Скоро начнется
+                  </div>
+                )}
               </div>
               
               <h1 className="text-[34px] leading-11 font-semibold text-balance">
@@ -128,18 +169,43 @@ const CompetitionPage = () => {
             </div>
             
             <div className="prose prose-lg max-w-none text-xl leading-10 font-normal">
-              <ReactMarkdown>{competition.description || ""}</ReactMarkdown>
+              <ReactMarkdown
+                remarkPlugins={[remarkMath, remarkGfm]}
+                rehypePlugins={[rehypeKatex]}
+              >
+                {competition.description || ""}
+              </ReactMarkdown>
             </div>
           </div>
           
           <div className="w-full *:w-full md:w-96">
-            <Button 
-              size={"lg"} 
-              onClick={handleStart} 
-              disabled={startMutation.isPending}
-            >
-              {startMutation.isPending ? "Загрузка..." : "Приступить к выполнению"}
-            </Button>
+            {competitionEnded && competition.type === CompetitionType.COMPETITIVE ? (
+              <Button 
+                size={"lg"} 
+                onClick={handleViewResults}
+                className="bg-indigo-600 hover:bg-indigo-700"
+              >
+                <BarChart2 size={18} className="mr-2" />
+                Смотреть результаты
+              </Button>
+            ) : competitionNotStarted && competition.type === CompetitionType.COMPETITIVE ? (
+              <Button 
+                size={"lg"} 
+                disabled={true}
+                className="bg-gray-200 text-gray-500 cursor-not-allowed"
+              >
+                <AlertCircle size={18} className="mr-2" />
+                Скоро начнется
+              </Button>
+            ) : (
+              <Button 
+                size={"lg"} 
+                onClick={handleStart} 
+                disabled={startMutation.isPending}
+              >
+                {startMutation.isPending ? "Загрузка..." : "Приступить к выполнению"}
+              </Button>
+            )}
           </div>
         </div>
       </div>
