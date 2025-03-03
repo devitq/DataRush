@@ -42,7 +42,7 @@ class CompetitionTaskSubmissionAdmin(admin.ModelAdmin):
         "user__username",
         "user__email",
     )
-    list_filter = ("plagiarism_checked", "status")
+    list_filter = ("plagiarism_detected", "status")
     ordering = ["-timestamp"]
 
     def has_add_permission(self, request, obj=None):
