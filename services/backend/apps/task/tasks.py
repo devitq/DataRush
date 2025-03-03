@@ -15,13 +15,13 @@ def analyze_data_task(self, submission_id):
     try:
         code_url = (
             f"{settings.MINIO_DEFAULT_CUSTOM_ENDPOINT_URL}/"
-            f"{urlparse(submission.content.file.url).path}"
+            f"{urlparse(submission.content.url).path}"
         )
         files = [
             {
                 "url": (
                     f"{settings.MINIO_DEFAULT_CUSTOM_ENDPOINT_URL}/"
-                    f"{urlparse(submission.content.file.url).path}"
+                    f"{urlparse(submission.content.url).path}"
                 ),
                 "bind_path": attachment.bind_at,
             }
