@@ -410,7 +410,7 @@ services:
       test: ["CMD", "service", "nginx", "status", "||", " exit 1"]
       interval: 1m30s
       timeout: 5s
-      start_period: 5s
+      start_period: 15s
       start_interval: 2s
       retries: 5
     ports:

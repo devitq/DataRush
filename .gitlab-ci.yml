@@ -87,7 +87,6 @@ deploy:
   stage: deploy
   rules:
     - if: '$CI_COMMIT_REF_NAME == "master"'
-  when: manual
   variables:
     SSH_HOST: "158.160.172.23"
     SSH_USER: "ubuntu"
