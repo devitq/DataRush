@@ -13,7 +13,7 @@ admin.site.index_title = "DataRush"
 
 urlpatterns = [
     # mdeditor
-    path(r'mdeditor/', include('mdeditor.urls')),
+    path(r"mdeditor/", include("mdeditor.urls")),
     # Admin urls
     path("admin/", admin.site.urls),
     # API urls

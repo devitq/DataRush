@@ -11,7 +11,7 @@ class UserRole(models.TextChoices):
 
 
 class User(BaseModel):
-    avatar = models.ImageField(verbose_name="аватар")
+    avatar = models.ImageField(verbose_name="аватар", null=True, blank=True)
     email = models.EmailField(unique=True, verbose_name="почта")
     username = models.SlugField(unique=True, verbose_name="юзернейм")
     password = models.TextField(verbose_name="пароль")
