@@ -113,7 +113,13 @@
     return (
       <div className="md:w-[500px] flex flex-col gap-4">
         {displayedSolution ? (
-          <SolutionStatus solution={displayedSolution} maxPoints={task.points}/>
+          <>
+            <div className="bg-gray-100 rounded-lg p-4 text-gray-600 font-hse-sans">
+              Последнее решение
+            </div>
+            <SolutionStatus solution={displayedSolution} maxPoints={task.points}/>
+          </>
+
         ) : (
           <div className="bg-gray-100 rounded-lg p-4 text-gray-600 font-hse-sans">
             Решение еще не отправлено

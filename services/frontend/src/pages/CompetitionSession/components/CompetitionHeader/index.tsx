@@ -24,7 +24,6 @@ const CompetitionHeader: React.FC<CompetitionHeaderProps> = ({
   const handleTaskSelect = (taskId: string) => {
     setAnswer("");
     setSelectedFile(null);
-    console.log("CLICK TEst")
     
     navigate(`/competition/${competitionId}/tasks/${taskId}`);
   }
