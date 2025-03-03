@@ -1,6 +1,6 @@
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Clock, Trophy, BookOpen, BarChart2 } from "lucide-react";
+import { ArrowLeft, Clock, Trophy, BookOpen, BarChart2, AlertCircle } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { getCompetition, startCompetition } from "@/shared/api/competitions";
@@ -59,17 +59,7 @@ const CompetitionPage = () => {
   };
   
   const handleViewResults = () => {
-    console.log("sorryan")
-  };
-
-  // Check if competition has ended
-  const isCompetitionEnded = () => {
-    if (!competition?.end_date) return false;
-    
-    const endDate = new Date(competition.end_date);
-    const now = new Date();
-    
-    return now > endDate;
+    console.log("sorryan");
   };
 
   if (competitionQuery.isLoading) {
@@ -81,7 +71,27 @@ const CompetitionPage = () => {
   }
 
   const competition = competitionQuery.data;
+  
+  const isCompetitionEnded = () => {
+    if (!competition?.end_date) return false;
+    
+    const endDate = new Date(competition.end_date);
+    const now = new Date();
+    
+    return now > endDate;
+  };
+  
+  const isCompetitionNotStarted = () => {
+    if (!competition?.start_date) return false;
+    
+    const startDate = new Date(competition.start_date);
+    const now = new Date();
+    
+    return now < startDate;
+  };
+
   const competitionEnded = isCompetitionEnded();
+  const competitionNotStarted = isCompetitionNotStarted();
 
   return (
     <div className="flex flex-col gap-4">
@@ -125,6 +135,12 @@ const CompetitionPage = () => {
                     Завершено
                   </div>
                 )}
+                
+                {competitionNotStarted && competition.type === CompetitionType.COMPETITIVE && (
+                  <div className="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-sm font-medium">
+                    Скоро начнется
+                  </div>
+                )}
               </div>
               
               <h1 className="text-[34px] leading-11 font-semibold text-balance">
@@ -163,6 +179,14 @@ const CompetitionPage = () => {
               >
                 <BarChart2 size={18} className="mr-2" />
                 Смотреть результаты
+              </Button>
+            ) : competitionNotStarted && competition.type === CompetitionType.COMPETITIVE ? (
+              <Button 
+                size={"lg"} 
+                disabled={true}
+                className="bg-gray-200 text-gray-500 cursor-not-allowed"
+              >
+                Скоро начнется
               </Button>
             ) : (
               <Button 
