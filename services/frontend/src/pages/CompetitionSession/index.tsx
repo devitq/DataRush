@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useParams, Navigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useParams, Navigate, useNavigate } from "react-router-dom";
 import CompetitionHeader from "./components/CompetitionHeader";
 import TaskContent from "./components/TaskContent";
 import TaskSolution from "./modules/TaskSolution";
@@ -13,8 +13,10 @@ const CompetitionSession = () => {
   const { id, taskId } = useParams<{ id: string; taskId?: string }>();
   const [answer, setAnswer] = useState("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [isReloading, setIsReloading] = useState(false);
   const competitionId = id || "";
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   const competitionQuery = useQuery({
     queryKey: ["competition", competitionId],
@@ -45,8 +47,12 @@ const CompetitionSession = () => {
         queryKey: ['solutionHistory', competitionId, taskId] 
       });
       
-      setAnswer("");
-      setSelectedFile(null);
+      setIsReloading(true);
+      
+      setTimeout(() => {
+        window.location.reload()
+        setIsReloading(false);
+      }, 2500);
     },
     onError: (error) => {
       console.error("Error submitting solution:", error);
@@ -89,6 +95,13 @@ const CompetitionSession = () => {
 
   const competitionTitle = competition?.title || "Загрузка соревнования...";
 
+  useEffect(() => {
+    setAnswer("");
+    setSelectedFile(null);
+  }, [taskId]);
+
+  const isSubmitting = submitMutation.isPending || isReloading;
+
   return (
     <div className="flex min-h-screen flex-col">
       <CompetitionHeader
@@ -123,7 +136,7 @@ const CompetitionSession = () => {
                 selectedFile={selectedFile}
                 setSelectedFile={setSelectedFile}
                 onSubmit={handleSubmit}
-                isSubmitting={submitMutation.isPending}
+                isSubmitting={isSubmitting}
               />
             </div>
           ) : (

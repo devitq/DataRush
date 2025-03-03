@@ -21,12 +21,12 @@ def analyze_data_task(self, submission_id):
             {
                 "url": (
                     f"{settings.MINIO_DEFAULT_CUSTOM_ENDPOINT_URL}/"
-                    f"{urlparse(submission.content.url).path}"
+                    f"{urlparse(attachment.file.url).path}"
                 ),
                 "bind_path": attachment.bind_at,
             }
             for attachment in submission.task.attachments.filter(
-                bind_path__isnull=False
+                bind_at__isnull=False
             )
         ]
 
@@ -37,7 +37,7 @@ def analyze_data_task(self, submission_id):
                 "code_url": code_url,
                 "answer_file_path": submission.task.answer_file_path,
                 "expected_hash": hashlib.sha256(
-                    submission.task.correct_answer_file.read().encode()
+                    submission.task.correct_answer_file.read()
                 ).hexdigest(),
             },
             timeout=30,
