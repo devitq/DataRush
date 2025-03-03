@@ -54,11 +54,11 @@ export const Header = () => {
               </Link>
               
               <div className="md:hidden">
-                <Link to="/docs">
+                <a href="/docs">
                   <DropdownMenuItem>
                     Материалы
                   </DropdownMenuItem>
-                </Link>
+                </a>
               </div>
               
               <DropdownMenuSeparator />
