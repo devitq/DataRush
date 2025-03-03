@@ -44,9 +44,6 @@ const CompetitionSession = () => {
       queryClient.invalidateQueries({ 
         queryKey: ['solutionHistory', competitionId, taskId] 
       });
-      
-      setAnswer("");
-      setSelectedFile(null);
     },
     onError: (error) => {
       console.error("Error submitting solution:", error);
