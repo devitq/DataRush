@@ -210,6 +210,7 @@ def get_competition_results(request, competition_id: UUID):
             task_name=task.title,
             result=result,
             max_points=task.points,
+            position=task.in_competition_positions
         ))
 
     return status.OK, data
