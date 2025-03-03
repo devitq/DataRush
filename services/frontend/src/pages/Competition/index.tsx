@@ -93,7 +93,6 @@ const CompetitionPage = () => {
     return now < startDate;
   };
   
-  // Check if competition has ended
   const isCompetitionEnded = () => {
     if (!competition?.end_date) return false;
     
@@ -212,7 +211,6 @@ const CompetitionPage = () => {
               <Button 
                 size={"lg"} 
                 onClick={() => setIsResultsModalOpen(true)}
-                className="bg-indigo-600 hover:bg-indigo-700"
               >
                 <BarChart2 size={18} className="mr-2" />
                 Посмотреть результаты
@@ -221,7 +219,7 @@ const CompetitionPage = () => {
             
             {competitionEnded && !hasResults && competition.type === CompetitionType.COMPETITIVE && !resultsQuery.isLoading && (
               <div className="text-center p-4 border rounded-md bg-gray-50">
-                <p className="text-gray-600">Соревнование завершено. Результаты пока не доступны.</p>
+                <p className="text-gray-600">Соревнование завершено. Увы</p>
               </div>
             )}
           </div>
