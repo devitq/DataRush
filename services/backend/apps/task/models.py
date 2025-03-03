@@ -82,20 +82,20 @@ class CompetitionTask(BaseModel):
 
     def clean(self):
         super().clean()
-        if self.correct_answer_file and self.type not in ["checker", "input"]:
-            raise ValidationError({
-                "type": "Если загружен файл правильного ответа, то тип проверки не может быть ручным"
-            })
-        elif not self.correct_answer_file and self.type == "review":
+        # if self.correct_answer_file and self.type not in ["checker", "input"]:
+        #     raise ValidationError({
+        #         "type": "Если загружен файл правильного ответа, то тип проверки не может быть ручным"
+        #     })
+        if not self.correct_answer_file and self.type != "review":
             raise ValidationError({
                 "correct_answer_file": "Загрузите правильный ответ"
             })
         
-        if self.answer_file_path and not self.type == "checker":
-            raise ValidationError({
-                "type": "Укажите другой тип задания: этот не совместим с путем правильного ответа"
-            })
-        elif not self.answer_file_path and self.type == "checker":
+        # if self.answer_file_path and not self.type == "checker":
+        #     raise ValidationError({
+        #         "type": "Укажите другой тип задания: этот не совместим с путем правильного ответа"
+        #     })
+        if not self.answer_file_path and self.type == "checker":
             raise ValidationError({
                 "answer_file_path": "Введите путь правильного ответа - это нужно для корректной работы чекера"
             })
@@ -104,10 +104,10 @@ class CompetitionTask(BaseModel):
             raise ValidationError({
                 "reviewers": "Загрузите ревьюверов - кто будет проверять задания, если не они?"
             })
-        elif self.reviewers and not self.type == "review":
-            raise ValidationError({
-                "type": "Проверьте тип - вы ввели ревьюверов, но задание не является ручным"
-            })
+        # elif self.reviewers and not self.type == "review":
+        #     raise ValidationError({
+        #         "type": "Проверьте тип - вы ввели ревьюверов, но задание не является ручным"
+        #     })
 
 
     def __str__(self):
