@@ -520,8 +520,8 @@ users = [
         "role": UserRole.STUDENT.value,
     },
     {
-        "email": "oleg-tinkov@gmail.com",
-        "username": "oleg-tinkov",
+        "email": "s.bliznyuk@tbank.ru",
+        "username": "s_bliznyuk",
         "password": "password123!",
         "role": UserRole.STUDENT.value,
     },
@@ -697,16 +697,13 @@ class Command(BaseCommand):
                     points=task["points"],
                     submission_reviewers_count=task[
                         "submission_reviewers_count"
-                    ],
+                    ] if task["type"] == CompetitionTask.CompetitionTaskType.REVIEW.value else None,
+                    correct_answer_file=task["correct_answer_file"] if task["type"] != CompetitionTask.CompetitionTaskType.REVIEW.value else None,
                     max_attempts=task.get("max_attempts"),
                 )
                 competitions[i]["tasks"][j]["obj"] = task_obj
 
-                if (
-                    task["type"]
-                    == CompetitionTask.CompetitionTaskType.INPUT.value
-                ):
-                    task_obj.correct_answer_file = task["correct_answer_file"]
+
                 if task.get("attachment"):
                     CompetitionTaskAttachment.objects.create(
                         task=task_obj,
