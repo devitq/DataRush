@@ -116,14 +116,16 @@ def submit_task(
         return status.FORBIDDEN, ForbiddenError()
 
     if task.type == CompetitionTask.CompetitionTaskType.INPUT:
+        verdict = content.read() == task.correct_answer_file.read()
         submission = CompetitionTaskSubmission.objects.create(
             user=user,
             task=task,
             status=CompetitionTaskSubmission.StatusChoices.CHECKED,
             content=content,
             result={
-                "correct": content.read() == task.correct_answer_file.read()
+                "correct": verdict
             },
+            earned_points=task.points
         )
     if task.type == CompetitionTask.CompetitionTaskType.REVIEW:
         submission = CompetitionTaskSubmission.objects.create(
