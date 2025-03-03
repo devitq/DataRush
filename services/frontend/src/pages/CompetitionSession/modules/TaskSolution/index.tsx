@@ -32,7 +32,7 @@ const TaskSolution: React.FC<TaskSolutionProps> = ({
   const [selectedSolutionUrl, setSelectedSolutionUrl] = useState<string | null>(null);
   const [currentSolution, setCurrentSolution] = useState<Solution | null>(null);
   const { id: competitionId } = useParams<{ id: string }>();
-  const previousTaskIdRef = useRef<string | null>(null);
+  const taskIdRef = useRef<string | null>(null);
 
   const solutionsQuery = useQuery({
     queryKey: ['solutionHistory', competitionId, task.id],
@@ -40,37 +40,42 @@ const TaskSolution: React.FC<TaskSolutionProps> = ({
     enabled: !!(competitionId && task.id),
   });
 
+  // Get the solution history - already sorted from oldest to newest
   const solutionHistory = solutionsQuery.data || [];
-
+  
+  // Handle task changes
   useEffect(() => {
-    if (solutionHistory.length > 0 && !currentSolution) {
-      setCurrentSolution(solutionHistory[solutionHistory.length - 1]);
-    }
-  }, [solutionHistory, currentSolution]);
-
-  useEffect(() => {
-    if (solutionHistory.length > 0 && currentSolution && 
-        solutionHistory[0].id !== currentSolution.id) {
-      setCurrentSolution(solutionHistory[solutionHistory.length - 1]);
-    }
-  }, [solutionHistory, currentSolution]);
-
-  useEffect(() => {
-    if (previousTaskIdRef.current !== task.id) {
+    // If task changed, reset everything and load the latest solution
+    if (taskIdRef.current !== task.id) {
       setCurrentSolution(null);
       setSelectedSolutionUrl(null);
-      
       setAnswer("");
       setSelectedFile(null);
+      taskIdRef.current = task.id;
       
-      if (solutionHistory.length > 0 && !solutionsQuery.isLoading) {
-        setCurrentSolution(solutionHistory[solutionHistory.length - 1]);
+      // Wait for the query to complete
+      if (!solutionsQuery.isLoading && solutionHistory.length > 0) {
+        // Get the most recent solution (last in the array)
+        const latestSolution = solutionHistory[solutionHistory.length - 1];
+        setCurrentSolution(latestSolution);
       }
-      
-      previousTaskIdRef.current = task.id;
     }
   }, [task.id, solutionHistory, solutionsQuery.isLoading, setAnswer, setSelectedFile]);
 
+  // Refresh current solution when the solution history changes (after a new submission)
+  useEffect(() => {
+    if (!solutionsQuery.isLoading && solutionHistory.length > 0) {
+      // If we don't have a current solution or there's a new submission
+      // (which would be the last item in the array)
+      if (!currentSolution || 
+          currentSolution.id !== solutionHistory[solutionHistory.length - 1].id) {
+        // Set to the latest solution (last in the array)
+        setCurrentSolution(solutionHistory[solutionHistory.length - 1]);
+      }
+    }
+  }, [solutionHistory, currentSolution, solutionsQuery.isLoading]);
+
+  // Load solution content when current solution changes
   useEffect(() => {
     const loadSolutionContent = async () => {
       if (!currentSolution || !currentSolution.content) return;
@@ -105,6 +110,13 @@ const TaskSolution: React.FC<TaskSolutionProps> = ({
   };
 
   const handleClearExistingFile = () => {
+    setSelectedSolutionUrl(null);
+  };
+
+  const handleSubmitWrapper = () => {
+    onSubmit();
+    setAnswer("");
+    setSelectedFile(null);
     setSelectedSolutionUrl(null);
   };
 
@@ -143,7 +155,7 @@ const TaskSolution: React.FC<TaskSolutionProps> = ({
       )}
       
       <ActionButtons 
-        onSubmit={onSubmit} 
+        onSubmit={handleSubmitWrapper} 
         onHistoryClick={handleOpenHistory}
       />
       

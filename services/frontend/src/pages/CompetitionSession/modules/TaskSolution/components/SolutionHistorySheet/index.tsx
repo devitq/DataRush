@@ -22,6 +22,7 @@ const SolutionHistorySheet: React.FC<SolutionHistorySheetProps> = ({
   onSolutionSelect,
   currentSolutionId
 }) => {
+  
   return (
     <Sheet open={isOpen} onOpenChange={onOpenChange}>
       <SheetContent className="w-[350px] sm:w-[450px] p-0">
