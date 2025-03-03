@@ -28,4 +28,5 @@ export enum CompetitionParticipationType {
 export interface CompetitionResult {
   task_name: string;
   result: number;
+  max_points: number;
 }
