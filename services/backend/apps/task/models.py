@@ -2,7 +2,6 @@ from uuid import uuid4
 
 from django.db import models
 from django.db.models import Count, Q
-from martor.models import MartorField
 from mdeditor.fields import MDTextField
 
 from apps.competition.models import Competition
