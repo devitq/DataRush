@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Task } from '@/shared/types/task';
 import { ArrowLeft, Clock } from 'lucide-react'; 
-import { CompetitionType } from '@/shared/types/task';
+import { CompetitionType } from '@/shared/types/competition';
 
 interface CompetitionHeaderProps {
   title: string;
@@ -56,22 +56,18 @@ const CompetitionHeader: React.FC<CompetitionHeaderProps> = ({
       const now = new Date();
       const diff = endDateObj.getTime() - now.getTime();
       
-      // If time is up, redirect to competition page
       if (diff <= 0) {
         navigate(`/competition/${competitionId}`);
         return;
       }
       
-      // Calculate hours, minutes, seconds
       const hours = Math.floor(diff / (1000 * 60 * 60));
       const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
       const seconds = Math.floor((diff % (1000 * 60)) / 1000);
       
-      // Format time left
       setTimeLeft(`${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`);
     };
     
-    // Update timer every second
     updateTimer();
     const timerInterval = setInterval(updateTimer, 1000);
     
