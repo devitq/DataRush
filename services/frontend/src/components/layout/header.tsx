@@ -13,7 +13,13 @@ import { useUserStore } from "@/shared/stores/user";
 
 const Header = () => {
   const user = useUserStore((state) => state.user);
+  const clearUser = useUserStore((state) => state.clearUser);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  
+  const handleLogout = () => {
+    clearUser();
+    setIsProfileOpen(false);
+  };
 
   return (
     <header className="bg-card sticky top-0 z-30 flex h-[72px] w-full items-center justify-center px-4 sm:px-6">
@@ -69,9 +75,7 @@ const Header = () => {
               <ProfileOption
                 icon={<LogOut size={18} />}
                 label="Выйти"
-                onClick={() => {
-                  setIsProfileOpen(false);
-                }}
+                onClick={handleLogout}
               />
             </div>
           </div>

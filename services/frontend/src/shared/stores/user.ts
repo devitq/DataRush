@@ -7,6 +7,7 @@ interface UserState {
   loading: boolean;
 
   fetchUser: () => Promise<void>;
+  clearUser: () => void;
 }
 
 const useUserStore = create<UserState>((set) => ({
@@ -17,6 +18,10 @@ const useUserStore = create<UserState>((set) => ({
     set({ loading: true });
     const user = await getCurrentUser();
     set({ user, loading: false });
+  },
+
+  clearUser: () => {
+    set({ user: null });
   },
 }));
 
