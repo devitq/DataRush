@@ -30,6 +30,7 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
       
       {isCleared ? (
         <Button 
+          className="font-hse-sans flex-grow" 
           disabled={true}
         >
           Задача сдана!
