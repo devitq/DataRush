@@ -155,10 +155,10 @@ const TaskSolution: React.FC<TaskSolutionProps> = ({
           ? 'bg-blue-50 text-blue-700'
           : 'bg-red-50 text-red-700'}`}
       >
-        {hasSubmissionsLeft ? (
+        {maxAttempts === -1 || hasSubmissionsLeft ? (
           <>
             <span className="font-medium">
-              Осталось посылок: {submissionsLeft === Infinity ? '∞' : submissionsLeft}
+              Осталось посылок: {maxAttempts === -1 ? '∞' : submissionsLeft}
             </span>
             {maxAttempts !== -1 && (
               <span className="text-blue-500 ml-1">
