@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams, Navigate } from "react-router-dom";
+import { useParams, Navigate   } from "react-router-dom";
 import CompetitionHeader from "./components/CompetitionHeader";
 import TaskContent from "./components/TaskContent";
 import TaskSolution from "./modules/TaskSolution";
