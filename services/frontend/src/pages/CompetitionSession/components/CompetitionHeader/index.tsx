@@ -80,20 +80,22 @@ const CompetitionHeader: React.FC<CompetitionHeaderProps> = ({
     <header className="bg-white shadow-sm sticky top-0 z-30 w-full">
       <div className="mx-auto max-w-6xl px-4">
         <div className="flex items-center justify-between py-4">
-          <Link 
-            to={`/competition/${competitionId}`}
-            className="flex items-center text-gray-600 hover:text-gray-900 transition-colors font-hse-sans text-sm"
-          >
-            <ArrowLeft className="h-4 w-4 mr-1" />
-          </Link>
-          
-          <h1 className="font-hse-sans text-xl font-semibold text-center flex-1">
-            {title}
-          </h1>
+          <div>
+            <Link 
+              to={`/competition/${competitionId}`}
+              className="flex items-center text-gray-600 hover:text-gray-900 transition-colors font-hse-sans text-sm"
+            >
+              <ArrowLeft className="h-4 w-4 mr-1" />
+            </Link>
+            
+            <h1 className="font-hse-sans text-xl font-semibold text-center flex-1">
+              {title}
+            </h1>
+          </div>
+
           
           {showTimeSection ? (
             <div className="flex items-center text-gray-600 font-hse-sans text-sm">
-              <Clock className="h-4 w-4 mr-1" />
               <div className="flex flex-col items-end">
                 {startDate && (
                   <span className="text-xs text-gray-500">

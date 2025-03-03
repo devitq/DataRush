@@ -82,13 +82,14 @@ const TaskSolution: React.FC<TaskSolutionProps> = ({
   useEffect(() => {
     const loadSolutionContent = async () => {
       if (!displayedSolution || !displayedSolution.content) return;
-      
+      console.log(displayedSolution, solutionHistory, "CHECK")
       try {
         if (task.type === TaskType.FILE) {
           setAnswer(""); 
           setSelectedFile(null);
           setSelectedSolutionUrl(displayedSolution.content);
-        } else {
+        } 
+        else {
           setSelectedFile(null); 
           setSelectedSolutionUrl(null);
           const response = await fetch(displayedSolution.content);
@@ -96,6 +97,7 @@ const TaskSolution: React.FC<TaskSolutionProps> = ({
             throw new Error(`Failed to fetch solution content: ${response.status}`);
           }
           const text = await response.text();
+
           setAnswer(text);
         }
       } catch (error) {
@@ -104,7 +106,7 @@ const TaskSolution: React.FC<TaskSolutionProps> = ({
     };
   
     loadSolutionContent();
-  }, [displayedSolution, task.type, setAnswer, setSelectedFile]);
+  }, [displayedSolution, setAnswer, setSelectedFile]);
 
   const handleOpenHistory = () => {
     setIsHistoryOpen(true);
