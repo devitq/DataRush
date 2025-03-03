@@ -3,6 +3,7 @@ from uuid import uuid4
 
 from django.db import models
 from django.db.models import Count, Q
+from django.core.validators import RegexValidator
 from django.core.exceptions import ValidationError
 from mdeditor.fields import MDTextField
 
@@ -149,7 +150,9 @@ class CompetitionTaskAttachment(BaseModel):
         related_name="attachments",
     )
     file = models.FileField(upload_to=file_upload_at, verbose_name="файл")
-    bind_at = models.CharField(verbose_name="путь сохранения", max_length=255)
+    bind_at = models.CharField(verbose_name="путь сохранения", max_length=255, 
+                               validators=[RegexValidator(r"^(?:[a-zA-Z]:\\(?:[^<>:\"\/\\|?*]*\\)*|/(?:[^<>:\"\/\\|?*]+/?)*)$",
+                                                         message="Введите абсолютный путь до папки")])
     public = models.BooleanField(default=False, verbose_name="публичный")
 
     class Meta:
