@@ -9,7 +9,7 @@ export interface Review {
   review_status: ReviewStatus;
   evaluation?: ReviewEvaluation[];
   criteries?: ReviewCriteria[];
-  submitted_at: Date;
+  submitted_at: string;
   competition: string;
   competition_name: string;
   task: string;
@@ -17,8 +17,9 @@ export interface Review {
   stdout?: string;
   result?: {};
   earned_points?: number;
-  checked_at?: Date;
+  checked_at?: string;
   task_title: string;
+  description?: string;
 }
 
 export enum ReviewStatus {

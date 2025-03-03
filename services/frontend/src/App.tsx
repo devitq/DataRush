@@ -10,7 +10,8 @@ import LoginPage from "./pages/Login";
 import { AuthLayout } from "./widgets/auth-layout";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import ReviewPage from "./pages/Review";
-import UserProfile from "./pages/UserProfile";
+import UserProfile from "./pages/Profile";
+import ProfilePage from "./pages/Profile";
 
 const queryClient = new QueryClient();
 
@@ -24,14 +25,13 @@ const App = () => {
           <Route element={<NavbarLayout />}>
             <Route path="/" element={<Competitions />} />
             <Route path="/competition/:id" element={<Competition />} />
+            <Route path="/profile" element={<ProfilePage />} />
           </Route>
 
           <Route
             path="/competition/:id/tasks/:taskId"
             element={<CompetitionSession />}
           />
-
-          <Route path="/profile" element={<UserProfile />} />
         </Route>
 
         <Route path="/review/:token" element={<ReviewPage />} />
