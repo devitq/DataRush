@@ -8,7 +8,6 @@ interface FileSolutionProps {
   fileInputRef: React.RefObject<HTMLInputElement>;
   existingFileUrl?: string | null; 
   onClearExistingFile?: () => void; // New prop to clear existing file URL
-  firstSolution: boolean
 }
 
 const FileSolution: React.FC<FileSolutionProps> = ({ 
@@ -17,7 +16,6 @@ const FileSolution: React.FC<FileSolutionProps> = ({
   fileInputRef,
   existingFileUrl = null,
   onClearExistingFile,
-  firstSolution
 }) => {
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
@@ -68,7 +66,7 @@ const FileSolution: React.FC<FileSolutionProps> = ({
       ? existingFileUrl.split('/').pop() || 'file' 
       : '';
 
-  const hasFile = !!selectedFile || (!!existingFileUrl && !firstSolution);
+  const hasFile = !!selectedFile || !!existingFileUrl;
 
   return (
     <>

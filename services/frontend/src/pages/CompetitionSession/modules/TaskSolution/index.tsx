@@ -149,7 +149,6 @@ const TaskSolution: React.FC<TaskSolutionProps> = ({
           fileInputRef={fileInputRef}
           existingFileUrl={selectedSolutionUrl}
           onClearExistingFile={handleClearExistingFile}
-          firstSolution={solutionHistory.length > 0}
         />
       )}
       
