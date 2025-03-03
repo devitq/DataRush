@@ -32,9 +32,9 @@ export function CompetitionCard({
 
   return (
     <Card
-      className={cn("aspect-square h-full w-auto overflow-hidden", className)}
+      className={cn("h-full w-full overflow-hidden flex flex-col", className)}
     >
-      <div className="relative h-full overflow-hidden">
+      <div className="h-48 overflow-hidden">
         <img
           src={competition.image_url ? competition.image_url : '/DANO.png'}
           alt={competition.title}
@@ -42,8 +42,8 @@ export function CompetitionCard({
         />
       </div>
 
-      <CardContent className="p-4">
-        <div className="flex flex-col gap-2.5">
+      <CardContent className="p-4 flex-1 flex flex-col">
+        <div className="flex flex-col gap-2.5 h-full">
           <div className="text-muted-foreground flex items-center gap-2 *:text-sm *:font-semibold">
             <span>
               {competition.type === CompetitionType.COMPETITIVE
@@ -67,7 +67,7 @@ export function CompetitionCard({
           </h3>
           
           {competition.type === CompetitionType.COMPETITIVE && (
-            <div className="text-gray-500 text-sm mt-1">
+            <div className="text-gray-500 text-sm mt-auto pt-2">
               {competition.start_date && (
                 <div className="flex items-center gap-1.5">
                   <Clock size={14} />
