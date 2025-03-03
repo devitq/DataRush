@@ -25,14 +25,7 @@ const TaskContent: React.FC<TaskContentProps> = ({ task }) => {
 
   const attachments = attachmentsQuery.data || [];
 
-  const convertToMarkdown = (text: string): string => {
-    if (!text) return '';
-    
-    let markdown = text.replace(/\n/g, '\n\n');
-    return markdown;
-  };
 
-  const markdownText = convertToMarkdown(task.description);
 
   return (
     <div className="flex-1 bg-white rounded-lg p-6">
@@ -45,7 +38,7 @@ const TaskContent: React.FC<TaskContentProps> = ({ task }) => {
           remarkPlugins={[remarkMath, remarkGfm]}
           rehypePlugins={[rehypeKatex]}
         >
-          {markdownText}
+          {task.description}
         </ReactMarkdown>
       </div>
 
