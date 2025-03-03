@@ -47,14 +47,12 @@ const CompetitionSession = () => {
         queryKey: ['solutionHistory', competitionId, taskId] 
       });
       
-      // Start the reload countdown
       setIsReloading(true);
       
-      // Schedule the page reload
       setTimeout(() => {
-        navigate(`/competition/${competitionId}/tasks/${taskId}`, { replace: true });
+        window.location.reload()
         setIsReloading(false);
-      }, 5000);
+      }, 2500);
     },
     onError: (error) => {
       console.error("Error submitting solution:", error);
