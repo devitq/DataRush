@@ -7,13 +7,23 @@ interface CompetitionHeaderProps {
   title: string;
   tasks: Task[];
   competitionId: string;
+  setAnswer: (value: string) => void;
+  setSelectedFile: (file: File | null) => void;  // заглушка
 }
 
 const CompetitionHeader: React.FC<CompetitionHeaderProps> = ({ 
   title,
   tasks, 
-  competitionId 
+  competitionId,
+  setAnswer,
+  setSelectedFile
 }) => {
+
+  const handleTaskSelect = () => {
+    setAnswer("")
+    setSelectedFile(null)
+  }
+  
   return (
     <header className="bg-white shadow-sm sticky top-0 z-30 w-full">
       <div className="mx-auto max-w-6xl px-4">
@@ -21,6 +31,7 @@ const CompetitionHeader: React.FC<CompetitionHeaderProps> = ({
           <Link 
             to={`/competition/${competitionId}`}
             className="flex items-center text-gray-600 hover:text-gray-900 transition-colors font-hse-sans text-sm"
+            onClick={handleTaskSelect}
           >
             <ArrowLeft className="h-4 w-4 mr-1" />
           </Link>

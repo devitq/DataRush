@@ -95,6 +95,8 @@ const CompetitionSession = () => {
         title={competitionTitle}
         tasks={tasks}
         competitionId={competitionId}
+        setAnswer={setAnswer}
+        setSelectedFile={setSelectedFile}
       />
 
       <main className="flex-1 bg-[#F8F8F8] pb-8">

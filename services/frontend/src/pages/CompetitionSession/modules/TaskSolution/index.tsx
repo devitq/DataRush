@@ -111,6 +111,7 @@ const TaskSolution: React.FC<TaskSolutionProps> = ({
 
   const handleSolutionSelect = (solution: Solution) => {
     setDisplayedSolution(solution);
+    console.log(displayedSolution)
   };
 
   const handleClearExistingFile = () => {
