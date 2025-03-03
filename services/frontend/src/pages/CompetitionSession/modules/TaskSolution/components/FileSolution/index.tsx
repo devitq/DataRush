@@ -86,7 +86,7 @@ const FileSolution: React.FC<FileSolutionProps> = ({
             <FileIcon size={28} className="text-black mb-2" />
             <span className="text-sm text-gray-700 font-medium mb-1 font-hse-sans">{fileName}</span>
             
-            <div className="flex items-center mt-2">
+            <div className="flex flex-col justify-center mt-2">
               {existingFileUrl && !selectedFile && (
                 <a 
                   href={existingFileUrl}
