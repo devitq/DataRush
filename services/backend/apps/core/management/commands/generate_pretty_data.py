@@ -4,7 +4,7 @@ from datetime import timedelta, datetime
 
 from django.conf import settings
 from django.contrib.auth.hashers import make_password
-from django.core.files.base import ContentFile
+from django.core.files.base import ContentFile, File
 from django.core.management.base import BaseCommand
 from django.utils import timezone
 
@@ -229,12 +229,12 @@ reviewers = [
     {
         "name": "Владислав",
         "surname": "Пикиневич",
-        "token": "pikinevich"
+        "token": "aa443163-9861-4b8d-b8f7-81ecd25f6088"
     },
     {
         "name": "Александр",
         "surname": "Шахов",
-        "token": "ashakhov"
+        "token": "d2e8904a-01dd-4f84-a8b0-8a60f1a3b6c0"
     }
 ]
 
@@ -357,7 +357,8 @@ class Command(BaseCommand):
 
                         content_dir = f"{settings.BASE_DIR}/apps/core/contents"
                         with open(f"{content_dir}/presentation.pptx", "rb") as f:
-                            files = [f, f, dummy_content_txt]
+                            pptx = File(f, name="presentation.pptx")
+                            files = [pptx, pptx, dummy_content_txt]
                             submission = CompetitionTaskSubmission.objects.create(
                                 user=user,
                                 task=task,
