@@ -3,6 +3,7 @@ from uuid import uuid4
 from django.db import models
 from django.db.models import Count, Q
 from martor.models import MartorField
+from mdeditor.fields import MDTextField
 
 from apps.competition.models import Competition
 from apps.core.models import BaseModel
@@ -25,7 +26,7 @@ class CompetitionTask(BaseModel):
     competition = models.ForeignKey(Competition, on_delete=models.CASCADE,
                                     verbose_name="привязанное соревнование")
     title = models.CharField(verbose_name="заголовок", max_length=50)
-    description = MartorField(verbose_name="описание")
+    description = MDTextField(verbose_name="описание")
     max_attempts = models.PositiveSmallIntegerField(null=True, blank=True,
                                                     verbose_name="максимальное кол-во попыток")
     type = models.CharField(
@@ -88,6 +89,13 @@ class CompetitionTaskCriteria(BaseModel):
     max_value = models.PositiveSmallIntegerField(
         verbose_name="максимальное кол-во баллов"
     )
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = "критерий"
+        verbose_name_plural = "критерии"
 
 
 class CompetitionTaskAttachment(BaseModel):

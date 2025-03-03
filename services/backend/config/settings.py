@@ -271,6 +271,8 @@ DEFAULT_CHARSET = "utf-8"
 
 FORCE_SCRIPT_NAME = None
 
+X_FRAME_OPTIONS = "SAMEORIGIN"
+
 INTERNAL_IPS = env(
     "DJANGO_INTERNAL_IPS",
     list,
@@ -440,6 +442,7 @@ INSTALLED_APPS = [
     "minio_storage",
     "tinymce",
     "martor",
+    "mdeditor",
     # Internal apps
     "apps.core",
     "apps.user",
