@@ -22,8 +22,9 @@ const CompetitionHeader: React.FC<CompetitionHeaderProps> = ({
   const handleTaskSelect = () => {
     setAnswer("")
     setSelectedFile(null)
+    console.log("STOP IT")
   }
-  
+
   return (
     <header className="bg-white shadow-sm sticky top-0 z-30 w-full">
       <div className="mx-auto max-w-6xl px-4">
