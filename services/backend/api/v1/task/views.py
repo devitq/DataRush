@@ -109,17 +109,23 @@ def submit_task(
             user=user, achievement=first_steps_achievement
         )
 
-    total_attempts = CompetitionTaskSubmission.objects.filter(user=user, task=task).count()
+    total_attempts = CompetitionTaskSubmission.objects.filter(
+        user=user, task=task
+    ).count()
     if task.max_attempts == total_attempts:
         return status.FORBIDDEN, ForbiddenError()
 
     if task.type == CompetitionTask.CompetitionTaskType.INPUT:
+        verdict = content.read() == task.correct_answer_file.read()
         submission = CompetitionTaskSubmission.objects.create(
             user=user,
             task=task,
             status=CompetitionTaskSubmission.StatusChoices.CHECKED,
-            result={"correct": content == task.answer_file_path},
             content=content,
+            result={
+                "correct": verdict
+            },
+            earned_points=task.points
         )
     if task.type == CompetitionTask.CompetitionTaskType.REVIEW:
         submission = CompetitionTaskSubmission.objects.create(

@@ -41,11 +41,11 @@ def analyze_data_task(self, submission_id):
         submission.stdout.save("output.txt", ContentFile(result["output"]))
         submission.result = {
             "correct": result["hash_match"],
-            "result_hash": result["result_hash"],
+            "hash_match": result["hash_match"],
             "error": result.get("error"),
         }
         submission.earned_points = (
-            submission.task.points if result["hash_match"] else 0
+            submission.task.points if result["correct"] else 0
         )
         submission.status = CompetitionTaskSubmission.StatusChoices.CHECKED
 
