@@ -15,6 +15,6 @@ export const getCompetition = async (id: string) => {
 
 export const startCompetition = async (competitionId: string) => {
   return await userFetch(`/competitions/${competitionId}/start`, {
-    method: 'POST'
+    method: "POST",
   });
 };

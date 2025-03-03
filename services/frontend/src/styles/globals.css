@@ -2,8 +2,6 @@
 @import "./fonts.css";
 @plugin "tailwindcss-animate";
 
-@custom-variant dark (&:is(.dark *));
-
 :root {
   --background: oklch(0.97 0 0);
   --foreground: oklch(0.145 0 0);
@@ -50,44 +48,25 @@
   --task-text-partial: oklch(0.639 0.1595 124.48);
   --task-wrong: oklch(0.906 0.0484 18.08);
   --task-text-wrong: oklch(0.433 0.17767 29.2339);
+
+  --correct: #d4ffe5;
+  --correct-foreground: #009b1c;
+
+  --partial: #e7ffd4;
+  --partial-foreground: #779b00;
+
+  --wrong: #ffd4d4;
+  --wrong-foreground: #9b0000;
+
+  --checking: #ffffff;
+  --checking-foreground: #242424;
+
+  --review: #ffec9f;
+  --review-foreground: #9b7700;
 }
 
 @theme inline {
   --font-hse-sans: "HSE Sans", system-ui, sans-serif;
-}
-.dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.145 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.145 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.985 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.396 0.141 25.723);
-  --destructive-foreground: oklch(0.637 0.237 25.331);
-  --border: oklch(0.269 0 0);
-  --input: oklch(0.269 0 0);
-  --ring: oklch(0.439 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(0.269 0 0);
-  --sidebar-ring: oklch(0.439 0 0);
 }
 
 @theme inline {
@@ -140,11 +119,26 @@
   --color-task-text-partial: var(--task-text-partial);
   --color-task-wrong: var(--task-wrong);
   --color-task-text-wrong: var(--task-text-wrong);
+
+  --color-correct: var(--correct);
+  --color-correct-foreground: var(--correct-foreground);
+
+  --color-partial: var(--partial);
+  --color-partial-foreground: var(--partial-foreground);
+
+  --color-wrong: var(--wrong);
+  --color-wrong-foreground: var(--wrong-foreground);
+
+  --color-checking: var(--checking);
+  --color-checking-foreground: var(--checking-foreground);
+
+  --color-review: var(--review);
+  --color-review-foreground: var(--review-foreground);
 }
 
 @layer base {
   * {
-    @apply border-border outline-ring/50 font-hse-sans;
+    @apply border-border outline-ring/50 font-hse-sans scheme-light;
   }
   body {
     @apply bg-background text-foreground;
