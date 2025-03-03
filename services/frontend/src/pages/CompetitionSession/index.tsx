@@ -8,7 +8,6 @@ import { getCompetition } from "@/shared/api/competitions";
 import { Loader2 } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { TaskType } from "@/shared/types/task";
-import { CompetitionType } from "@/shared/types/task";
 
 const CompetitionSession = () => {
   const { id, taskId } = useParams<{ id: string; taskId?: string }>();

@@ -59,14 +59,14 @@ const CompetitionPage = () => {
   };
   
   const handleViewResults = () => {
-    navigate(`/competition/${competitionId}/results`);
+    console.log("sorryan")
   };
 
   // Check if competition has ended
   const isCompetitionEnded = () => {
-    if (!competitionQuery.data?.end_date) return false;
+    if (!competition?.end_date) return false;
     
-    const endDate = new Date(competitionQuery.data.end_date);
+    const endDate = new Date(competition.end_date);
     const now = new Date();
     
     return now > endDate;

@@ -54,7 +54,7 @@ const TaskSolution: React.FC<TaskSolutionProps> = ({
       const latestSolution = solutionHistory[solutionHistory.length - 1];
       setDisplayedSolution(latestSolution);
     }
-  }, [solutionHistory, displayedSolution]);
+  }, [solutionHistory]);
 
   useEffect(() => {
     if (prevTaskIdRef.current !== task.id) {

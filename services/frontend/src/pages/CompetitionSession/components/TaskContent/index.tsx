@@ -27,7 +27,7 @@ const TaskContent: React.FC<TaskContentProps> = ({ task }) => {
   return (
     <div className="flex-1 bg-white rounded-lg p-6">
       <h2 className="text-3xl font-semibold mb-6 font-hse-sans">
-        Задача {task.in_competition_position}
+        {task.title}
       </h2>
       
       <div className="prose prose-lg max-w-none text-gray-700 font-hse-sans mb-6">
