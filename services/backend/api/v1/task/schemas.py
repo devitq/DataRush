@@ -62,3 +62,8 @@ class TaskAttachmentSchema(ModelSchema):
             "file",
             "public",
         )
+
+
+class TaskStatusSchema(Schema):
+    task_name: str
+    result: int
