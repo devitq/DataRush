@@ -71,12 +71,11 @@ const TaskSolution: React.FC<TaskSolutionProps> = ({
   }, [task.id, solutionHistory]);
 
   useEffect(() => {
-    if (solutionHistory.length > 0 && displayedSolution) {
-      const latestSolution = solutionHistory[solutionHistory.length - 1];
-      
-      if (latestSolution.id !== displayedSolution.id) {
-        setDisplayedSolution(latestSolution);
-      }
+    if (solutionHistory.length > 0 && 
+        (!displayedSolution || 
+         (solutionHistory[solutionHistory.length - 1].id !== displayedSolution.id &&
+          displayedSolution.id === solutionHistory[solutionHistory.length - 2]?.id))) {
+      setDisplayedSolution(solutionHistory[solutionHistory.length - 1]);
     }
   }, [solutionHistory, displayedSolution]);
 
