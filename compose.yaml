@@ -400,6 +400,9 @@ services:
       - type: bind
         source: /var/run/docker.sock
         target: /var/run/docker.sock
+      - type: bind
+        source: /tmp
+        target: /tmp
 
   proxy:
     image: docker.io/nginx:1.27-alpine3.21
