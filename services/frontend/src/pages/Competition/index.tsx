@@ -38,7 +38,10 @@ const CompetitionPage = () => {
         const tasks = await getCompetitionTasks(competitionId);
         
         if (tasks && tasks.length > 0) {
-          navigate(`/competition/${competitionId}/tasks/${tasks[0].id}`);
+          const sortedTasks = [...tasks].sort((a, b) => {
+            return a.in_competition_position - b.in_competition_position;
+          });
+          navigate(`/competition/${competitionId}/tasks/${sortedTasks[0].id}`);
         } else {
           navigate(`/competition/${competitionId}/tasks`);
         }
