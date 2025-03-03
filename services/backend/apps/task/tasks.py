@@ -2,27 +2,38 @@ import httpx
 from celery import shared_task
 from django.conf import settings
 from django.core.files.base import ContentFile
+import hashlib
+
+from apps.task.models import CompetitionTaskSubmission
 
 
 @shared_task(bind=True, max_retries=3)
 def analyze_data_task(self, submission_id):
-    from .models import CompetitionTaskSubmission
-
     submission = CompetitionTaskSubmission.objects.get(id=submission_id)
     try:
-        code = submission.content.read().decode()
+        code_url = (
+            f"{settings.MINIO_DEFAULT_CUSTOM_ENDPOINT_URL}{submission.path}"
+        )
         files = [
-            (f.name, f.file.open("rb"))
-            for f in submission.task.attachments.filter(public=True)
+            {
+                "url": f"{settings.MINIO_DEFAULT_CUSTOM_ENDPOINT_URL}{attachment.path}",
+                "bind_path": attachment.bind_at,
+            }
+            for attachment in submission.task.attachments.filter(
+                bind_path__isnull=False
+            )
         ]
 
         response = httpx.post(
             f"{settings.CHECKER_API_ENDPOINT}/execute",
-            files=[("files", (f.name, f)) for f in files]
-            + [
-                ("code", code),
-                ("expected_hash", submission.task.correct_answer_hash),
-            ],
+            json={
+                "files": files,
+                "code_url": code_url,
+                "answer_file_path": submission.task.answer_file_path,
+                "expected_hash": hashlib.sha256(
+                    submission.task.correct_answer_file.read().encode()
+                ).hexdigest(),
+            },
             timeout=30,
         )
         response.raise_for_status()
