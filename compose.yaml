@@ -370,11 +370,20 @@ services:
     restart: unless-stopped
     shm_size: 4mb
 
+  custom_python:
+    image: gitlab.prodcontest.ru:5050/team-15/project/custom-python:latest
+    entrypoint: ["sh", "-c", "exit 0"]
+
   checker:
     image: gitlab.prodcontest.ru:5050/team-15/project/checker:latest
     build:
       context: ./services/checker
       dockerfile: Dockerfile
+    depends_on:
+      custom_python:
+        restart: false
+        condition: service_completed_successfully
+        required: true
     env_file:
       - path: ./infrastructure/checker/.env.template
         required: true

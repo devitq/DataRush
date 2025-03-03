@@ -9,7 +9,11 @@ from django.utils import timezone
 
 from apps.competition.models import Competition, State
 from apps.review.models import Reviewer
-from apps.task.models import CompetitionTask, CompetitionTaskSubmission, CompetitionTaskCriteria
+from apps.task.models import (
+    CompetitionTask,
+    CompetitionTaskCriteria,
+    CompetitionTaskSubmission,
+)
 from apps.user.models import User, UserRole
 
 
@@ -92,7 +96,7 @@ class Command(BaseCommand):
         task_types = [
             CompetitionTask.CompetitionTaskType.INPUT.value,
             CompetitionTask.CompetitionTaskType.REVIEW.value,
-            CompetitionTask.CompetitionTaskType.INPUT.value
+            CompetitionTask.CompetitionTaskType.INPUT.value,
         ]
         for comp in competitions:
             # Create 3 tasks per competition
@@ -110,7 +114,10 @@ class Command(BaseCommand):
                     submission_reviewers_count=random.randint(2, 10),
                     max_attempts=random.randint(1, 10),
                 )
-                if task_type == CompetitionTask.CompetitionTaskType.REVIEW.value:
+                if (
+                    task_type
+                    == CompetitionTask.CompetitionTaskType.REVIEW.value
+                ):
                     for j in range(5):
                         CompetitionTaskCriteria.objects.create(
                             task=task,

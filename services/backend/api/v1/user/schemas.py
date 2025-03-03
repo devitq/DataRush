@@ -1,5 +1,7 @@
 from ninja import ModelSchema, Schema
 
+from api.v1.achievement.schemas import UserAchievementSchema
+from apps.achievement.models import UserAchievement
 from apps.user.models import User
 
 
@@ -20,9 +22,17 @@ class LoginSchema(ModelSchema):
 
 
 class UserSchema(ModelSchema):
+    achievements: list[UserAchievementSchema] = None
+
+    @staticmethod
+    def resolve_achievements(self, context):
+        return UserAchievement.objects.filter(
+            user=context.get("request").auth
+        ).order_by("-received_at")
+
     class Meta:
         model = User
-        fields = ["id", "email", "username", "created_at", "achievements"]
+        fields = ["id", "email", "username", "created_at"]
 
 
 class StatSchema(Schema):

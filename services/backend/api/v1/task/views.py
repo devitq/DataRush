@@ -12,6 +12,7 @@ from api.v1.task.schemas import (
     TaskOutSchema,
     TaskSubmissionOut,
 )
+from apps.achievement.models import Achievement, UserAchievement
 from apps.competition.models import State
 from apps.task.models import (
     Competition,
@@ -102,6 +103,11 @@ def submit_task(
         CompetitionTask, competition=competition, id=task_id
     )
 
+    if not CompetitionTaskSubmission.objects.filter(user=user).exists():
+        first_steps_achievement = Achievement.objects.get(slug="first_steps")
+        UserAchievement.objects.create(
+            user=user, achievement=first_steps_achievement
+        )
     if task.type == CompetitionTask.CompetitionTaskType.INPUT:
         submission = CompetitionTaskSubmission.objects.create(
             user=user,
