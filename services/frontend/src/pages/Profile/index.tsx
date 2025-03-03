@@ -1,6 +1,6 @@
 import { UserInfo } from "./widgets/user-info";
 import { UserAchievements } from "./widgets/user-achievements";
-import { UserStats } from "./widgets/user-stats";
+import { UserStatsSections } from "./widgets/user-stats";
 import { useQuery } from "@tanstack/react-query";
 import { getCurrentUser } from "@/shared/api/user";
 import { Loading } from "@/components/ui/loading";
@@ -25,11 +25,11 @@ const ProfilePage = () => {
 
   return (
     <div className="flex flex-col items-stretch gap-14">
-      <div className="flex">
+      <div className="flex flex-col gap-5 md:flex-row md:gap-0">
         <UserInfo user={user} />
         <UserAchievements achievements={user.achievements} />
       </div>
-      <UserStats />
+      <UserStatsSections />
     </div>
   );
 };

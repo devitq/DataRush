@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
-import { useParams, Navigate, useNavigate } from "react-router-dom";
+import { useParams, Navigate   } from "react-router-dom";
 import CompetitionHeader from "./components/CompetitionHeader";
 import TaskContent from "./components/TaskContent";
 import TaskSolution from "./modules/TaskSolution";
 import { getCompetitionTasks, submitTaskSolution } from "@/shared/api/session";
-import { getCompetition } from "@/shared/api/competitions";
+import { getCompetition, getCompetitionResults } from "@/shared/api/competitions";
 import { Loader2 } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { TaskType } from "@/shared/types/task";
@@ -16,7 +16,6 @@ const CompetitionSession = () => {
   const [isReloading, setIsReloading] = useState(false);
   const competitionId = id || "";
   const queryClient = useQueryClient();
-  const navigate = useNavigate();
 
   const competitionQuery = useQuery({
     queryKey: ["competition", competitionId],
@@ -27,6 +26,12 @@ const CompetitionSession = () => {
   const tasksQuery = useQuery({
     queryKey: ["competitionTasks", competitionId],
     queryFn: () => getCompetitionTasks(competitionId),
+    enabled: !!competitionId,
+  });
+
+  const resultsQuery = useQuery({
+    queryKey: ["competitionResults", competitionId],
+    queryFn: () => getCompetitionResults(competitionId),
     enabled: !!competitionId,
   });
 
@@ -47,10 +52,14 @@ const CompetitionSession = () => {
         queryKey: ['solutionHistory', competitionId, taskId] 
       });
       
+      queryClient.invalidateQueries({
+        queryKey: ['competitionResults', competitionId]
+      });
+      
       setIsReloading(true);
       
       setTimeout(() => {
-        window.location.reload()
+        window.location.reload();
         setIsReloading(false);
       }, 2500);
     },
@@ -61,6 +70,7 @@ const CompetitionSession = () => {
 
   const competition = competitionQuery.data;
   const tasks = tasksQuery.data || [];
+  const results = resultsQuery.data || [];
   const isLoading = tasksQuery.isLoading || competitionQuery.isLoading;
   const error = tasksQuery.error || competitionQuery.error 
     ? "Не удалось загрузить данные. Пожалуйста, попробуйте позже." 
@@ -113,6 +123,7 @@ const CompetitionSession = () => {
         competitionType={competition?.type}
         startDate={competition?.start_date}
         endDate={competition?.end_date}
+        taskResults={results}
       />
 
       <main className="flex-1 bg-[#F8F8F8] pb-8">
@@ -138,6 +149,16 @@ const CompetitionSession = () => {
                 onSubmit={handleSubmit}
                 isSubmitting={isSubmitting}
               />
+              {isReloading && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+                  <div className="bg-white p-6 rounded-lg shadow-xl text-center">
+                    <Loader2 className="h-8 w-8 animate-spin text-blue-500 mx-auto mb-4" />
+                    <p className="font-hse-sans text-gray-700">
+                      Решение отправлено! Страница обновится через несколько секунд...
+                    </p>
+                  </div>
+                </div>
+              )}
             </div>
           ) : (
             <div className="flex h-40 items-center justify-center rounded-lg bg-white">

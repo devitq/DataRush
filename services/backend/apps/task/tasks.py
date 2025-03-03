@@ -15,6 +15,7 @@ def analyze_data_task(self, submission_id):
     submission = CompetitionTaskSubmission.objects.get(id=submission_id)
     try:
         code = submission.content.read()
+        print("YA SSF")
         files = [
             {
                 "url": (
@@ -32,7 +33,7 @@ def analyze_data_task(self, submission_id):
             f"{settings.CHECKER_API_ENDPOINT}/execute",
             json={
                 "files": files,
-                "code": base64.encode(code),
+                "code": base64.b64encode(code).decode("utf-8"),
                 "answer_file_path": submission.task.answer_file_path,
                 "expected_hash": hashlib.sha256(
                     submission.task.correct_answer_file.read()
@@ -42,6 +43,7 @@ def analyze_data_task(self, submission_id):
         )
         response.raise_for_status()
         result = response.json()
+        print("HOHOHO")
 
         submission.stdout.save("output.txt", ContentFile(result["output"]))
         submission.result = {

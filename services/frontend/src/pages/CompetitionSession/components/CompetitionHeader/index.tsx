@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Task } from '@/shared/types/task';
-import { ArrowLeft, Clock } from 'lucide-react'; 
+import { ArrowLeft } from 'lucide-react'; 
 import { CompetitionType } from '@/shared/types/competition';
+import { CompetitionResult } from '@/shared/types/competition';
 
 interface CompetitionHeaderProps {
   title: string;
@@ -11,8 +12,9 @@ interface CompetitionHeaderProps {
   setAnswer: (value: string) => void;
   setSelectedFile: (file: File | null) => void;
   competitionType?: CompetitionType;
-  startDate?: Date;
-  endDate?: Date;
+  startDate?: Date | string;
+  endDate?: Date | string;
+  taskResults?: CompetitionResult[];
 }
 
 const CompetitionHeader: React.FC<CompetitionHeaderProps> = ({ 
@@ -23,9 +25,11 @@ const CompetitionHeader: React.FC<CompetitionHeaderProps> = ({
   setSelectedFile,
   competitionType,
   startDate,
-  endDate
+  endDate,
+  taskResults = []
 }) => {
   const navigate = useNavigate();
+  const { taskId } = useParams<{ taskId?: string }>();
   const [timeLeft, setTimeLeft] = useState<string>('');
   
   const handleTaskSelect = (taskId: string) => {
@@ -34,7 +38,7 @@ const CompetitionHeader: React.FC<CompetitionHeaderProps> = ({
     navigate(`/competition/${competitionId}/tasks/${taskId}`);
   }
   
-  const formatDate = (date?: Date) => {
+  const formatDate = (date?: Date | string) => {
     if (!date) return '';
     
     const dateObj = typeof date === 'string' ? new Date(date) : date;
@@ -73,6 +77,42 @@ const CompetitionHeader: React.FC<CompetitionHeaderProps> = ({
     
     return () => clearInterval(timerInterval);
   }, [endDate, competitionId, navigate, competitionType]);
+  
+  const getTaskStatus = (task: Task) => {
+    const result = taskResults.find(r => r.task_name === task.title);
+    
+    let bgColor = 'var(--color-task-uncleared)';
+    let textColor = 'var(--color-task-text-uncleared)';
+    
+    if (result) {
+      if (result.result === -1) {
+        bgColor = 'var(--color-task-checking)';
+        textColor = 'var(--color-task-text-checking)';
+      } else if (result.result === -2) {
+        bgColor = 'var(--color-task-uncleared)';
+        textColor = 'var(--color-task-text-uncleared)';
+      } else if (result.result === 0) {
+        bgColor = 'var(--color-task-wrong)';
+        textColor = 'var(--color-task-text-wrong)';
+      } else if (result.result < result.max_points) {
+        bgColor = 'var(--color-task-partial)';
+        textColor = 'var(--color-task-text-partial)';
+      } else if (result.result === result.max_points) {
+        bgColor = 'var(--color-task-correct)';
+        textColor = 'var(--color-task-text-correct)';
+      }
+    }
+    
+    const isActive = task.id === taskId;
+    const activeBorder = isActive ? 'border-2 border-blue-500' : '';
+    
+    return {
+      backgroundColor: bgColor,
+      color: textColor,
+      className: `rounded-lg px-3 py-1.5 font-medium text-sm font-hse-sans cursor-pointer 
+                transition-all hover:brightness-95 flex-shrink-0 ${activeBorder}`
+    };
+  };
   
   const showTimeSection = competitionType === CompetitionType.COMPETITIVE && (startDate || endDate);
   
@@ -120,18 +160,19 @@ const CompetitionHeader: React.FC<CompetitionHeaderProps> = ({
         </div>
         
         <div className="flex items-center justify-center gap-4 pb-4 overflow-x-auto no-scrollbar">
-          {tasks.map((task) => (
-          <button
-            key={task.id}
-            className={`text-[var(--color-task-text-uncleared)] bg-[var(--color-task-uncleared)]
-              rounded-lg px-3 py-1.5 font-medium text-sm font-hse-sans cursor-pointer 
-              transition-all hover:brightness-95 flex-shrink-0
-              `}
-            onClick={() => handleTaskSelect(task.id)}
-          >
-            {task.in_competition_position}
-          </button>
-          ))}
+          {tasks.map((task) => {
+            const { backgroundColor, color, className } = getTaskStatus(task);
+            return (
+              <button
+                key={task.id}
+                style={{ backgroundColor, color }}
+                className={className}
+                onClick={() => handleTaskSelect(task.id)}
+              >
+                {task.in_competition_position}
+              </button>
+            );
+          })}
         </div>
       </div>
     </header>

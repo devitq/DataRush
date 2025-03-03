@@ -14,7 +14,7 @@ export const getCompetition = async (id: string) => {
 };
 
 export const getCompetitionResults = async (id: string) => {
-  return await userFetch<CompetitionResult>(`/competitions/${id}/results`);
+  return await userFetch<CompetitionResult[]>(`/competitions/${id}/results`);
 }
 
 export const startCompetition = async (competitionId: string) => {
