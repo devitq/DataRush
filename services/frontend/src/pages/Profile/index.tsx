@@ -1,4 +1,3 @@
-import { User } from "@/shared/types/user";
 import { UserInfo } from "./widgets/user-info";
 import { UserAchievements } from "./widgets/user-achievements";
 import { UserStats } from "./widgets/user-stats";
