@@ -40,12 +40,9 @@ const TaskSolution: React.FC<TaskSolutionProps> = ({
     enabled: !!(competitionId && task.id),
   });
 
-  // Get the solution history - already sorted from oldest to newest
   const solutionHistory = solutionsQuery.data || [];
-  
   // Handle task changes
   useEffect(() => {
-    // If task changed, reset everything and load the latest solution
     if (taskIdRef.current !== task.id) {
       setCurrentSolution(null);
       setSelectedSolutionUrl(null);
@@ -115,9 +112,6 @@ const TaskSolution: React.FC<TaskSolutionProps> = ({
 
   const handleSubmitWrapper = () => {
     onSubmit();
-    setAnswer("");
-    setSelectedFile(null);
-    setSelectedSolutionUrl(null);
   };
 
   return (
