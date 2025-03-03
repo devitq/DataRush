@@ -30,6 +30,7 @@ export const Header = () => {
         </Link>
         
         <div className="flex items-center gap-4">
+          {/* это переход на ваще другой сервис поэтому не надо линк */}
           <a 
             href="/docs/"
             className="hidden md:flex text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors items-center gap-1"
