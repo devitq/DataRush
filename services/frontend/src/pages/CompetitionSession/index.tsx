@@ -60,7 +60,6 @@ const CompetitionSession = () => {
       
       setTimeout(() => {
         window.location.reload();
-        setIsReloading(false);
       }, 2500);
     },
     onError: (error) => {
@@ -69,7 +68,9 @@ const CompetitionSession = () => {
   });
 
   const competition = competitionQuery.data;
-  const tasks = tasksQuery.data || [];
+  const tasks = [...(tasksQuery.data || [])].sort((a, b) => {
+    return a.in_competition_position - b.in_competition_position;
+  });
   const results = resultsQuery.data || [];
   const isLoading = tasksQuery.isLoading || competitionQuery.isLoading;
   const error = tasksQuery.error || competitionQuery.error 

@@ -55,7 +55,6 @@ export const Header = () => {
               <div className="md:hidden">
                 <Link to="/docs">
                   <DropdownMenuItem>
-                    <FileText className="h-4 w-4 mr-2" />
                     Материалы
                   </DropdownMenuItem>
                 </Link>
