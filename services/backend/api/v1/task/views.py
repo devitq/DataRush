@@ -120,7 +120,6 @@ def submit_task(
         user_input = content.read()
         correct_answer = task.correct_answer_file.read()
         verdict = user_input == correct_answer
-        print(user_input, correct_answer)
         submission = CompetitionTaskSubmission.objects.create(
             user=user,
             task=task,
