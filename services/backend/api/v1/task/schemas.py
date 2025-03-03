@@ -33,6 +33,7 @@ class TaskOutSchema(ModelSchema):
             "description",
             "in_competition_position",
             "points",
+            "max_attempts"
         ]
 
 

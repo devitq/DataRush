@@ -30,7 +30,7 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONOPTIMIZE=2 \
     PATH="/opt/venv/bin:$PATH"
 
-EXPOSE 8080
+EXPOSE 8000
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --start-interval=2s --retries=3 \
     CMD wget --no-verbose --tries=1 --spider http://127.0.0.1:8000/health || exit 1

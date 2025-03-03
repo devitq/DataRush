@@ -12,6 +12,7 @@ from api.v1.task.schemas import (
     TaskOutSchema,
     TaskSubmissionOut,
 )
+from apps.achievement.models import Achievement, UserAchievement
 from apps.competition.models import State
 from apps.task.models import (
     Competition,
@@ -102,13 +103,27 @@ def submit_task(
         CompetitionTask, competition=competition, id=task_id
     )
 
+    if not CompetitionTaskSubmission.objects.filter(user=user).exists():
+        first_steps_achievement = Achievement.objects.get(slug="first_steps")
+        UserAchievement.objects.create(
+            user=user, achievement=first_steps_achievement
+        )
+
+    total_attempts = CompetitionTaskSubmission.objects.filter(
+        user=user, task=task
+    ).count()
+    if task.max_attempts == total_attempts:
+        return status.FORBIDDEN, ForbiddenError()
+
     if task.type == CompetitionTask.CompetitionTaskType.INPUT:
         submission = CompetitionTaskSubmission.objects.create(
             user=user,
             task=task,
             status=CompetitionTaskSubmission.StatusChoices.CHECKED,
-            result={"correct": content == task.answer_file_path},
             content=content,
+            result={
+                "correct": content.read() == task.correct_answer_file.read()
+            },
         )
     if task.type == CompetitionTask.CompetitionTaskType.REVIEW:
         submission = CompetitionTaskSubmission.objects.create(

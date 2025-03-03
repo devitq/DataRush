@@ -6,12 +6,18 @@ from django.contrib.auth.hashers import make_password
 from django.core.files.base import ContentFile
 from django.core.management.base import BaseCommand
 from django.utils import timezone
+from faker import Faker
 
 from apps.competition.models import Competition, State
 from apps.review.models import Reviewer
-from apps.task.models import CompetitionTask, CompetitionTaskSubmission, CompetitionTaskCriteria
+from apps.task.models import (
+    CompetitionTask,
+    CompetitionTaskCriteria,
+    CompetitionTaskSubmission,
+)
 from apps.user.models import User, UserRole
 
+faker = Faker("ru_RU")
 
 class Command(BaseCommand):
     help = "Generate sample data for Users, Competitions, Tasks, Submissions, and States."
@@ -40,11 +46,10 @@ class Command(BaseCommand):
     def create_users(self, count):
         users = []
         for i in range(1, count + 1):
-            email = f"user{i}@example.com"
-            username = f"user{i}"
-            password = (
-                "password123"  # In production, use proper password handling.
-            )
+            fake_profile = faker.profile()
+            email = fake_profile["email"]
+            username = fake_profile["username"]
+            password = faker.password()
             role = random.choice(
                 [UserRole.STUDENT.value, UserRole.METODIST.value]
             )
@@ -64,7 +69,7 @@ class Command(BaseCommand):
         competitions = []
         now = timezone.now()
         for i in range(1, count + 1):
-            title = f"Competition {i}"
+            title = faker.sentence()
             description = f"Description for competition {i}"
             start_date = now - timedelta(days=random.randint(1, 10))
             end_date = now + timedelta(days=random.randint(1, 10))
@@ -92,7 +97,7 @@ class Command(BaseCommand):
         task_types = [
             CompetitionTask.CompetitionTaskType.INPUT.value,
             CompetitionTask.CompetitionTaskType.REVIEW.value,
-            CompetitionTask.CompetitionTaskType.INPUT.value
+            CompetitionTask.CompetitionTaskType.INPUT.value,
         ]
         for comp in competitions:
             # Create 3 tasks per competition
@@ -110,7 +115,10 @@ class Command(BaseCommand):
                     submission_reviewers_count=random.randint(2, 10),
                     max_attempts=random.randint(1, 10),
                 )
-                if task_type == CompetitionTask.CompetitionTaskType.REVIEW.value:
+                if (
+                    task_type
+                    == CompetitionTask.CompetitionTaskType.REVIEW.value
+                ):
                     for j in range(5):
                         CompetitionTaskCriteria.objects.create(
                             task=task,
@@ -132,28 +140,29 @@ class Command(BaseCommand):
 
     def create_submissions(self, tasks, users):
         for task in tasks:
-            # Each task will get between 1 and 3 submissions
-            num_submissions = random.randint(1, 3)
-            for _ in range(num_submissions):
-                user = random.choice(users)
-                # Create a dummy content file
-                dummy_content = ContentFile(
-                    b"Submission content",
-                    name=f"submission_{uuid.uuid4().hex}.txt",
-                )
-                submission = CompetitionTaskSubmission.objects.create(
-                    user=user,
-                    task=task,
-                    earned_points=random.randint(
-                        0, task.points if task.points else 10
-                    ),
-                    content=dummy_content,
-                )
-                submission.save()
-                submission.send_on_review()
-                self.stdout.write(
-                    f"Created submission for task '{task.title}' by user '{user.username}'"
-                )
+            if task.type == CompetitionTask.CompetitionTaskType.REVIEW.value:
+                # Each task will get between 1 and 3 submissions
+                num_submissions = random.randint(1, 3)
+                for _ in range(num_submissions):
+                    user = random.choice(users)
+                    # Create a dummy content file
+                    dummy_content = ContentFile(
+                        b"Submission content",
+                        name=f"submission_{uuid.uuid4().hex}.txt",
+                    )
+                    submission = CompetitionTaskSubmission.objects.create(
+                        user=user,
+                        task=task,
+                        earned_points=random.randint(
+                            0, task.points if task.points else 10
+                        ),
+                        content=dummy_content,
+                    )
+                    submission.save()
+                    submission.send_on_review()
+                    self.stdout.write(
+                        f"Created submission for task '{task.title}' by user '{user.username}'"
+                    )
 
     def create_states(self, competitions, users):
         # For each competition, create a State for some of its participants

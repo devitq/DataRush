@@ -3,6 +3,7 @@ from functools import partial
 from ninja import NinjaAPI
 
 from api.v1 import handlers
+from api.v1.achievement.views import router as achievement_router
 from api.v1.auth import BearerAuth
 from api.v1.competition.views import router as competition_router
 from api.v1.ping.views import router as ping_router
@@ -47,6 +48,11 @@ router.add_router(
 router.add_router(
     "team",
     team_router,
+    auth=BearerAuth(),
+)
+router.add_router(
+    "achievements",
+    achievement_router,
     auth=BearerAuth(),
 )
 

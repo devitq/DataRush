@@ -1,14 +1,19 @@
 import React from 'react';
 import { Button } from "@/components/ui/button";
+import { Loader2 } from "lucide-react";
 
 interface ActionButtonsProps {
   onSubmit: () => void;
   onHistoryClick: () => void;
+  isSubmitting?: boolean;
+  hasSubmissionsLeft?: boolean;
 }
 
 const ActionButtons: React.FC<ActionButtonsProps> = ({ 
   onSubmit,
-  onHistoryClick
+  onHistoryClick,
+  isSubmitting = false,
+  hasSubmissionsLeft = true
 }) => {
   return (
     <div className="flex gap-8">
@@ -16,15 +21,31 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
         variant="ghost" 
         className="font-hse-sans bg-white hover:bg-gray-100"
         onClick={onHistoryClick}
+        disabled={isSubmitting}
       >
         История
       </Button>
-      <Button 
-        onClick={onSubmit}
-        className="font-hse-sans flex-grow" 
-      >
-        Отправить решение
-      </Button>
+      
+      {hasSubmissionsLeft ? (
+        <Button 
+          onClick={onSubmit}
+          className="font-hse-sans flex-grow" 
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Отправка...
+            </>
+          ) : (
+            "Отправить решение"
+          )}
+        </Button>
+      ) : (
+        <div className="flex-grow text-right text-gray-500 flex items-center justify-end font-hse-sans">
+          Лимит посылок исчерпан
+        </div>
+      )}
     </div>
   );
 };

@@ -11,3 +11,4 @@ if [ "$DJANGO_CREATE_SUPERUSER" = "True" ]; then
 fi
 
 python manage.py init_achievments
+python manage.py generate_pretty_data

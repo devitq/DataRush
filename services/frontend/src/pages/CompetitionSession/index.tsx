@@ -4,6 +4,7 @@ import CompetitionHeader from "./components/CompetitionHeader";
 import TaskContent from "./components/TaskContent";
 import TaskSolution from "./modules/TaskSolution";
 import { getCompetitionTasks, submitTaskSolution } from "@/shared/api/session";
+import { getCompetition } from "@/shared/api/competitions";
 import { Loader2 } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { TaskType } from "@/shared/types/task";
@@ -14,6 +15,12 @@ const CompetitionSession = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const competitionId = id || "";
   const queryClient = useQueryClient();
+
+  const competitionQuery = useQuery({
+    queryKey: ["competition", competitionId],
+    queryFn: () => getCompetition(competitionId),
+    enabled: !!competitionId,
+  });
 
   const tasksQuery = useQuery({
     queryKey: ["competitionTasks", competitionId],
@@ -46,9 +53,12 @@ const CompetitionSession = () => {
     }
   });
 
+  const competition = competitionQuery.data;
   const tasks = tasksQuery.data || [];
-  const isLoading = tasksQuery.isLoading;
-  const error = tasksQuery.error ? "Не удалось загрузить задания. Пожалуйста, попробуйте позже." : null;
+  const isLoading = tasksQuery.isLoading || competitionQuery.isLoading;
+  const error = tasksQuery.error || competitionQuery.error 
+    ? "Не удалось загрузить данные. Пожалуйста, попробуйте позже." 
+    : null;
 
   const currentTask = tasks.find((t) => t.id === taskId) || null;
 
@@ -77,12 +87,16 @@ const CompetitionSession = () => {
     submitMutation.mutate();
   };
 
+  const competitionTitle = competition?.title || "Загрузка соревнования...";
+
   return (
     <div className="flex min-h-screen flex-col">
       <CompetitionHeader
-        title="Олимпиада DANO 2025. Индивидуальный этап"
+        title={competitionTitle}
         tasks={tasks}
         competitionId={competitionId}
+        setAnswer={setAnswer}
+        setSelectedFile={setSelectedFile}
       />
 
       <main className="flex-1 bg-[#F8F8F8] pb-8">

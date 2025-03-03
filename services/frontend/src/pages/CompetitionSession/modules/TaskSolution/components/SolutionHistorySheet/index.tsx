@@ -1,9 +1,9 @@
 import React from 'react';
 import { Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { X } from "lucide-react";
+import { X, Check } from "lucide-react";
 import SolutionStatus from '../SolutionStatus';
-import { Solution, TaskType } from '@/shared/types/task';
+import { Solution } from '@/shared/types/task';
 
 interface SolutionHistorySheetProps {
   isOpen: boolean;
@@ -18,7 +18,7 @@ const SolutionHistorySheet: React.FC<SolutionHistorySheetProps> = ({
   onOpenChange,
   solutions,
   maxPoints,
-  onSolutionSelect
+  onSolutionSelect,
 }) => {
   return (
     <Sheet open={isOpen} onOpenChange={onOpenChange}>
@@ -39,10 +39,10 @@ const SolutionHistorySheet: React.FC<SolutionHistorySheetProps> = ({
             solutions.map((solution, index) => (
               <div 
                 key={solution.id || index} 
-                className="w-full cursor-pointer transition-transform hover:scale-[1.01]" 
+                className={`w-full cursor-pointer transition-transform hover:scale-[1.01] relative`}
                 onClick={() => {
                   onSolutionSelect(solution);
-                  onOpenChange(false); 
+                  onOpenChange(false);
                 }}
               >
                 <SolutionStatus solution={solution} maxPoints={maxPoints} />

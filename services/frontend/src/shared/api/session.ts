@@ -24,7 +24,7 @@ export const submitTaskSolution = async (
 
   // туповатый костыль но для мвп сойдет
   if (typeof solution === 'string') {
-    const textFile = new File([solution], 'solution.txt', { type: 'text/plain' });
+    const textFile = new File([solution], 'solution_example.txt', { type: 'text/plain' });
     formData.append('content', textFile);
   } else {
     formData.append('content', solution);
