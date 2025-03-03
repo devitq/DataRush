@@ -22,12 +22,16 @@ class CompetitionTask(BaseModel):
     in_competition_position = models.PositiveSmallIntegerField(
         verbose_name="позиция в соревновании"
     )
-    competition = models.ForeignKey(Competition, on_delete=models.CASCADE,
-                                    verbose_name="привязанное соревнование")
+    competition = models.ForeignKey(
+        Competition,
+        on_delete=models.CASCADE,
+        verbose_name="привязанное соревнование",
+    )
     title = models.CharField(verbose_name="заголовок", max_length=50)
     description = MDTextField(verbose_name="описание")
-    max_attempts = models.PositiveSmallIntegerField(null=True, blank=True,
-                                                    verbose_name="максимальное кол-во попыток")
+    max_attempts = models.PositiveSmallIntegerField(
+        null=True, blank=True, verbose_name="максимальное кол-во попыток"
+    )
     type = models.CharField(
         choices=CompetitionTaskType, max_length=8, verbose_name="тип проверки"
     )
@@ -68,7 +72,10 @@ class CompetitionTask(BaseModel):
         ),
     )
     submission_reviewers_count = models.PositiveSmallIntegerField(
-        default=1, null=True, blank=True, verbose_name="кол-во проверяющих для зачета задачи"
+        default=1,
+        null=True,
+        blank=True,
+        verbose_name="кол-во проверяющих для зачета задачи",
     )
 
     def __str__(self):
@@ -84,15 +91,9 @@ class CompetitionTaskCriteria(BaseModel):
         CompetitionTask, on_delete=models.CASCADE, related_name="criteries"
     )
 
-    name = models.TextField(
-        verbose_name="название"
-    )
-    slug = models.SlugField(
-        verbose_name="техническое название"
-    )
-    description = models.TextField(
-        verbose_name="описание критерии"
-    )
+    name = models.TextField(verbose_name="название")
+    slug = models.SlugField(verbose_name="техническое название")
+    description = models.TextField(verbose_name="описание критерии")
     max_value = models.PositiveSmallIntegerField(
         verbose_name="максимальное кол-во баллов"
     )

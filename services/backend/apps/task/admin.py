@@ -3,8 +3,8 @@ from django.contrib import admin
 from apps.task.models import (
     CompetitionTask,
     CompetitionTaskAttachment,
+    CompetitionTaskCriteria,
     CompetitionTaskSubmission,
-    CompetitionTaskCriteria
 )
 
 
@@ -23,7 +23,10 @@ class CompetitionTaskAdmin(admin.ModelAdmin):
     list_display = ("title", "type", "points")
     filter_horizontal = ("reviewers",)
     list_filter = ("type",)
-    inlines = (CompletionAttachmentInline, CompetitionCriteriaInline,)
+    inlines = (
+        CompletionAttachmentInline,
+        CompetitionCriteriaInline,
+    )
 
 
 @admin.register(CompetitionTaskSubmission)

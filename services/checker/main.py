@@ -157,12 +157,12 @@ def run_container_safely(
             "stderr": f"Container error: {str(e)}",
             "status": -1,
         }
-    # finally:
-    #     if container:
-    #         try:
-    #             container.remove(force=True)
-    #         except docker.errors.DockerException:
-    #             pass
+    finally:
+        if container:
+            try:
+                container.remove(force=True)
+            except docker.errors.DockerException:
+                pass
 
 
 def validate_file_path(path: str) -> bool:
@@ -202,6 +202,7 @@ async def execute_code(request: ExecutionRequest) -> ExecutionResponse:
             )
 
     with tempfile.TemporaryDirectory() as tmp_dir:
+        print(tmp_dir)
         bound_files = {}
         if request.files:
             async with aiohttp.ClientSession() as session:

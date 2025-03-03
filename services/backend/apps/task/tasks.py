@@ -1,8 +1,9 @@
+import hashlib
+
 import httpx
 from celery import shared_task
 from django.conf import settings
 from django.core.files.base import ContentFile
-import hashlib
 
 from apps.task.models import CompetitionTaskSubmission
 
