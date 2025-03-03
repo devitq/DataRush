@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from ninja import ModelSchema, Schema
 from pydantic import Field
 
@@ -19,6 +21,7 @@ class UserAchievementSchema(Schema):
     name: str = Field(..., alias="achievement.name")
     description: str = Field(..., alias="achievement.description")
     icon: str = Field(..., alias="achievement.icon")
+    received_at: datetime
 
     class Meta:
         model = UserAchievement

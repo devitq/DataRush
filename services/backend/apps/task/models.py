@@ -22,12 +22,16 @@ class CompetitionTask(BaseModel):
     in_competition_position = models.PositiveSmallIntegerField(
         verbose_name="позиция в соревновании"
     )
-    competition = models.ForeignKey(Competition, on_delete=models.CASCADE,
-                                    verbose_name="привязанное соревнование")
+    competition = models.ForeignKey(
+        Competition,
+        on_delete=models.CASCADE,
+        verbose_name="привязанное соревнование",
+    )
     title = models.CharField(verbose_name="заголовок", max_length=50)
     description = MDTextField(verbose_name="описание")
-    max_attempts = models.PositiveSmallIntegerField(null=True, blank=True,
-                                                    verbose_name="максимальное кол-во попыток")
+    max_attempts = models.PositiveSmallIntegerField(
+        null=True, blank=True, verbose_name="максимальное кол-во попыток"
+    )
     type = models.CharField(
         choices=CompetitionTaskType, max_length=8, verbose_name="тип проверки"
     )
@@ -38,9 +42,10 @@ class CompetitionTask(BaseModel):
         null=True,
         blank=True,
         verbose_name="файл с правильным ответом",
+        help_text="Имеет смысл только при автоматической (ввод ответа или кода) проверке.",
     )
     points = models.IntegerField(
-        null=True, blank=True, verbose_name="баллы за задание"
+        null=True, blank=True, verbose_name="общий балл за задание"
     )
 
     # only when "checker" type
@@ -48,7 +53,10 @@ class CompetitionTask(BaseModel):
         null=True,
         blank=True,
         verbose_name="куда сделать вывод программы участнику",
-        help_text="Путь до файла в котором ожидается результат. Пример: stdout или ./output.txt",
+        help_text=(
+            "Путь до файла в котором ожидается результат. "
+            "Пример: stdout или ./output.txt. Имеет смысл только при автоматическом типе проверки."
+        ),
         default="stdout",
     )
 
@@ -57,10 +65,17 @@ class CompetitionTask(BaseModel):
         Reviewer,
         blank=True,
         verbose_name="ревьюверы",
-        help_text="Справа отображаются действующие проверяющие, слева - доступные для выбора. Для перемещения можно кликнуть 2 раза по проверяющему",
+        help_text=(
+            "Справа отображаются действующие проверяющие, слева - доступные для выбора. "
+            "Для перемещения можно кликнуть 2 раза по проверяющему. Имеет смысл только"
+            " при ручном типе проверки."
+        ),
     )
     submission_reviewers_count = models.PositiveSmallIntegerField(
-        default=1, null=True, blank=True, verbose_name="кол-во проверяющих для зачета задачи"
+        default=1,
+        null=True,
+        blank=True,
+        verbose_name="кол-во проверяющих для зачета задачи",
     )
 
     def __str__(self):
@@ -76,15 +91,9 @@ class CompetitionTaskCriteria(BaseModel):
         CompetitionTask, on_delete=models.CASCADE, related_name="criteries"
     )
 
-    name = models.TextField(
-        verbose_name="название"
-    )
-    slug = models.SlugField(
-        verbose_name="техническое название"
-    )
-    description = models.TextField(
-        verbose_name="описание критерии"
-    )
+    name = models.TextField(verbose_name="название")
+    slug = models.SlugField(verbose_name="техническое название")
+    description = models.TextField(verbose_name="описание критерии")
     max_value = models.PositiveSmallIntegerField(
         verbose_name="максимальное кол-во баллов"
     )

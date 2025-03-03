@@ -202,6 +202,7 @@ async def execute_code(request: ExecutionRequest) -> ExecutionResponse:
             )
 
     with tempfile.TemporaryDirectory() as tmp_dir:
+        print(tmp_dir)
         bound_files = {}
         if request.files:
             async with aiohttp.ClientSession() as session:
