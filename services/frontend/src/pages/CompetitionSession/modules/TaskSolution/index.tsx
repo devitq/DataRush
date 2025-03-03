@@ -70,13 +70,13 @@ const TaskSolution: React.FC<TaskSolutionProps> = ({
     }
   }, [task.id, solutionHistory]);
 
-  useEffect(() => {
-    if (solutionHistory.length > 0 && 
-        (!displayedSolution || 
-         (solutionHistory[solutionHistory.length - 1].id !== displayedSolution.id))) {
-      setDisplayedSolution(solutionHistory[solutionHistory.length - 1]);
-    }
-  }, [solutionHistory, displayedSolution]);
+  // useEffect(() => {
+  //   if (solutionHistory.length > 0 && 
+  //       (!displayedSolution || 
+  //        (solutionHistory[solutionHistory.length - 1].id !== displayedSolution.id))) {
+  //     setDisplayedSolution(solutionHistory[solutionHistory.length - 1]);
+  //   }
+  // }, [solutionHistory, displayedSolution]);
 
   useEffect(() => {
     const loadSolutionContent = async () => {
