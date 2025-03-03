@@ -4,6 +4,7 @@ import httpx
 from celery import shared_task
 from django.conf import settings
 from django.core.files.base import ContentFile
+from urllib.parse import urlparse
 
 from apps.task.models import CompetitionTaskSubmission
 
@@ -12,10 +13,16 @@ from apps.task.models import CompetitionTaskSubmission
 def analyze_data_task(self, submission_id):
     submission = CompetitionTaskSubmission.objects.get(id=submission_id)
     try:
-        code_url = f"{settings.MINIO_DEFAULT_CUSTOM_ENDPOINT_URL}{submission.content.path}"
+        code_url = (
+            f"{settings.MINIO_DEFAULT_CUSTOM_ENDPOINT_URL}/"
+            f"{urlparse(submission.content.url).path}"
+        )
         files = [
             {
-                "url": f"{settings.MINIO_DEFAULT_CUSTOM_ENDPOINT_URL}{attachment.path}",
+                "url": (
+                    f"{settings.MINIO_DEFAULT_CUSTOM_ENDPOINT_URL}/"
+                    f"{urlparse(submission.content.url).path}"
+                ),
                 "bind_path": attachment.bind_at,
             }
             for attachment in submission.task.attachments.filter(
@@ -40,12 +47,12 @@ def analyze_data_task(self, submission_id):
 
         submission.stdout.save("output.txt", ContentFile(result["output"]))
         submission.result = {
-            "correct": result["hash_match"],
-            "result_hash": result["result_hash"],
+            "correct": result["correct"],
+            "hash_match": result["hash_match"],
             "error": result.get("error"),
         }
         submission.earned_points = (
-            submission.task.points if result["hash_match"] else 0
+            submission.task.points if result["correct"] else 0
         )
         submission.status = CompetitionTaskSubmission.StatusChoices.CHECKED
 

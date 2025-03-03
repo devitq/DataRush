@@ -178,8 +178,8 @@ class CompetitionTaskSubmission(BaseModel):
     checked_at = models.DateTimeField(
         null=True, blank=True, verbose_name="дата проверки"
     )
-    plagiarism_checked = models.BooleanField(
-        default=False, verbose_name="проверено на плагиат"
+    plagiarism_detected = models.BooleanField(
+        default=False, verbose_name="обнаружен плагиат"
     )
     timestamp = models.DateTimeField(
         auto_now_add=True, verbose_name="дата отправки"

@@ -97,6 +97,9 @@ const CompetitionSession = () => {
         competitionId={competitionId}
         setAnswer={setAnswer}
         setSelectedFile={setSelectedFile}
+        competitionType={competition?.type}
+        startDate={competition?.start_date}
+        endDate={competition?.end_date}
       />
 
       <main className="flex-1 bg-[#F8F8F8] pb-8">
@@ -120,6 +123,7 @@ const CompetitionSession = () => {
                 selectedFile={selectedFile}
                 setSelectedFile={setSelectedFile}
                 onSubmit={handleSubmit}
+                isSubmitting={submitMutation.isPending}
               />
             </div>
           ) : (
