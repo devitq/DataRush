@@ -24,7 +24,7 @@ export const UserStatsSections = () => {
           />
           <UserStatBlock
             value={stats.total_attempts}
-            description="Попыток выполнено"
+            description="Решений отправлено"
           />
         </div>
       ) : (

@@ -30,10 +30,9 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
       
       {isCleared ? (
         <Button 
-          className="font-hse-sans flex-grow bg-green-600 hover:bg-green-700" 
+          className="font-hse-sans flex-grow" 
           disabled={true}
         >
-          <CheckCircle className="mr-2 h-4 w-4" />
           Задача сдана!
         </Button>
       ) : hasSubmissionsLeft ? (
