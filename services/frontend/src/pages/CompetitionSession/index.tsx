@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useParams, Navigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useParams, Navigate, useNavigate } from "react-router-dom";
 import CompetitionHeader from "./components/CompetitionHeader";
 import TaskContent from "./components/TaskContent";
 import TaskSolution from "./modules/TaskSolution";
@@ -13,8 +13,10 @@ const CompetitionSession = () => {
   const { id, taskId } = useParams<{ id: string; taskId?: string }>();
   const [answer, setAnswer] = useState("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [submissionSuccess, setSubmissionSuccess] = useState(false);
   const competitionId = id || "";
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   const competitionQuery = useQuery({
     queryKey: ["competition", competitionId],
@@ -45,13 +47,36 @@ const CompetitionSession = () => {
         queryKey: ['solutionHistory', competitionId, taskId] 
       });
       
-      setAnswer("");
-      setSelectedFile(null);
+      setSubmissionSuccess(true); // Set flag to trigger the timeout
     },
     onError: (error) => {
       console.error("Error submitting solution:", error);
     }
   });
+
+  // Effect to handle the page reload after successful submission
+  useEffect(() => {
+    let timeoutId: number;
+    
+    if (submissionSuccess) {
+      timeoutId = window.setTimeout(() => {
+        // Reload the current page
+        window.location.reload();
+        
+        // Alternative: Use React Router's navigate to refresh
+        // navigate(`/competition/${competitionId}/tasks/${taskId}`, { replace: true });
+        
+        setSubmissionSuccess(false);
+      }, 5000); // 5 seconds timeout
+    }
+    
+    // Clean up timeout when component unmounts or when submissionSuccess changes
+    return () => {
+      if (timeoutId) {
+        window.clearTimeout(timeoutId);
+      }
+    };
+  }, [submissionSuccess, competitionId, taskId, navigate]);
 
   const competition = competitionQuery.data;
   const tasks = tasksQuery.data || [];
@@ -125,6 +150,16 @@ const CompetitionSession = () => {
                 onSubmit={handleSubmit}
                 isSubmitting={submitMutation.isPending}
               />
+              {submissionSuccess && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+                  <div className="bg-white p-6 rounded-lg shadow-xl text-center">
+                    <Loader2 className="h-8 w-8 animate-spin text-blue-500 mx-auto mb-4" />
+                    <p className="font-hse-sans text-gray-700">
+                      Решение отправлено! Страница обновится через несколько секунд...
+                    </p>
+                  </div>
+                </div>
+              )}
             </div>
           ) : (
             <div className="flex h-40 items-center justify-center rounded-lg bg-white">

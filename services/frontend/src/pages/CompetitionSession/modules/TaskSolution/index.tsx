@@ -70,14 +70,6 @@ const TaskSolution: React.FC<TaskSolutionProps> = ({
     }
   }, [task.id, solutionHistory]);
 
-  // useEffect(() => {
-  //   if (solutionHistory.length > 0 && 
-  //       (!displayedSolution || 
-  //        (solutionHistory[solutionHistory.length - 1].id !== displayedSolution.id))) {
-  //     setDisplayedSolution(solutionHistory[solutionHistory.length - 1]);
-  //   }
-  // }, [solutionHistory, displayedSolution]);
-
   useEffect(() => {
     const loadSolutionContent = async () => {
       if (!displayedSolution || !displayedSolution.content) return;
@@ -122,9 +114,6 @@ const TaskSolution: React.FC<TaskSolutionProps> = ({
     <div className="md:w-[500px] flex flex-col gap-4">
       {displayedSolution ? (
         <>
-          <div className="bg-gray-100 rounded-lg p-4 text-gray-600 font-hse-sans">
-            Результат последней посылки:
-          </div>
           <SolutionStatus key={displayedSolution.id} solution={displayedSolution} maxPoints={task.points}/>
         </>
       ) : (
