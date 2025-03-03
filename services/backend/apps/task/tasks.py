@@ -37,7 +37,7 @@ def analyze_data_task(self, submission_id):
                 "code_url": code_url,
                 "answer_file_path": submission.task.answer_file_path,
                 "expected_hash": hashlib.sha256(
-                    submission.task.correct_answer_file.read().encode()
+                    submission.task.correct_answer_file.read()
                 ).hexdigest(),
             },
             timeout=30,
