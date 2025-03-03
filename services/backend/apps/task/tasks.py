@@ -18,7 +18,7 @@ def analyze_data_task(self, submission_id):
         files = [
             {
                 "url": (
-                    f"{settings.MINIO_DEFAULT_CUSTOM_ENDPOINT_URL}/"
+                    f"{settings.MINIO_DEFAULT_CUSTOM_ENDPOINT_URL}"
                     f"{urlparse(attachment.file.url).path}"
                 ),
                 "bind_path": attachment.bind_at,
