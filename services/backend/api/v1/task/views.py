@@ -108,6 +108,11 @@ def submit_task(
         UserAchievement.objects.create(
             user=user, achievement=first_steps_achievement
         )
+
+    total_attempts = CompetitionTaskSubmission.objects.filter(user=user, task=task).count()
+    if task.max_attempts == total_attempts:
+        return status.FORBIDDEN, ForbiddenError()
+
     if task.type == CompetitionTask.CompetitionTaskType.INPUT:
         submission = CompetitionTaskSubmission.objects.create(
             user=user,
