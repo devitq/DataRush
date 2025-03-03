@@ -15,6 +15,7 @@ def analyze_data_task(self, submission_id):
     submission = CompetitionTaskSubmission.objects.get(id=submission_id)
     try:
         code = submission.content.read()
+        print("YA SSF")
         files = [
             {
                 "url": (
@@ -42,6 +43,7 @@ def analyze_data_task(self, submission_id):
         )
         response.raise_for_status()
         result = response.json()
+        print("HOHOHO")
 
         submission.stdout.save("output.txt", ContentFile(result["output"]))
         submission.result = {
