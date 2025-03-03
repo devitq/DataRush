@@ -5,6 +5,7 @@ from celery import shared_task
 from django.conf import settings
 from django.core.files.base import ContentFile
 from urllib.parse import urlparse
+import base64
 
 from apps.task.models import CompetitionTaskSubmission
 
@@ -13,10 +14,7 @@ from apps.task.models import CompetitionTaskSubmission
 def analyze_data_task(self, submission_id):
     submission = CompetitionTaskSubmission.objects.get(id=submission_id)
     try:
-        code_url = (
-            f"{settings.MINIO_DEFAULT_CUSTOM_ENDPOINT_URL}/"
-            f"{urlparse(submission.content.url).path}"
-        )
+        code = submission.content.read()
         files = [
             {
                 "url": (
@@ -34,7 +32,7 @@ def analyze_data_task(self, submission_id):
             f"{settings.CHECKER_API_ENDPOINT}/execute",
             json={
                 "files": files,
-                "code_url": code_url,
+                "code": base64.encode(code),
                 "answer_file_path": submission.task.answer_file_path,
                 "expected_hash": hashlib.sha256(
                     submission.task.correct_answer_file.read()
