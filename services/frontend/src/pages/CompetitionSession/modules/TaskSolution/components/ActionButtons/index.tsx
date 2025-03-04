@@ -35,7 +35,7 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
         >
           Задача сдана!
         </Button>
-      ) : hasSubmissionsLeft ? (
+      ) : hasSubmissionsLeft? (
         <Button 
           onClick={onSubmit}
           className="font-hse-sans flex-grow" 

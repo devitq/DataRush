@@ -51,7 +51,7 @@ const TaskSolution: React.FC<TaskSolutionProps> = ({
   const maxAttempts = task.max_attempts || -1;
   const submissionsUsed = solutionHistory.length;
   const submissionsLeft = Math.max(0, maxAttempts - submissionsUsed);
-  const hasSubmissionsLeft = submissionsLeft > 0;
+  const hasSubmissionsLeft = submissionsLeft > 0 || maxAttempts === -1;
 
   useEffect(() => {
     if (solutionHistory.length > 0 && !displayedSolution) {
