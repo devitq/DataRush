@@ -1,0 +1,43 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_urls %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+<a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
+&rsaquo; <a href="{% url 'admin:app_list' app_label='competition' %}">Соревнования</a>
+{% if competition %}
+&rsaquo; <a href="{% url 'admin:competition_competition_change' competition.id %}">{{ competition.title }}</a>
+{% endif %}
+&rsaquo; Лидерборд
+</div>
+{% endblock %}
+
+{% block content %}
+<div id="content-main">
+    <h1>{% if competition %}Лидерборд: {{ competition.title }}{% else %}Лидерборд соревнования{% endif %}</h1>
+    <div class="module">
+        <table>
+            <thead>
+                <tr>
+                    <th>Ранг</th>
+                    <th>Участник</th>
+                    <th>Баллы</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in leaderboard %}
+                <tr class="{% cycle 'row1' 'row2' %}">
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.total_score|default:0 }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="3">Пока что нет посылок</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
