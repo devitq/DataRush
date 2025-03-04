@@ -1,10 +1,9 @@
-from sys import stdout
 from uuid import uuid4
 
+from django.core.exceptions import ValidationError
+from django.core.validators import RegexValidator
 from django.db import models
 from django.db.models import Count, Q
-from django.core.validators import RegexValidator
-from django.core.exceptions import ValidationError
 from mdeditor.fields import MDTextField
 
 from apps.competition.models import Competition
@@ -88,23 +87,27 @@ class CompetitionTask(BaseModel):
         #         "type": "Если загружен файл правильного ответа, то тип проверки не может быть ручным"
         #     })
         if not self.correct_answer_file and self.type != "review":
-            raise ValidationError({
-                "correct_answer_file": "Загрузите правильный ответ"
-            })
+            raise ValidationError(
+                {"correct_answer_file": "Загрузите правильный ответ"}
+            )
 
         # if self.answer_file_path and not self.type == "checker":
         #     raise ValidationError({
         #         "type": "Укажите другой тип задания: этот не совместим с путем правильного ответа"
         #     })
         if not self.answer_file_path and self.type == "checker":
-            raise ValidationError({
-                "answer_file_path": "Введите путь правильного ответа - это нужно для корректной работы чекера"
-            })
+            raise ValidationError(
+                {
+                    "answer_file_path": "Введите путь правильного ответа - это нужно для корректной работы чекера"
+                }
+            )
 
         if not self.reviewers and self.type == "review":
-            raise ValidationError({
-                "reviewers": "Загрузите ревьюверов - кто будет проверять задания, если не они?"
-            })
+            raise ValidationError(
+                {
+                    "reviewers": "Загрузите ревьюверов - кто будет проверять задания, если не они?"
+                }
+            )
         # elif self.reviewers and not self.type == "review":
         #     raise ValidationError({
         #         "type": "Проверьте тип - вы ввели ревьюверов, но задание не является ручным"
