@@ -7,4 +7,4 @@ class UsersConfig(AppConfig):
     verbose_name = "контестанты"
 
     def ready(self):
-        import apps.user.signals
+        pass

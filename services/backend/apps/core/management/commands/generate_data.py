@@ -19,6 +19,7 @@ from apps.user.models import User, UserRole
 
 faker = Faker("ru_RU")
 
+
 class Command(BaseCommand):
     help = "Generate sample data for Users, Competitions, Tasks, Submissions, and States."
 
