@@ -1,11 +1,10 @@
+import base64
 import hashlib
+from urllib.parse import urlparse
 
 import httpx
 from celery import shared_task
 from django.conf import settings
-from django.core.files.base import ContentFile
-from urllib.parse import urlparse
-import base64
 
 from apps.task.models import CompetitionTaskSubmission
 

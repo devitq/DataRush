@@ -3,7 +3,6 @@ from uuid import UUID
 from django.shortcuts import get_object_or_404
 from ninja import Router
 
-from api.v1.schemas import BadRequestError, NotFoundError, UnauthorizedError
 from api.v1.team.schemas import CreateTeamSchema, TeamSchemaOut
 from apps.team.models import Team
 

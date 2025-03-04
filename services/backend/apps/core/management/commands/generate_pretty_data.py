@@ -1,8 +1,7 @@
 import random
 import uuid
-from datetime import timedelta, datetime
+from datetime import timedelta
 
-from PIL.Image import Image
 from django.conf import settings
 from django.contrib.auth.hashers import make_password
 from django.core.files.base import ContentFile, File
@@ -13,9 +12,9 @@ from apps.competition.models import Competition, State
 from apps.review.models import Reviewer
 from apps.task.models import (
     CompetitionTask,
+    CompetitionTaskAttachment,
     CompetitionTaskCriteria,
     CompetitionTaskSubmission,
-    CompetitionTaskAttachment,
 )
 from apps.user.models import User, UserRole
 
@@ -47,11 +46,11 @@ dataset2 = ContentFile(
 
 correct_answer_file = ContentFile(
     b"42",
-    name=f"answer.txt",
+    name="answer.txt",
 )
 correct2_answer_file = ContentFile(
     b"it is a dataset",
-    name=f"answer.txt",
+    name="answer.txt",
 )
 
 now = timezone.now()
@@ -666,7 +665,7 @@ class Command(BaseCommand):
                     type=competition["type"],
                     participation_type=competition["participation_type"],
                 )
-            except Exception as e:
+            except Exception:
                 print(competition)
 
             if competition.get("image"):
@@ -697,12 +696,17 @@ class Command(BaseCommand):
                     points=task["points"],
                     submission_reviewers_count=task[
                         "submission_reviewers_count"
-                    ] if task["type"] == CompetitionTask.CompetitionTaskType.REVIEW.value else None,
-                    correct_answer_file=task["correct_answer_file"] if task["type"] != CompetitionTask.CompetitionTaskType.REVIEW.value else None,
+                    ]
+                    if task["type"]
+                    == CompetitionTask.CompetitionTaskType.REVIEW.value
+                    else None,
+                    correct_answer_file=task["correct_answer_file"]
+                    if task["type"]
+                    != CompetitionTask.CompetitionTaskType.REVIEW.value
+                    else None,
                     max_attempts=task.get("max_attempts"),
                 )
                 competitions[i]["tasks"][j]["obj"] = task_obj
-
 
                 if task.get("attachment"):
                     CompetitionTaskAttachment.objects.create(
