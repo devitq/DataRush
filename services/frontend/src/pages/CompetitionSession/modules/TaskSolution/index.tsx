@@ -42,7 +42,11 @@ const TaskSolution: React.FC<TaskSolutionProps> = ({
     enabled: !!(competitionId && task.id),
   });
 
-  const solutionHistory = solutionsQuery.data || [];
+  const solutionHistory = [...(solutionsQuery.data || [])].sort((a, b) => {
+    const dateA = new Date(a.timestamp);
+    const dateB = new Date(b.timestamp);
+    return dateA.getTime() - dateB.getTime();
+  });
   
   let lastSolutionPoints = 0;
   if (solutionHistory.length > 0) {
