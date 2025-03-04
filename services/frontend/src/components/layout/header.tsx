@@ -30,13 +30,14 @@ export const Header = () => {
         </Link>
         
         <div className="flex items-center gap-4">
-          <a 
-            href="/docs/"
+          
+          <Link
+            to="/docs" target="_blank"
             className="hidden md:flex text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors items-center gap-1"
           >
             <FileText className="h-4 w-4" />
             Материалы
-          </a>
+          </Link>
           
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -53,7 +54,7 @@ export const Header = () => {
               </Link>
               
               <div className="md:hidden">
-                <Link to="/docs">
+                <Link to="/docs" target="_blank">
                   <DropdownMenuItem>
                     Материалы
                   </DropdownMenuItem>

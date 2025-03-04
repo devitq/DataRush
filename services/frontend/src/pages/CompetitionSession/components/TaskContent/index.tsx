@@ -74,7 +74,11 @@ const TaskContent: React.FC<TaskContentProps> = ({ task }) => {
 const getFileNameFromUrl = (url: string): string => {
   try {
     const parts = url.split('/');
-    return parts[parts.length - 1];
+    const fullFileName = parts[parts.length - 1]
+    const fileName = fullFileName.length > 20 
+    ? fullFileName.substring(0, 20) + '...' 
+    : fullFileName;
+    return fileName;
   } catch (e) {
     return 'Файл';
   }

@@ -42,7 +42,11 @@ const TaskSolution: React.FC<TaskSolutionProps> = ({
     enabled: !!(competitionId && task.id),
   });
 
-  const solutionHistory = solutionsQuery.data || [];
+  const solutionHistory = [...(solutionsQuery.data || [])].sort((a, b) => {
+    const dateA = new Date(a.timestamp);
+    const dateB = new Date(b.timestamp);
+    return dateA.getTime() - dateB.getTime();
+  });
   
   let lastSolutionPoints = 0;
   if (solutionHistory.length > 0) {
@@ -51,7 +55,7 @@ const TaskSolution: React.FC<TaskSolutionProps> = ({
   const maxAttempts = task.max_attempts || -1;
   const submissionsUsed = solutionHistory.length;
   const submissionsLeft = Math.max(0, maxAttempts - submissionsUsed);
-  const hasSubmissionsLeft = submissionsLeft > 0;
+  const hasSubmissionsLeft = submissionsLeft > 0 || maxAttempts === -1;
 
   useEffect(() => {
     if (solutionHistory.length > 0 && !displayedSolution) {
@@ -155,10 +159,10 @@ const TaskSolution: React.FC<TaskSolutionProps> = ({
           ? 'bg-blue-50 text-blue-700'
           : 'bg-red-50 text-red-700'}`}
       >
-        {hasSubmissionsLeft ? (
+        {maxAttempts === -1 || hasSubmissionsLeft ? (
           <>
             <span className="font-medium">
-              Осталось посылок: {submissionsLeft === Infinity ? '∞' : submissionsLeft}
+              Осталось посылок: {maxAttempts === -1 ? '∞' : submissionsLeft}
             </span>
             {maxAttempts !== -1 && (
               <span className="text-blue-500 ml-1">

@@ -23,7 +23,7 @@ from api.v1.user.schemas import (
     TokenSchema,
     UserSchema,
 )
-from apps.task.models import CompetitionTaskSubmission, CompetitionTask
+from apps.task.models import CompetitionTask, CompetitionTaskSubmission
 from apps.user.models import User
 
 router = Router(tags=["user"])

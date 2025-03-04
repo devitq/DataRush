@@ -148,7 +148,12 @@ const ReviewDescription = ({ review }: { review: Review }) => {
 
 const ReviewContent = ({ review }: { review: Review }) => {
   const extension = review.content.split(".").at(-1);
-  const filename = review.content.split("/").at(-1);
+  const fullFilename = review.content.split("/").at(-1);
+  
+  const filename = fullFilename ? 
+    (fullFilename.length > 20 ? fullFilename.substring(0, 20) + '...' : fullFilename) 
+    : '';
+
 
   const { data: content, isLoading } = useQuery({
     queryKey: ["review-file", review.id],

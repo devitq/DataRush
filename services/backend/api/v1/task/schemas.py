@@ -33,7 +33,7 @@ class TaskOutSchema(ModelSchema):
             "description",
             "in_competition_position",
             "points",
-            "max_attempts"
+            "max_attempts",
         ]
 
 
@@ -68,3 +68,4 @@ class TaskStatusSchema(Schema):
     task_name: str
     result: int
     max_points: int
+    position: int

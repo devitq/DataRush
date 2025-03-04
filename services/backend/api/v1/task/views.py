@@ -1,7 +1,7 @@
 from http import HTTPStatus as status
 from uuid import UUID
 
-from django.shortcuts import get_object_or_404, get_list_or_404
+from django.shortcuts import get_list_or_404, get_object_or_404
 from ninja import File, Router, UploadedFile
 
 from api.v1.ping.schemas import PingOut
@@ -10,8 +10,8 @@ from api.v1.task.schemas import (
     HistorySubmissionOut,
     TaskAttachmentSchema,
     TaskOutSchema,
-    TaskSubmissionOut,
     TaskStatusSchema,
+    TaskSubmissionOut,
 )
 from apps.achievement.models import Achievement, UserAchievement
 from apps.competition.models import State
@@ -125,10 +125,8 @@ def submit_task(
             task=task,
             status=CompetitionTaskSubmission.StatusChoices.CHECKED,
             content=content,
-            result={
-                "correct": verdict
-            },
-            earned_points=task.points if verdict else 0
+            result={"correct": verdict},
+            earned_points=task.points if verdict else 0,
         )
     if task.type == CompetitionTask.CompetitionTaskType.REVIEW:
         submission = CompetitionTaskSubmission.objects.create(
@@ -184,7 +182,7 @@ def get_task_attachments(request, competition_id: UUID, task_id: UUID):
     "competitions/{competition_id}/results",
     response={
         status.OK: list[TaskStatusSchema],
-        status.UNAUTHORIZED: UnauthorizedError
+        status.UNAUTHORIZED: UnauthorizedError,
     },
 )
 def get_competition_results(request, competition_id: UUID):
@@ -193,9 +191,14 @@ def get_competition_results(request, competition_id: UUID):
     data = []
 
     for task in tasks:
-        submissions = CompetitionTaskSubmission.objects.filter(
-            user=request.auth, task=task
-        ).filter(status="checked").order_by("-earned_points").all()
+        submissions = (
+            CompetitionTaskSubmission.objects.filter(
+                user=request.auth, task=task
+            )
+            .filter(status="checked")
+            .order_by("-earned_points")
+            .all()
+        )
         if not submissions:
             all_submissions_count = CompetitionTaskSubmission.objects.filter(
                 user=request.auth, task=task
@@ -206,10 +209,13 @@ def get_competition_results(request, competition_id: UUID):
                 result = -1
         else:
             result = submissions[0].earned_points
-        data.append(TaskStatusSchema(
-            task_name=task.title,
-            result=result,
-            max_points=task.points,
-        ))
+        data.append(
+            TaskStatusSchema(
+                task_name=task.title,
+                result=result,
+                max_points=task.points,
+                position=task.in_competition_position,
+            )
+        )
 
     return status.OK, data

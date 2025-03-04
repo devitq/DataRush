@@ -1,11 +1,10 @@
+import base64
 import hashlib
+from urllib.parse import urlparse
 
 import httpx
 from celery import shared_task
 from django.conf import settings
-from django.core.files.base import ContentFile
-from urllib.parse import urlparse
-import base64
 
 from apps.task.models import CompetitionTaskSubmission
 
@@ -35,23 +34,27 @@ def analyze_data_task(self, submission_id):
                 "code": base64.b64encode(code).decode("utf-8"),
                 "answer_file_path": submission.task.answer_file_path,
                 "expected_hash": hashlib.sha256(
-                    submission.task.correct_answer_file.read().decode("utf-8")
+                    submission.task.correct_answer_file.read()
                 ).hexdigest(),
             },
             timeout=30,
         )
         response.raise_for_status()
         result = response.json()
-        print(result, response.request)
+        print(result)
 
-        submission.stdout.save("output.txt", ContentFile(result["output"]))
+        # submission.stdout = ContentFile(
+        #     bytes(result["output"]),
+        #     "output.txt",
+        # )
+        # submission.stdout.save()
         submission.result = {
-            "correct": result["correct"],
+            "correct": result["hash_match"],
             "hash_match": result["hash_match"],
             "error": result.get("error"),
         }
         submission.earned_points = (
-            submission.task.points if result["correct"] else 0
+            submission.task.points if result["hash_match"] else 0
         )
         submission.status = CompetitionTaskSubmission.StatusChoices.CHECKED
 
