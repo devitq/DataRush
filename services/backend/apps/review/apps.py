@@ -7,4 +7,4 @@ class CoreConfig(AppConfig):
     verbose_name = "Проверка"
 
     def ready(self):
-        pass
+        import apps.review.signals
