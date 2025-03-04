@@ -44,11 +44,11 @@ def analyze_data_task(self, submission_id):
         result = response.json()
         print(result)
 
-        submission.stdout = ContentFile(
-            bytes(result["output"]),
-            "output.txt",
-        )
-        submission.stdout.save()
+        # submission.stdout = ContentFile(
+        #     bytes(result["output"]),
+        #     "output.txt",
+        # )
+        # submission.stdout.save()
         submission.result = {
             "correct": result["hash_match"],
             "hash_match": result["hash_match"],
