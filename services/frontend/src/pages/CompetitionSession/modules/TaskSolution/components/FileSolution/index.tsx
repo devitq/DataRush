@@ -60,11 +60,15 @@ const FileSolution: React.FC<FileSolutionProps> = ({
   };
 
 
-  const fileName = selectedFile 
+  const fullFileName = selectedFile 
     ? selectedFile.name 
     : existingFileUrl 
       ? existingFileUrl.split('/').pop() || 'file' 
       : '';
+      
+  const fileName = fullFileName.length > 20 
+    ? fullFileName.substring(0, 20) + '...' 
+    : fullFileName;
 
   const hasFile = !!selectedFile || !!existingFileUrl;
 
