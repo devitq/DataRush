@@ -1,9 +1,11 @@
 from datetime import datetime
 from http import HTTPStatus as status
 
+from django.db.models import Count, Q
+from apps.user.models import User
 from django.contrib.auth.hashers import check_password, make_password
 from django.shortcuts import get_object_or_404
-from ninja import Router
+from ninja import Router, File
 from ninja.errors import AuthenticationError
 
 from api.v1.auth import BearerAuth
@@ -115,3 +117,21 @@ def get_my_stat(request):
     return StatSchema(
         total_attempts=len(user_submissions), solved_tasks=success_attempts_cnt
     )
+
+@router.get(
+    "leaderboard",
+    auth=None,
+    response={
+        status.OK: list[UserSchema],
+    }
+)
+def get_leaderboard(request):
+    leaderboard = User.objects.annotate(
+        checked_count=Count(
+            'competitiontasksubmission',
+            filter=Q(competitiontasksubmission__status='checked')
+        )
+    ).order_by('-checked_count')
+
+    top_10 = leaderboard[:10]
+    return status.OK, top_10
