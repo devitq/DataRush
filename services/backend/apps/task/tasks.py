@@ -28,11 +28,6 @@ def analyze_data_task(self, submission_id):
             )
         ]
 
-        print(
-            hashlib.sha256(
-                submission.task.correct_answer_file.read()
-            ).hexdigest()
-        )
         response = httpx.post(
             f"{settings.CHECKER_API_ENDPOINT}/execute",
             json={
@@ -47,9 +42,13 @@ def analyze_data_task(self, submission_id):
         )
         response.raise_for_status()
         result = response.json()
-        print(result, response.request)
+        print(result)
 
-        submission.stdout.save("output.txt", ContentFile(result["output"]))
+        submission.stdout = ContentFile(
+            bytes(result["output"]),
+            "output.txt",
+        )
+        submission.stdout.save()
         submission.result = {
             "correct": result["hash_match"],
             "hash_match": result["hash_match"],
