@@ -28,6 +28,11 @@ def analyze_data_task(self, submission_id):
             )
         ]
 
+        print(
+            hashlib.sha256(
+                submission.task.correct_answer_file.read()
+            ).hexdigest()
+        )
         response = httpx.post(
             f"{settings.CHECKER_API_ENDPOINT}/execute",
             json={
