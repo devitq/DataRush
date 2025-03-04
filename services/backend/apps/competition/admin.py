@@ -42,7 +42,7 @@ class CompetitionAdmin(admin.ModelAdmin):
 
     def view_leaderboard(self, obj):
         url = reverse('admin:competition_specific_leaderboard', args=[obj.id])
-        return format_html('<a href="{}">лидерборд</a>', url)
+        return format_html('<a href="{}">перейти</a>', url)
     
     view_leaderboard.short_description = "Лидерборд"
     view_leaderboard.allow_tags = True
