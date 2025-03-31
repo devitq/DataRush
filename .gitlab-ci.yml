@@ -85,6 +85,7 @@ build_docs:
 deploy:
   image: kroniak/ssh-client:3.19
   stage: deploy
+  when: manual
   rules:
     - if: '$CI_COMMIT_REF_NAME == "master"'
   variables:
