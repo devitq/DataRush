@@ -275,7 +275,7 @@ async def execute_code(request: ExecutionRequest) -> ExecutionResponse:
             result_hash=result_hash,
             error=error[:5000],
         )
-        print(response.model_dump_json())
+
         return response
 
 
