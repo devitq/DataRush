@@ -106,8 +106,8 @@ deploy:
     - |
       ssh -p $SSH_PORT $SSH_ADDRESS <<'EOF'
       cd ~/deploy
-      docker system prune --force
-      docker compose pull > deploy.log 2>&1
+      docker system prune --force > /dev/null 2>&1
+      docker compose pull --policy always -q > deploy.log 2>&1
       docker compose up -d --remove-orphans --force-recreate >> deploy.log 2>&1
       docker compose ps >> deploy.log 2>&1
       EOF
