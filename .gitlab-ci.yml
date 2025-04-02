@@ -101,14 +101,13 @@ deploy:
     - ssh-keyscan -H "$SSH_HOST" -p "$SSH_PORT" > /dev/null 2>&1
 
     - AUTH_COMMAND="echo "$CI_REGISTRY_PASSWORD" | docker login $CI_REGISTRY --username $CI_REGISTRY_USER --password-stdin";
-    - ssh -p $SSH_PORT $SSH_ADDRESS "$AUTH_COMMAND"
-    - scp -P $SSH_PORT -C -r infrastructure/ compose.yaml $SSH_ADDRESS:~/deploy/
-    - ssh -p $SSH_PORT $SSH_ADDRESS "docker -v"
+    - ssh -p $SSH_PORT $SSH_ADDRESS "$AUTH_COMMAND" > /dev/null 2>&1
 
+    - scp -P $SSH_PORT -C -r infrastructure/ compose.yaml $SSH_ADDRESS:~/deploy/ > /dev/null 2>&1
     - |
       ssh -p $SSH_PORT $SSH_ADDRESS > /dev/null 2>&1 <<'EOF'
       cd ~/deploy
-      docker system prune --force > /dev/null 2>&1
+      docker system prune --force > deploy.log 2>&1
       docker compose pull --policy always -q > deploy.log 2>&1
       docker compose up -d --remove-orphans --force-recreate >> deploy.log 2>&1
       docker compose ps >> deploy.log 2>&1
