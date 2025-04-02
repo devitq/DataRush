@@ -93,8 +93,8 @@ deploy:
   script:
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
-    - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
-    - echo $SSH_PRIVATE_KEY > ~/.ssh/id_rsa
+    - echo -e "Host *\n\tStrictHostKeyChecking no\n\tIdentitiesOnly yes\n\n" > ~/.ssh/config
+    - printf "%s\n" "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
     - chmod 600 ~/.ssh/id_rsa
     - ssh-keyscan -H "$SSH_HOST" -p "$SSH_PORT" > /dev/null 2>&1
 
