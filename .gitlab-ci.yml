@@ -88,7 +88,7 @@ deploy:
   rules:
     - if: '$CI_COMMIT_REF_NAME == "master"'
   variables:
-    SSH_ADDRESS: "$SSH_USER@$SSH_HOST"
+    SSH_ADDRESS: "$SSH_USER@$SSH_HOST:$SSH_PORT"
     SSH_PRIVATE_KEY: SSH_PRIVATE_KEY
   script:
     - mkdir -p ~/.ssh
