@@ -78,7 +78,7 @@ build_docs:
   rules:
     - if: '$CI_COMMIT_REF_NAME == "master"'
   variables:
-    CONTEXT: "${CI_PROJECT_DIR}/docs"
+    CONTEXT: "${CI_PROJECT_DIR}/services/docs"
     DOCKERFILE_PATH: "Dockerfile"
     IMAGE_NAME: "$CI_REGISTRY_IMAGE/docs"
 
