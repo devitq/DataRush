@@ -85,12 +85,11 @@ build_docs:
 deploy:
   image: kroniak/ssh-client:3.19
   stage: deploy
-  when: manual
   rules:
     - if: '$CI_COMMIT_REF_NAME == "master"'
   variables:
-    SSH_HOST: "158.160.172.23"
-    SSH_USER: "ubuntu"
+    SSH_HOST: $SSH_HOST
+    SSH_USER: $SSH_USER
     SSH_ADDRESS: "$SSH_USER@$SSH_HOST"
     SSH_PRIVATE_KEY: SSH_PRIVATE_KEY
   script:
@@ -105,6 +104,7 @@ deploy:
     - ssh $SSH_ADDRESS "$AUTH_COMMAND"
     - scp -C -r infrastructure/ compose.yaml $SSH_ADDRESS:~/deploy/
     - ssh $SSH_ADDRESS "docker -v"
+
     - |
       ssh $SSH_ADDRESS <<'EOF'
       cd ~/deploy
@@ -123,8 +123,8 @@ reset-compose:
   rules:
     - if: '$CI_COMMIT_REF_NAME == "master"'
   variables:
-    SSH_HOST: "158.160.172.23"
-    SSH_USER: "ubuntu"
+    SSH_HOST: $SSH_HOST
+    SSH_USER: $SSH_USER
     SSH_ADDRESS: "$SSH_USER@$SSH_HOST"
     SSH_PRIVATE_KEY: SSH_PRIVATE_KEY
   script:
@@ -139,6 +139,7 @@ reset-compose:
     - ssh $SSH_ADDRESS "$AUTH_COMMAND"
     - scp -C -r infrastructure/ compose.yaml $SSH_ADDRESS:~/deploy/
     - ssh $SSH_ADDRESS "docker -v"
+
     - |
       ssh $SSH_ADDRESS <<'EOF'
       cd ~/deploy
