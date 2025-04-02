@@ -144,7 +144,7 @@ services:
       - name: web
         target: 80
         published: 8002
-        host_ip: 0.0.0.0
+        host_ip: 127.0.0.1
         protocol: tcp
     restart: unless-stopped
 
@@ -257,7 +257,7 @@ services:
       - name: web
         target: 80
         published: 8003
-        host_ip: 0.0.0.0
+        host_ip: 127.0.0.1
         protocol: tcp
     restart: unless-stopped
     secrets:
@@ -286,7 +286,7 @@ services:
       - name: web
         target: 3000
         published: 8004
-        host_ip: 0.0.0.0
+        host_ip: 127.0.0.1
         protocol: tcp
     restart: unless-stopped
     shm_size: 4mb
@@ -320,12 +320,12 @@ services:
       - name: api
         target: 9000
         published: 8005
-        host_ip: 0.0.0.0
+        host_ip: 127.0.0.1
         protocol: tcp
       - name: console
         target: 9001
         published: 8006
-        host_ip: 0.0.0.0
+        host_ip: 127.0.0.1
         protocol: tcp
     restart: unless-stopped
     volumes:
@@ -351,7 +351,7 @@ services:
       - name: web
         target: 9090
         published: 8007
-        host_ip: 0.0.0.0
+        host_ip: 127.0.0.1
         protocol: tcp
     restart: unless-stopped
     shm_size: 4mb
@@ -369,7 +369,7 @@ services:
       - name: web
         target: 3000
         published: 8008
-        host_ip: 0.0.0.0
+        host_ip: 127.0.0.1
         protocol: tcp
     restart: unless-stopped
     shm_size: 4mb
@@ -401,7 +401,7 @@ services:
       - name: web
         target: 8000
         published: 8009
-        host_ip: 0.0.0.0
+        host_ip: 127.0.0.1
         protocol: tcp
     restart: unless-stopped
     volumes:
@@ -427,18 +427,9 @@ services:
     ports:
       - name: web-insecure
         target: 80
-        published: 80
-        host_ip: 0.0.0.0
+        published: 14000
+        host_ip: 127.0.0.1
         protocol: tcp
-      - name: web-secure
-        target: 443
-        published: 443
-        host_ip: 0.0.0.0
-        protocol: tcp
-    volumes:
-      - type: bind
-        source: ./infrastructure/ssl
-        target: /etc/nginx/certs
     restart: unless-stopped
 
 volumes:
