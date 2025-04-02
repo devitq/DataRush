@@ -2,7 +2,7 @@ name: datarush
 
 services:
   backend:
-    image: gitlab.prodcontest.ru:5050/team-15/project/backend:latest
+    image: registry.gitlab.com/megazordpobeda/datarush/backend:latest
     build:
       context: ./services/backend
     depends_on:
@@ -40,7 +40,7 @@ services:
     restart: unless-stopped
 
   backend-initdb:
-    image: gitlab.prodcontest.ru:5050/team-15/project/backend:latest
+    image: registry.gitlab.com/megazordpobeda/datarush/backend:latest
     build:
       context: ./services/backend
     command: ./scripts/initdb
@@ -64,7 +64,7 @@ services:
         required: false
 
   backend-staticfiles:
-    image: gitlab.prodcontest.ru:5050/team-15/project/backend-staticfiles:latest
+    image: registry.gitlab.com/megazordpobeda/datarush/backend-staticfiles:latest
     build:
       context: ./services/backend
       dockerfile: Dockerfile.staticfiles
@@ -89,7 +89,7 @@ services:
     restart: unless-stopped
 
   backend-celery-worker:
-    image: gitlab.prodcontest.ru:5050/team-15/project/backend:latest
+    image: registry.gitlab.com/megazordpobeda/datarush/backend:latest
     build:
       context: ./services/backend
     command: celery -A config worker -l INFO
@@ -127,7 +127,7 @@ services:
     restart: unless-stopped
 
   frontend:
-    image: gitlab.prodcontest.ru:5050/team-15/project/frontend:latest
+    image: registry.gitlab.com/megazordpobeda/datarush/frontend:latest
     env_file:
       - path: ./infrastructure/frontend/.env.template
         required: true
@@ -361,7 +361,7 @@ services:
         target: /prometheus
 
   docs:
-    image: gitlab.prodcontest.ru:5050/team-15/project/docs:latest
+    image: registry.gitlab.com/megazordpobeda/datarush/docs:latest
     build:
       context: ./docs
       dockerfile: Dockerfile
@@ -375,11 +375,11 @@ services:
     shm_size: 4mb
 
   custom_python:
-    image: gitlab.prodcontest.ru:5050/team-15/project/custom-python:latest
+    image: registry.gitlab.com/megazordpobeda/datarush/custom-python:latest
     entrypoint: ["sh", "-c", "exit 0"]
 
   checker:
-    image: gitlab.prodcontest.ru:5050/team-15/project/checker:latest
+    image: registry.gitlab.com/megazordpobeda/datarush/checker:latest
     build:
       context: ./services/checker
       dockerfile: Dockerfile
