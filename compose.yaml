@@ -417,17 +417,10 @@ services:
     configs:
       - source: nginx_config
         target: /etc/nginx/nginx.conf
-    healthcheck:
-      test: ["CMD", "service", "nginx", "status", "||", " exit 1"]
-      interval: 1m30s
-      timeout: 5s
-      start_period: 15s
-      start_interval: 2s
-      retries: 5
     ports:
       - name: web-insecure
         target: 80
-        published: 14000
+        published: 8010
         host_ip: 127.0.0.1
         protocol: tcp
     restart: unless-stopped

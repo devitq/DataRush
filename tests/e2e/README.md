@@ -11,7 +11,7 @@ Ensure you have the following installed on your system:
 
 ## Warning
 
-Plese note that containers will use ports from 13241 to 13245 and 8080, so there is must be no listeners on this ports range.
+Plese note that containers will use ports from 8000 to 8010, so there is must be no listeners on this ports range.
 
 ## Clone the project
 
