@@ -15,13 +15,13 @@ Ensure you have the following installed on your system:
 #### Clone the project
 
 ```bash
-git clone git@gitlab.com:megazordpobeda/DataRush.git
+git clone https://gitlab.com/megazordpobeda/DataRush.git
 ```
 
 #### Go to the project directory
 
 ```bash
-cd project/services/backend
+cd DataRush/services/backend
 ```
 
 #### Customize environment
@@ -79,13 +79,13 @@ uv run gunicorn config.wsgi
 ### Clone the project
 
 ```bash
-git clone git@gitlab.com:megazordpobeda/DataRush.git
+git clone https://gitlab.com/megazordpobeda/DataRush.git
 ```
 
 ### Go to the project directory
 
 ```bash
-cd project/services/backend
+cd DataRush/services/backend
 ```
 
 ### Build docker image
@@ -119,13 +119,13 @@ Backend will be available on [127.0.0.1:8080](http://127.0.0.1:8080).
 ### Clone the project
 
 ```bash
-git clone git@gitlab.com:megazordpobeda/DataRush.git
+git clone https://gitlab.com/megazordpobeda/DataRush.git
 ```
 
 ### Go to the project directory
 
 ```bash
-cd project/services/backend
+cd DataRush/services/backend
 ```
 
 ### Install dependencies

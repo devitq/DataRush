@@ -16,13 +16,13 @@ Plese note that containers will use ports from 13241 to 13245 and 8080, so there
 ## Clone the project
 
 ```bash
-git clone git@gitlab.com:megazordpobeda/DataRush.git
+git clone https://gitlab.com/megazordpobeda/DataRush.git
 ```
 
 ## Go to the project directory
 
 ```bash
-cd devitq/solution/tests/e2e
+cd DataRush/solution/tests/e2e
 ```
 
 ## Install dependencies

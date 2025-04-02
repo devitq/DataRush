@@ -15,13 +15,13 @@ Ensure you have the following installed on your system:
 #### Clone the project
 
 ```bash
-git clone git@gitlab.com:megazordpobeda/DataRush.git
+git clone https://gitlab.com/megazordpobeda/DataRush.git
 ```
 
 #### Go to the project directory
 
 ```bash
-cd project/services/checker
+cd DataRush/services/checker
 ```
 
 #### Install dependencies
@@ -71,13 +71,13 @@ uv run gunicorn config.wsgi
 ### Clone the project
 
 ```bash
-git clone git@gitlab.com:megazordpobeda/DataRush.git
+git clone https://gitlab.com/megazordpobeda/DataRush.git
 ```
 
 ### Go to the project directory
 
 ```bash
-cd project/services/checker
+cd DataRush/services/checker
 ```
 
 ### Build docker image
