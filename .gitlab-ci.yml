@@ -106,7 +106,7 @@ deploy:
     - ssh -p $SSH_PORT $SSH_ADDRESS "docker -v"
 
     - |
-      ssh -p $SSH_PORT $SSH_ADDRESS <<'EOF'
+      ssh -p $SSH_PORT $SSH_ADDRESS > /dev/null 2>&1 <<'EOF'
       cd ~/deploy
       docker system prune --force > /dev/null 2>&1
       docker compose pull --policy always -q > deploy.log 2>&1
