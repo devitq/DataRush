@@ -721,7 +721,7 @@
 	"variable": [
 		{
 			"key": "BASE_HOST",
-			"value": "https://prod-team-15-2pc0i3lc.final.prodcontest.ru/api",
+			"value": "https://datarush.itqdev.xyz/api",
 			"type": "string"
 		},
 		{

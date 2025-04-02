@@ -7,9 +7,9 @@ import type * as Preset from "@docusaurus/preset-classic";
 const config: Config = {
     title: "DataRush",
     tagline: "Изучите основы анализа данных здесь!",
-    favicon: "https://prod-team-15-2pc0i3lc.final.prodcontest.ru/dr.svg",
+    favicon: "https://datarush.itqdev.xyz/dr.svg",
 
-    url: "https://prod-team-15-2pc0i3lc.final.prodcontest.ru",
+    url: "https://datarush.itqdev.xyz",
     baseUrl: "/docs/",
 
     organizationName: "megazord",
@@ -38,12 +38,12 @@ const config: Config = {
     ],
 
     themeConfig: {
-        image: "https://prod-team-15-2pc0i3lc.final.prodcontest.ru/dr.svg",
+        image: "https://datarush.itqdev.xyz/dr.svg",
         navbar: {
             title: "DataRush",
             logo: {
                 alt: "DataRush",
-                src: "https://prod-team-15-2pc0i3lc.final.prodcontest.ru/dr.svg",
+                src: "https://datarush.itqdev.xyz/dr.svg",
             },
             items: [
                 {

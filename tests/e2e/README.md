@@ -16,7 +16,7 @@ Plese note that containers will use ports from 13241 to 13245 and 8080, so there
 ## Clone the project
 
 ```bash
-git clone https://gitlab.prodcontest.ru/2025-final-projects-back/devitq.git
+git clone git@gitlab.com:megazordpobeda/DataRush.git
 ```
 
 ## Go to the project directory

@@ -15,7 +15,7 @@ Ensure you have the following installed on your system:
 #### Clone the project
 
 ```bash
-git clone git@gitlab.prodcontest.ru:team-15/project.git
+git clone git@gitlab.com:megazordpobeda/DataRush.git
 ```
 
 #### Go to the project directory
@@ -79,7 +79,7 @@ uv run gunicorn config.wsgi
 ### Clone the project
 
 ```bash
-git clone git@gitlab.prodcontest.ru:team-15/project.git
+git clone git@gitlab.com:megazordpobeda/DataRush.git
 ```
 
 ### Go to the project directory
@@ -119,7 +119,7 @@ Backend will be available on [127.0.0.1:8080](http://127.0.0.1:8080).
 ### Clone the project
 
 ```bash
-git clone git@gitlab.prodcontest.ru:team-15/project.git
+git clone git@gitlab.com:megazordpobeda/DataRush.git
 ```
 
 ### Go to the project directory
