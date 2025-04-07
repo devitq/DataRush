@@ -38,6 +38,9 @@ class UserAchievement(BaseModel):
         verbose_name="дата получения", auto_now_add=True
     )
 
+    def __str__(self) -> str:
+        return f"{self.achievement.slug} <-> {self.user.username}"
+
     class Meta:
         verbose_name = "выданная ачивка"
         verbose_name_plural = "выданные ачивки"
