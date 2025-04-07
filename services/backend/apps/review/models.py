@@ -35,7 +35,7 @@ class Review(BaseModel):
     )
 
     evaluation = models.JSONField(
-        default=list, null=True, blank=True, verbose_name="выполнение"
+        default=list, null=True, blank=True, verbose_name="оценка"
     )
     state = models.CharField(
         choices=ReviewStatusChoices.choices,

@@ -7,7 +7,7 @@ from django.shortcuts import get_object_or_404
 from django.utils.html import format_html
 
 from apps.user.models import User
-from apps.competition.models import Competition
+from apps.competition.models import Competition, State
 from apps.task.admin import CompetitionTaskInline
 from apps.task.models import CompetitionTaskSubmission, CompetitionTask
 
@@ -80,7 +80,10 @@ class CompetitionAdmin(admin.ModelAdmin):
 
         context = dict(
             self.admin_site.each_context(request),
-            title="Global Competition Leaderboard",
+            title="Лидерборд соревнования",
             leaderboard=leaderboard,
         )
         return TemplateResponse(request, "admin/competition_leaderboard.html", context)
+
+
+admin.site.register(State)

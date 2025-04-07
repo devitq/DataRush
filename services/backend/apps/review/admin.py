@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from apps.review.models import Reviewer
+from apps.review.models import Reviewer, Review
 
 
 @admin.register(Reviewer)
@@ -13,3 +13,6 @@ class ReviewersAdmin(admin.ModelAdmin):
         "name",
         "surname",
     )
+
+
+admin.site.register(Review)
