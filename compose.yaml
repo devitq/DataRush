@@ -2,7 +2,7 @@ name: datarush
 
 services:
   backend:
-    image: registry.gitlab.com/megazordpobeda/datarush/backend:latest
+    image: registry.gitlab.com/megazordpobeda/datarush/backend:${VERSION:-latest}
     build:
       context: ./services/backend
     depends_on:
@@ -40,7 +40,7 @@ services:
     restart: unless-stopped
 
   backend-initdb:
-    image: registry.gitlab.com/megazordpobeda/datarush/backend:latest
+    image: registry.gitlab.com/megazordpobeda/datarush/backend:${VERSION:-latest}
     build:
       context: ./services/backend
     command: ./scripts/initdb
@@ -64,7 +64,7 @@ services:
         required: false
 
   backend-staticfiles:
-    image: registry.gitlab.com/megazordpobeda/datarush/backend-staticfiles:latest
+    image: registry.gitlab.com/megazordpobeda/datarush/backend-staticfiles:${VERSION:-latest}
     build:
       context: ./services/backend
       dockerfile: Dockerfile.staticfiles
@@ -89,7 +89,7 @@ services:
     restart: unless-stopped
 
   backend-celery-worker:
-    image: registry.gitlab.com/megazordpobeda/datarush/backend:latest
+    image: registry.gitlab.com/megazordpobeda/datarush/backend:${VERSION:-latest}
     build:
       context: ./services/backend
     command: celery -A config worker -l INFO
@@ -127,7 +127,7 @@ services:
     restart: unless-stopped
 
   frontend:
-    image: registry.gitlab.com/megazordpobeda/datarush/frontend:latest
+    image: registry.gitlab.com/megazordpobeda/datarush/frontend:${VERSION:-latest}
     env_file:
       - path: ./infrastructure/frontend/.env.template
         required: true
@@ -361,7 +361,7 @@ services:
         target: /prometheus
 
   docs:
-    image: registry.gitlab.com/megazordpobeda/datarush/docs:latest
+    image: registry.gitlab.com/megazordpobeda/datarush/docs:${VERSION:-latest}
     build:
       context: ./docs
       dockerfile: Dockerfile
@@ -375,11 +375,11 @@ services:
     shm_size: 4mb
 
   custom_python:
-    image: registry.gitlab.com/megazordpobeda/datarush/custom-python:latest
+    image: registry.gitlab.com/megazordpobeda/datarush/custom-python:${VERSION:-latest}
     entrypoint: ["sh", "-c", "exit 0"]
 
   checker:
-    image: registry.gitlab.com/megazordpobeda/datarush/checker:latest
+    image: registry.gitlab.com/megazordpobeda/datarush/checker:${VERSION:-latest}
     build:
       context: ./services/checker
       dockerfile: Dockerfile

@@ -1,16 +1,18 @@
 stages:
   - build
   - deploy
-  - utils
 
 variables:
   DOCKER_TLS_CERTDIR: /certs
+  DEPLOYMENT_VERSION: $CI_COMMIT_SHA
 
 .build-template: &build-template
+  stage: build
+  rules:
+    - if: $CI_COMMIT_REF_NAME == "master"
   image:
     name: gcr.io/kaniko-project/executor:v1.23.2-debug
     entrypoint: [""]
-  stage: build
   variables:
     DOCKER_CONFIG: /kaniko/.docker
     REGISTRY_USER: $CI_REGISTRY_USER
@@ -30,75 +32,63 @@ variables:
 
 build_frontend:
   <<: *build-template
-  rules:
-    - if: '$CI_COMMIT_REF_NAME == "master"'
   variables:
-    CONTEXT: "${CI_PROJECT_DIR}/services/frontend"
-    DOCKERFILE_PATH: "Dockerfile"
-    IMAGE_NAME: "$CI_REGISTRY_IMAGE/frontend"
+    CONTEXT: ${CI_PROJECT_DIR}/services/frontend
+    DOCKERFILE_PATH: Dockerfile
+    IMAGE_NAME: $CI_REGISTRY_IMAGE/frontend
 
 build_backend:
   <<: *build-template
-  rules:
-    - if: '$CI_COMMIT_REF_NAME == "master"'
   variables:
-    CONTEXT: "${CI_PROJECT_DIR}/services/backend"
-    DOCKERFILE_PATH: "Dockerfile"
-    IMAGE_NAME: "$CI_REGISTRY_IMAGE/backend"
+    CONTEXT: ${CI_PROJECT_DIR}/services/backend
+    DOCKERFILE_PATH: Dockerfile
+    IMAGE_NAME: $CI_REGISTRY_IMAGE/backend
 
 build_backend-staticfiles:
   <<: *build-template
-  rules:
-    - if: '$CI_COMMIT_REF_NAME == "master"'
   variables:
-    CONTEXT: "${CI_PROJECT_DIR}/services/backend"
-    DOCKERFILE_PATH: "Dockerfile.staticfiles"
-    IMAGE_NAME: "$CI_REGISTRY_IMAGE/backend-staticfiles"
+    CONTEXT: ${CI_PROJECT_DIR}/services/backend
+    DOCKERFILE_PATH: Dockerfile.staticfiles
+    IMAGE_NAME: $CI_REGISTRY_IMAGE/backend-staticfiles
 
 build_checker:
   <<: *build-template
-  rules:
-    - if: '$CI_COMMIT_REF_NAME == "master"'
   variables:
-    CONTEXT: "${CI_PROJECT_DIR}/services/checker"
-    DOCKERFILE_PATH: "Dockerfile"
-    IMAGE_NAME: "$CI_REGISTRY_IMAGE/checker"
+    CONTEXT: ${CI_PROJECT_DIR}/services/checker
+    DOCKERFILE_PATH: Dockerfile
+    IMAGE_NAME: $CI_REGISTRY_IMAGE/checker
 
 build_custom-python:
   <<: *build-template
-  when: manual
-  rules:
-    - if: '$CI_COMMIT_REF_NAME == "master"'
   variables:
-    CONTEXT: "${CI_PROJECT_DIR}/services/checker"
-    DOCKERFILE_PATH: "Dockerfile.checker"
-    IMAGE_NAME: "$CI_REGISTRY_IMAGE/custom-python"
+    CONTEXT: ${CI_PROJECT_DIR}/services/checker
+    DOCKERFILE_PATH: Dockerfile.checker
+    IMAGE_NAME: $CI_REGISTRY_IMAGE/custom-python
 
 build_docs:
   <<: *build-template
-  when: manual
-  rules:
-    - if: '$CI_COMMIT_REF_NAME == "master"'
   variables:
-    CONTEXT: "${CI_PROJECT_DIR}/services/docs"
-    DOCKERFILE_PATH: "Dockerfile"
-    IMAGE_NAME: "$CI_REGISTRY_IMAGE/docs"
+    CONTEXT: ${CI_PROJECT_DIR}/services/docs
+    DOCKERFILE_PATH: Dockerfile
+    IMAGE_NAME: $CI_REGISTRY_IMAGE/docs
 
 deploy:
   image: kroniak/ssh-client:3.19
   stage: deploy
   rules:
-    - if: '$CI_COMMIT_REF_NAME == "master"'
+    - if: $CI_COMMIT_REF_NAME == "master"
   variables:
     SSH_ADDRESS: $SSH_USER@$SSH_HOST
-    SSH_PRIVATE_KEY: SSH_PRIVATE_KEY
+  environment:
+    name: production
+    url: https://datarush.itqdev.xyz
   script:
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
     - echo -e "Host *\n\tStrictHostKeyChecking no\n\tIdentitiesOnly yes\n\n" > ~/.ssh/config
     - printf "%s\n" "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
     - chmod 600 ~/.ssh/id_rsa
-    - ssh-keyscan -H "$SSH_HOST" -p "$SSH_PORT" > /dev/null 2>&1
+    - ssh-keyscan -H $SSH_HOST -p $SSH_PORT > /dev/null 2>&1
 
     - AUTH_COMMAND="echo "$CI_REGISTRY_PASSWORD" | docker login $CI_REGISTRY --username $CI_REGISTRY_USER --password-stdin";
     - ssh -p $SSH_PORT $SSH_ADDRESS "$AUTH_COMMAND" > /dev/null 2>&1
@@ -107,42 +97,11 @@ deploy:
     - |
       ssh -p $SSH_PORT $SSH_ADDRESS > /dev/null 2>&1 <<'EOF'
       cd ~/deploy
+
       docker system prune --force > deploy.log 2>&1
+
+      export VERSION="$DEPLOYMENT_VERSION"
       docker compose pull --policy always -q > deploy.log 2>&1
-      docker compose up -d --remove-orphans --force-recreate >> deploy.log 2>&1
-      docker compose ps >> deploy.log 2>&1
-      EOF
-  retry: 2
-
-
-reset-compose:
-  image: kroniak/ssh-client:3.19
-  stage: utils
-  when: manual
-  rules:
-    - if: '$CI_COMMIT_REF_NAME == "master"'
-  variables:
-    SSH_HOST: $SSH_HOST
-    SSH_USER: $SSH_USER
-    SSH_ADDRESS: "$SSH_USER@$SSH_HOST"
-    SSH_PRIVATE_KEY: SSH_PRIVATE_KEY
-  script:
-    - mkdir -p ~/.ssh
-    - chmod 700 ~/.ssh
-    - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
-    - echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
-    - chmod 600 ~/.ssh/id_rsa
-    - ssh-keyscan -H "$SSH_HOST" > /dev/null 2>&1
-
-    - AUTH_COMMAND="echo "$CI_REGISTRY_PASSWORD" | docker login $CI_REGISTRY --username $CI_REGISTRY_USER --password-stdin";
-    - ssh $SSH_ADDRESS "$AUTH_COMMAND"
-    - scp -C -r infrastructure/ compose.yaml $SSH_ADDRESS:~/deploy/
-    - ssh $SSH_ADDRESS "docker -v"
-
-    - |
-      ssh $SSH_ADDRESS <<'EOF'
-      cd ~/deploy
-      docker compose down -v > deploy.log 2>&1
       docker compose up -d --remove-orphans --force-recreate >> deploy.log 2>&1
       docker compose ps >> deploy.log 2>&1
       EOF
