@@ -34,6 +34,7 @@ class UserSchema(ModelSchema):
         model = User
         fields = ["id", "avatar", "email", "username", "created_at"]
 
+
 class StatSchema(Schema):
     total_attempts: int
     solved_tasks: int

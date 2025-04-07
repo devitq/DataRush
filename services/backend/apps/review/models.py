@@ -45,7 +45,7 @@ class Review(BaseModel):
     )
 
     def __str__(self):
-        return str(self.id)
+        return f"{str(self.reviewer)} -> {self.submission.task.title} ({self.submission.user.username})"
 
     class Meta:
         verbose_name = "проверка"

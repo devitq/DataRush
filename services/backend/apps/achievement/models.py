@@ -27,10 +27,16 @@ class Achievement(BaseModel):
 
 
 class UserAchievement(BaseModel):
-    achievement = models.ForeignKey(Achievement, verbose_name="ачивка", on_delete=models.CASCADE)
-    user = models.ForeignKey("user.User", verbose_name="пользователь", on_delete=models.CASCADE)
+    achievement = models.ForeignKey(
+        Achievement, verbose_name="ачивка", on_delete=models.CASCADE
+    )
+    user = models.ForeignKey(
+        "user.User", verbose_name="пользователь", on_delete=models.CASCADE
+    )
 
-    received_at = models.DateTimeField(verbose_name="дата получения", auto_now_add=True)
+    received_at = models.DateTimeField(
+        verbose_name="дата получения", auto_now_add=True
+    )
 
     class Meta:
         verbose_name = "выданная ачивка"

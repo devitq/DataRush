@@ -7,4 +7,4 @@ class CompetitionsConfig(AppConfig):
     verbose_name = "Соревнование"
 
     def ready(self):
-        import apps.competition.signals
+        pass

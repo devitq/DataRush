@@ -14,4 +14,5 @@ class AchievementAdmin(admin.ModelAdmin):
         "description",
     )
 
+
 admin.site.register(UserAchievement)
