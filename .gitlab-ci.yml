@@ -94,6 +94,7 @@ deploy:
     - ssh -p $SSH_PORT $SSH_ADDRESS "$AUTH_COMMAND" > /dev/null 2>&1
 
     - SET_VERSION="echo "VERSION=$DEPLOYMENT_VERSION" > ~/deploy/.env"
+    - ssh -p $SSH_PORT $SSH_ADDRESS "$SET_VERSION" > /dev/null 2>&1
 
     - scp -P $SSH_PORT -C -r infrastructure/ compose.yaml $SSH_ADDRESS:~/deploy/ > /dev/null 2>&1
     - |
