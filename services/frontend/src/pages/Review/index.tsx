@@ -2,9 +2,9 @@ import { Loading } from "@/components/ui/loading";
 import { getReviewer, getReviewSubmissions } from "@/shared/api/review";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate, useParams } from "react-router";
-import { ReviewHeader } from "./modules/review-header";
+import { ReviewHeader } from "./widgets/review-header";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ReviewsList } from "./modules/reviews-list";
+import { ReviewsList } from "./widgets/reviews-list";
 import React from "react";
 import { ReviewStatus } from "@/shared/types/review";
 

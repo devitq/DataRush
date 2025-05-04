@@ -65,6 +65,7 @@ export const LoginTab = () => {
           label="Пароль"
           placeholder="Введите пароль"
           type="password"
+          className="placeholder:font-hse-sans font-mono"
         />
       </div>
       {error && <span className="text-red-500">{error}</span>}

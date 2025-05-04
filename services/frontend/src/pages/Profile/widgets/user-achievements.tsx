@@ -10,13 +10,19 @@ export const UserAchievements = ({
   return (
     <section className="flex flex-1 flex-col gap-5">
       <h2 className="text-3xl font-semibold">Достижения</h2>
-      {achievements && (
+      {achievements && achievements.length > 0 ? (
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
           {achievements.map((a) => (
             <AchievementDialog key={a.name} achievement={a}>
               <AchievementCard achievement={a} />
             </AchievementDialog>
           ))}
+        </div>
+      ) : (
+        <div className="flex h-12 flex-col items-center justify-center">
+          <p className="text-muted-foreground text-center">
+            Достижений пока нет
+          </p>
         </div>
       )}
     </section>

@@ -1,7 +1,6 @@
 import { buttonVariants } from "@/components/ui/button";
 import { DataRushReview } from "@/components/ui/icons/datarush-review";
 import { Reviewer } from "@/shared/types/review";
-import { useUserStore } from "@/shared/stores/user";
 import { useNavigate } from "react-router-dom";
 
 interface ReviewHeaderProps {
@@ -9,11 +8,9 @@ interface ReviewHeaderProps {
 }
 
 export const ReviewHeader = ({ reviewer }: ReviewHeaderProps) => {
-  const clearUser = useUserStore((state) => state.clearUser);
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    clearUser();
     navigate("/");
   };
 

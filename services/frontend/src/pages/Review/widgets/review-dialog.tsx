@@ -1,4 +1,9 @@
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import React from "react";
 import { useToken } from "..";
@@ -76,7 +81,7 @@ const ReviewScreen = ({ reviewId }: { reviewId: string }) => {
     queryClient.invalidateQueries({
       queryKey: ["submissions", token],
     });
-  }, [review?.criteries, evaluation, token, queryClient]);
+  }, [review?.criteries, token, reviewId, queryClient, evaluation]);
 
   if (isLoading) {
     return <Loading />;
@@ -149,11 +154,12 @@ const ReviewDescription = ({ review }: { review: Review }) => {
 const ReviewContent = ({ review }: { review: Review }) => {
   const extension = review.content.split(".").at(-1);
   const fullFilename = review.content.split("/").at(-1);
-  
-  const filename = fullFilename ? 
-    (fullFilename.length > 20 ? fullFilename.substring(0, 20) + '...' : fullFilename) 
-    : '';
 
+  const filename = fullFilename
+    ? fullFilename.length > 20
+      ? fullFilename.substring(0, 20) + "..."
+      : fullFilename
+    : "";
 
   const { data: content, isLoading } = useQuery({
     queryKey: ["review-file", review.id],
@@ -220,7 +226,7 @@ const ReviewCriteriesList = ({
 
       setEvaluation((prev) => ({ ...prev, [slug]: { slug, mark: value } }));
     },
-    [evaluation],
+    [review.criteries, setEvaluation],
   );
 
   return (
@@ -299,7 +305,9 @@ const ReviewFooter = ({
           {score <= 0 ? "Неверный ответ" : `Зачтено ${score}/${maxScore}`}
         </h2>
       </div>
-      <Button onClick={onSubmit}>Сохранить</Button>
+      <DialogClose asChild>
+        <Button onClick={onSubmit}>Сохранить</Button>
+      </DialogClose>
     </div>
   );
 };
