@@ -7,7 +7,6 @@ export interface Competition {
   start_date?: Date;
   end_date?: Date;
   type: CompetitionType;
-  participation_type: CompetitionParticipationType;
 }
 
 export enum CompetitionState {
@@ -21,12 +20,9 @@ export enum CompetitionType {
   COMPETITIVE = "competitive",
 }
 
-export enum CompetitionParticipationType {
-  SOLO = "solo",
-}
-
 export interface CompetitionResult {
   task_name: string;
   result: number;
   max_points: number;
+  position: number;
 }

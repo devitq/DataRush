@@ -15,10 +15,19 @@ export const getCompetition = async (id: string) => {
 
 export const getCompetitionResults = async (id: string) => {
   return await userFetch<CompetitionResult[]>(`/competitions/${id}/results`);
-}
+};
 
 export const startCompetition = async (competitionId: string) => {
   return await userFetch(`/competitions/${competitionId}/start`, {
     method: "POST",
+  });
+};
+
+export const finishCompetition = async (competitionId: string) => {
+  return await userFetch(`/competitions/${competitionId}/state`, {
+    method: "POST",
+    body: {
+      state: "finished",
+    },
   });
 };

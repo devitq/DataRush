@@ -11,7 +11,7 @@ export const AuthLayout = () => {
     }
 
     fetchData();
-  }, []);
+  }, [fetchUser]);
 
   return <Outlet />;
 };

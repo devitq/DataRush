@@ -1,16 +1,16 @@
 import "./styles/globals.css";
-import { Routes, Route } from "react-router";
 
+import { Routes, Route } from "react-router";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+import { AuthLayout } from "./widgets/auth-layout";
 import { NavbarLayout } from "./widgets/navbar-layout";
 
-import Competitions from "./pages/Competitions";
-import Competition from "./pages/Competition";
-import CompetitionSession from "./pages/CompetitionSession";
 import LoginPage from "./pages/Login";
-import { AuthLayout } from "./widgets/auth-layout";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import CompetitionPage from "./pages/Competition";
+import CompetitionsPage from "./pages/Competitions";
+import SessionPage from "./pages/CompetitionSession";
 import ReviewPage from "./pages/Review";
-import UserProfile from "./pages/Profile";
 import ProfilePage from "./pages/Profile";
 
 const queryClient = new QueryClient();
@@ -23,14 +23,15 @@ const App = () => {
 
         <Route element={<AuthLayout />}>
           <Route element={<NavbarLayout />}>
-            <Route path="/" element={<Competitions />} />
-            <Route path="/competition/:id" element={<Competition />} />
+            <Route path="/" element={<CompetitionsPage />} />
+            <Route path="/competitions/:id" element={<CompetitionPage />} />
             <Route path="/profile" element={<ProfilePage />} />
           </Route>
 
+          <Route path="/session/:competitionId" element={<SessionPage />} />
           <Route
-            path="/competition/:id/tasks/:taskId"
-            element={<CompetitionSession />}
+            path="/session/:competitionId/tasks/:taskId"
+            element={<SessionPage />}
           />
         </Route>
 

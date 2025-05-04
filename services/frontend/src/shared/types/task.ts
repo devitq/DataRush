@@ -1,11 +1,11 @@
-interface Task {
+export interface Task {
   id: string;
   title: string;
   description: string;
   type: TaskType;
   in_competition_position: number;
   points: number;
-  max_attempts: number;
+  max_attempts: number | null;
 }
 
 export interface TaskAttachment {
@@ -14,25 +14,30 @@ export interface TaskAttachment {
   public: boolean;
 }
 
-enum TaskType {
+export enum TaskType {
   INPUT = "input",
   FILE = "review",
   CODE = "checker",
 }
 
-enum SolutionStatus {
-  SENT = "sent",
+export enum TaskStatus {
+  DEFAULT = "default",
+  CORRECT = "correct",
+  PARTIAL = "partial",
+  WRONG = "wrong",
   CHECKING = "checking",
+}
+
+export interface TaskSolution {
+  id: string;
+  timestamp: string;
+  earned_points: number;
+  content: string;
+  status: TaskSolutionStatus;
+}
+
+export enum TaskSolutionStatus {
+  SENT = "sent",
   CHECKED = "checked",
+  CHECKING = "checking",
 }
-
-interface Solution {
-  id: string,
-  status: SolutionStatus,
-  timestamp: string,
-  earned_points: number,
-  content: string
-}
-
-export type {Task, Solution}
-export {TaskType, SolutionStatus}

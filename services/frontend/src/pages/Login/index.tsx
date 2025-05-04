@@ -14,7 +14,7 @@ const LoginPage = () => {
     if (token) {
       navigate("/");
     }
-  }, []);
+  }, [navigate]);
 
   return (
     <div className="flex flex-col items-center gap-10 px-4 py-10 sm:gap-18 sm:py-18">

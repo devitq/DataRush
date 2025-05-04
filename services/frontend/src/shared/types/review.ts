@@ -15,7 +15,7 @@ export interface Review {
   task: string;
   content: string;
   stdout?: string;
-  result?: {};
+  result?: unknown;
   earned_points?: number;
   checked_at?: string;
   task_title: string;

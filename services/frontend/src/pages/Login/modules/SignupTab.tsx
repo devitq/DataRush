@@ -119,6 +119,7 @@ export const SignupTab = () => {
           type="password"
           error={errors?.password?.at(0)}
           onChange={() => setErrors(null)}
+          className="placeholder:font-hse-sans font-mono"
         />
       </div>
 

@@ -1,6 +1,8 @@
 @import "tailwindcss";
 @import "./fonts.css";
+
 @plugin "tailwindcss-animate";
+@plugin "@tailwindcss/typography";
 
 :root {
   --background: oklch(0.97 0 0);
@@ -37,18 +39,6 @@
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.87 0 0);
 
-  --yellow-standard: oklch(0.9 0.1763 97.07);
-  --task-uncleared: oklch(0.955 0 0);
-  --task-text-uncleared: oklch(0.321 0 0);
-  --task-checking: oklch(0.941 0.0983 95.95);
-  --task-text-checking: oklch(0.588 0.120264 87.3807);
-  --task-correct: oklch(0.962 0.0561 158.62);
-  --task-text-correct: oklch(0.598 0.19517 143.8056);
-  --task-partial: oklch(0.971 0.0616 131.35);
-  --task-text-partial: oklch(0.639 0.1595 124.48);
-  --task-wrong: oklch(0.906 0.0484 18.08);
-  --task-text-wrong: oklch(0.433 0.17767 29.2339);
-
   --correct: #d4ffe5;
   --correct-foreground: #009b1c;
 
@@ -58,11 +48,8 @@
   --wrong: #ffd4d4;
   --wrong-foreground: #9b0000;
 
-  --checking: #ffffff;
-  --checking-foreground: #242424;
-
-  --review: #ffec9f;
-  --review-foreground: #9b7700;
+  --checking: #ffec9f;
+  --checking-foreground: #9b7700;
 }
 
 @theme inline {
@@ -108,18 +95,6 @@
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
 
-  --color-yellow-standard: var(--yellow-standard);
-  --color-task-uncleared: var(--task-uncleared);
-  --color-task-text-uncleared: var(--task-text-uncleared);
-  --color-task-checking: var(--task-checking);
-  --color-task-text-checking: var(--task-text-checking);
-  --color-task-correct: var(--task-correct);
-  --color-task-text-correct: var(--task-text-correct);
-  --color-task-partial: var(--task-partial);
-  --color-task-text-partial: var(--task-text-partial);
-  --color-task-wrong: var(--task-wrong);
-  --color-task-text-wrong: var(--task-text-wrong);
-
   --color-correct: var(--correct);
   --color-correct-foreground: var(--correct-foreground);
 
@@ -131,14 +106,14 @@
 
   --color-checking: var(--checking);
   --color-checking-foreground: var(--checking-foreground);
-
-  --color-review: var(--review);
-  --color-review-foreground: var(--review-foreground);
 }
 
 @layer base {
   * {
-    @apply border-border outline-ring/50 font-hse-sans scheme-light;
+    @apply border-border outline-ring/50 scheme-light;
+  }
+  *:not(.monaco-editor *) {
+    @apply font-hse-sans;
   }
   body {
     @apply bg-background text-foreground;
