@@ -35,7 +35,12 @@ export const AttachmentCard = ({
   const extension = filename?.split(".").at(-1);
 
   return (
-    <a download={filename} href={attachment.file} target="_blank">
+    <a
+      download={filename}
+      href={attachment.file}
+      target="_blank"
+      rel="noreferrer"
+    >
       <div className="bg-card flex w-full items-center gap-3 rounded-md px-3 py-3 transition-transform active:scale-[0.95]">
         <File size={22} className="min-w-fit" />
         <div className="flex w-full flex-col gap-1 overflow-hidden">
