@@ -113,7 +113,7 @@ services:
     restart: unless-stopped
 
   celery-exporter:
-    image: docker.io/danihodovic/celery-exporter:0.11.1
+    image: docker.io/danihodovic/celery-exporter:0.11.3
     depends_on:
       redis:
         restart: false
@@ -174,7 +174,7 @@ services:
         target: /data
 
   redis-exporter:
-    image: docker.io/oliver006/redis_exporter:v1.67.0-alpine
+    image: docker.io/oliver006/redis_exporter:v1.71.0-alpine
     depends_on:
       redis:
         restart: false
@@ -207,9 +207,6 @@ services:
       retries: 5
     oom_kill_disable: true
     restart: unless-stopped
-    secrets:
-      - source: postgres_password
-        target: /run/secrets/postgres_password
     shm_size: 128mb
     volumes:
       - type: volume
@@ -217,7 +214,7 @@ services:
         target: /var/lib/postgresql/data
 
   postgres-exporter:
-    image: quay.io/prometheuscommunity/postgres-exporter:v0.16.0
+    image: quay.io/prometheuscommunity/postgres-exporter:v0.17.1
     depends_on:
       postgres:
         restart: false
@@ -232,7 +229,7 @@ services:
     shm_size: 4mb
 
   pgadmin:
-    image: docker.io/dpage/pgadmin4:9
+    image: docker.io/dpage/pgadmin4:9.3
     configs:
       - source: pgadmin_servers
         target: /pgadmin4/servers.json
@@ -275,6 +272,9 @@ services:
       - source: grafana_config
         target: /usr/share/grafana/conf/defaults.ini
     entrypoint: ["/etc/grafana/scripts/entrypoint.sh"]
+    env_file:
+      - path: ./infrastructure/grafana/.env
+        required: false
     healthcheck:
       test: ["CMD", "wget", "-O", "-", "http://localhost:3000/api/health"]
       interval: 1m30s
@@ -413,7 +413,7 @@ services:
         target: /tmp
 
   proxy:
-    image: docker.io/nginx:1.27-alpine
+    image: docker.io/nginx:1.28-alpine-slim
     configs:
       - source: nginx_config
         target: /etc/nginx/nginx.conf
@@ -448,7 +448,5 @@ configs:
     file: ./infrastructure/nginx/nginx.conf
 
 secrets:
-  postgres_password:
-    file: ./infrastructure/postgres/password
   pgadmin_password:
     file: ./infrastructure/pgadmin/password
