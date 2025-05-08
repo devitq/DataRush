@@ -3,8 +3,8 @@ stages:
   - deploy
 
 variables:
-  DOCKER_TLS_CERTDIR: /certs
   DEPLOYMENT_VERSION: $CI_COMMIT_SHA
+  DEPLOYMENT_PROFILES: "celery,docs"
 
 .build-template: &build-template
   stage: build
@@ -72,6 +72,14 @@ build_docs:
     DOCKERFILE_PATH: Dockerfile
     IMAGE_NAME: $CI_REGISTRY_IMAGE/docs
 
+.ssh-setup: &ssh-setup |
+  mkdir -p ~/.ssh
+  chmod 700 ~/.ssh
+  echo -e "Host *\n\tStrictHostKeyChecking no\n\tIdentitiesOnly yes\n\n" > ~/.ssh/config
+  echo "$SSH_PRIVATE_KEY_BASE64" | base64 -d > ~/.ssh/id_rsa
+  chmod 600 ~/.ssh/id_rsa
+  ssh-keyscan -H $SSH_HOST -p $SSH_PORT > /dev/null 2>&1
+
 deploy:
   image: kroniak/ssh-client:3.19
   stage: deploy
@@ -83,14 +91,10 @@ deploy:
   environment:
     name: production
     url: https://datarush.itqdev.xyz
+    on_stop: undeploy
   resource_group: production
   script:
-    - mkdir -p ~/.ssh
-    - chmod 700 ~/.ssh
-    - echo -e "Host *\n\tStrictHostKeyChecking no\n\tIdentitiesOnly yes\n\n" > ~/.ssh/config
-    - echo "$SSH_PRIVATE_KEY_BASE64" | base64 -d > ~/.ssh/id_rsa
-    - chmod 600 ~/.ssh/id_rsa
-    - ssh-keyscan -H $SSH_HOST -p $SSH_PORT > /dev/null 2>&1
+    - *ssh-setup
 
     - AUTH_COMMAND="echo "$CI_REGISTRY_PASSWORD" | docker login $CI_REGISTRY --username $CI_REGISTRY_USER --password-stdin";
     - ssh -p $SSH_PORT $SSH_ADDRESS "$AUTH_COMMAND" > /dev/null 2>&1
@@ -104,9 +108,33 @@ deploy:
       cd ~/deploy
 
       docker compose pull --policy always -q > deploy.log 2>&1
-      docker compose --profile celery --profile docs up -d --remove-orphans --force-recreate >> deploy.log 2>&1
+      docker compose --profile celery --profile docs up -d --remove-orphans --force-recreate --yes >> deploy.log 2>&1
       docker compose ps >> deploy.log 2>&1
 
       nohup docker system prune -a --force >> deploy.log 2>&1 &
       EOF
-  retry: 2
+
+undeploy:
+  image: kroniak/ssh-client:3.19
+  stage: deploy
+  when: manual
+  rules:
+    - if: $CI_COMMIT_REF_NAME == "master"
+  variables:
+    SSH_ADDRESS: $SSH_USER@$SSH_HOST
+    SSH_PRIVATE_KEY_BASE64: $SSH_PRIVATE_KEY_BASE64
+  environment:
+    name: production
+    action: stop
+  resource_group: production
+  script:
+    - *ssh-setup
+
+    - |
+      ssh -p $SSH_PORT $SSH_ADDRESS > /dev/null 2>&1 <<'EOF'
+      cd ~/deploy
+
+      docker compose --profile celery --profile docs down --remove-orphans > undeploy.log 2>&1
+      docker compose ps >> undeploy.log 2>&1
+
+      EOF
