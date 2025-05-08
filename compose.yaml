@@ -376,7 +376,6 @@ services:
 
   custom_python:
     image: registry.gitlab.com/megazordpobeda/datarush/custom-python:${VERSION:-latest}
-    entrypoint: ["sh", "-c", "exit 0"]
 
   checker:
     image: registry.gitlab.com/megazordpobeda/datarush/checker:${VERSION:-latest}
