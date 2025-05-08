@@ -22,10 +22,6 @@ services:
         restart: false
         condition: service_healthy
         required: true
-      checker:
-        restart: false
-        condition: service_healthy
-        required: true
     env_file:
       - path: ./infrastructure/backend/.env.template
         required: true
@@ -37,6 +33,7 @@ services:
         published: 8000
         host_ip: 127.0.0.1
         protocol: tcp
+        app_protocol: http
     restart: unless-stopped
 
   backend-initdb:
@@ -86,6 +83,7 @@ services:
         published: 8001
         host_ip: 127.0.0.1
         protocol: tcp
+        app_protocol: http
     restart: unless-stopped
 
   backend-celery-worker:
@@ -146,6 +144,7 @@ services:
         published: 8002
         host_ip: 127.0.0.1
         protocol: tcp
+        app_protocol: http
     restart: unless-stopped
 
   redis:
@@ -256,6 +255,7 @@ services:
         published: 8003
         host_ip: 127.0.0.1
         protocol: tcp
+        app_protocol: http
     restart: unless-stopped
     secrets:
       - source: pgadmin_password
@@ -288,6 +288,7 @@ services:
         published: 8004
         host_ip: 127.0.0.1
         protocol: tcp
+        app_protocol: http
     restart: unless-stopped
     shm_size: 4mb
     volumes:
@@ -322,11 +323,13 @@ services:
         published: 8005
         host_ip: 127.0.0.1
         protocol: tcp
+        app_protocol: http
       - name: console
         target: 9001
         published: 8006
         host_ip: 127.0.0.1
         protocol: tcp
+        app_protocol: http
     restart: unless-stopped
     volumes:
       - type: volume
@@ -353,6 +356,7 @@ services:
         published: 8007
         host_ip: 127.0.0.1
         protocol: tcp
+        app_protocol: http
     restart: unless-stopped
     shm_size: 4mb
     volumes:
@@ -363,7 +367,7 @@ services:
   docs:
     image: registry.gitlab.com/megazordpobeda/datarush/docs:${VERSION:-latest}
     build:
-      context: ./docs
+      context: ./services/docs
       dockerfile: Dockerfile
     ports:
       - name: web
@@ -371,6 +375,7 @@ services:
         published: 8008
         host_ip: 127.0.0.1
         protocol: tcp
+        app_protocol: http
     restart: unless-stopped
     shm_size: 4mb
 
@@ -383,10 +388,6 @@ services:
       context: ./services/checker
       dockerfile: Dockerfile
     depends_on:
-      custom_python:
-        restart: false
-        condition: service_completed_successfully
-        required: true
       minio:
         restart: false
         condition: service_healthy
@@ -402,6 +403,7 @@ services:
         published: 8009
         host_ip: 127.0.0.1
         protocol: tcp
+        app_protocol: http
     restart: unless-stopped
     volumes:
       - type: bind
@@ -422,6 +424,7 @@ services:
         published: 8010
         host_ip: 127.0.0.1
         protocol: tcp
+        app_protocol: http
     restart: unless-stopped
 
 volumes:
