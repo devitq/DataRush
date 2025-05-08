@@ -10,7 +10,7 @@ COPY . .
 RUN bun run build
 
 # Stage 2: Serve the built files with Nginx
-FROM nginx:latest
+FROM nginx:1.28-alpine-slim
 
 COPY --from=builder /app/dist /usr/share/nginx/html
 

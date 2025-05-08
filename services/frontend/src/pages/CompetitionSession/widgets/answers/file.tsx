@@ -69,7 +69,12 @@ export const FileAnswer = ({
         </>
       ) : (
         <>
-          <a download={answer.file.name} href={link} target="_blank">
+          <a
+            download={answer.file.name}
+            href={link}
+            target="_blank"
+            rel="noreferrer"
+          >
             <div className="bg-muted flex w-full max-w-56 items-center gap-3 rounded-md border px-3 py-3 transition-transform active:scale-[0.95]">
               <File size={22} className="min-w-fit" />
               <div className="flex w-full flex-col gap-1 overflow-hidden">

@@ -2,10 +2,6 @@ stages:
   - build
   - deploy
 
-resource_group:
-  name: production
-  process_mode: oldest_first
-
 variables:
   DOCKER_TLS_CERTDIR: /certs
   DEPLOYMENT_VERSION: $CI_COMMIT_SHA

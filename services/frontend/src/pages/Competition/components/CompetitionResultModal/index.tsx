@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   Dialog,
   DialogContent,
@@ -6,7 +6,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { Loader2 } from 'lucide-react';
+import { Loader2 } from "lucide-react";
 
 export interface CompetitionResult {
   task_name: string;
@@ -24,67 +24,77 @@ interface CompetitionResultsModalProps {
   onOpenChange: (open: boolean) => void;
 }
 
-export const CompetitionResultsModal: React.FC<CompetitionResultsModalProps> = ({
-  competitionTitle,
-  results,
-  isLoading,
-  error,
-  isOpen,
-  onOpenChange,
-}) => {
+export const CompetitionResultsModal: React.FC<
+  CompetitionResultsModalProps
+> = ({ competitionTitle, results, isLoading, error, isOpen, onOpenChange }) => {
   const renderResultValue = (result: number, maxPoints: number) => {
     if (result === -1) {
       return (
-        <span className="font-semibold" style={{ 
-          color: 'var(--color-task-text-checking)',
-          backgroundColor: 'var(--color-task-checking)',
-          padding: '4px 8px',
-          borderRadius: '4px'
-        }}>
+        <span
+          className="font-semibold"
+          style={{
+            color: "var(--color-task-text-checking)",
+            backgroundColor: "var(--color-task-checking)",
+            padding: "4px 8px",
+            borderRadius: "4px",
+          }}
+        >
           На проверке
         </span>
       );
     } else if (result === -2) {
       return (
-        <span className="font-semibold" style={{ 
-          color: 'var(--color-task-text-uncleared)',
-          backgroundColor: 'var(--color-task-uncleared)',
-          padding: '4px 8px',
-          borderRadius: '4px'
-        }}>
+        <span
+          className="font-semibold"
+          style={{
+            color: "var(--color-task-text-uncleared)",
+            backgroundColor: "var(--color-task-uncleared)",
+            padding: "4px 8px",
+            borderRadius: "4px",
+          }}
+        >
           Нет ответа
         </span>
       );
     } else if (result === 0) {
       return (
-        <span className="font-semibold" style={{ 
-          color: 'var(--color-task-text-wrong)',
-          backgroundColor: 'var(--color-task-wrong)',
-          padding: '4px 8px',
-          borderRadius: '4px'
-        }}>
+        <span
+          className="font-semibold"
+          style={{
+            color: "var(--color-task-text-wrong)",
+            backgroundColor: "var(--color-task-wrong)",
+            padding: "4px 8px",
+            borderRadius: "4px",
+          }}
+        >
           Неверно (0/{maxPoints})
         </span>
       );
     } else if (result < maxPoints) {
       return (
-        <span className="font-semibold" style={{ 
-          color: 'var(--color-task-text-partial)',
-          backgroundColor: 'var(--color-task-partial)',
-          padding: '4px 8px',
-          borderRadius: '4px'
-        }}>
+        <span
+          className="font-semibold"
+          style={{
+            color: "var(--color-task-text-partial)",
+            backgroundColor: "var(--color-task-partial)",
+            padding: "4px 8px",
+            borderRadius: "4px",
+          }}
+        >
           Частично верно ({result}/{maxPoints})
         </span>
       );
     } else {
       return (
-        <span className="font-semibold" style={{ 
-          color: 'var(--color-task-text-correct)',
-          backgroundColor: 'var(--color-task-correct)',
-          padding: '4px 8px',
-          borderRadius: '4px'
-        }}>
+        <span
+          className="font-semibold"
+          style={{
+            color: "var(--color-task-text-correct)",
+            backgroundColor: "var(--color-task-correct)",
+            padding: "4px 8px",
+            borderRadius: "4px",
+          }}
+        >
           Верно ({result}/{maxPoints})
         </span>
       );
@@ -97,35 +107,37 @@ export const CompetitionResultsModal: React.FC<CompetitionResultsModalProps> = (
         <DialogHeader>
           <DialogTitle>Результаты</DialogTitle>
           <DialogDescription>
-            Ваши результаты по соревнованию "{competitionTitle}"
+            Ваши результаты по соревнованию «{competitionTitle}»
           </DialogDescription>
         </DialogHeader>
-        
+
         <div className="mt-4 space-y-4">
           {isLoading ? (
             <div className="flex justify-center py-8">
               <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
             </div>
           ) : error ? (
-            <div className="text-center py-6 text-red-500">
+            <div className="py-6 text-center text-red-500">
               Произошла ошибка при загрузке результатов
             </div>
           ) : results && results.length > 0 ? (
             [...results]
               .sort((a, b) => a.position - b.position)
               .map((result, index) => (
-                <div 
-                  key={index} 
-                  className="flex flex-col md:flex-row justify-between items-start md:items-center p-4 bg-gray-50 rounded-lg border"
+                <div
+                  key={index}
+                  className="flex flex-col items-start justify-between rounded-lg border bg-gray-50 p-4 md:flex-row md:items-center"
                 >
-                  <div className="font-medium mb-2 md:mb-0">{result.task_name}</div>
+                  <div className="mb-2 font-medium md:mb-0">
+                    {result.task_name}
+                  </div>
                   <div className="text-right">
                     {renderResultValue(result.result, result.max_points)}
                   </div>
                 </div>
               ))
           ) : (
-            <div className="text-center py-6 text-gray-500">
+            <div className="py-6 text-center text-gray-500">
               Нет доступных результатов
             </div>
           )}

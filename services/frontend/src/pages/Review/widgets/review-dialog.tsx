@@ -153,13 +153,7 @@ const ReviewDescription = ({ review }: { review: Review }) => {
 
 const ReviewContent = ({ review }: { review: Review }) => {
   const extension = review.content.split(".").at(-1);
-  const fullFilename = review.content.split("/").at(-1);
-
-  const filename = fullFilename
-    ? fullFilename.length > 20
-      ? fullFilename.substring(0, 20) + "..."
-      : fullFilename
-    : "";
+  const filename = review.content.split("/").at(-1);
 
   const { data: content, isLoading } = useQuery({
     queryKey: ["review-file", review.id],
@@ -181,10 +175,13 @@ const ReviewContent = ({ review }: { review: Review }) => {
           <a
             href={review.content}
             target="_blank"
-            className="flex items-center gap-3"
+            className="flex items-center gap-3 overflow-hidden"
+            rel="noreferrer"
           >
-            <File size={16} />
-            <span>{filename}</span>
+            <File size={16} className="min-w-4" />
+            <span className="overflow-hidden overflow-ellipsis whitespace-nowrap">
+              {filename}
+            </span>
           </a>
         )}
       </div>
