@@ -71,7 +71,7 @@ services:
       - path: ./infrastructure/backend/.env
         required: false
     healthcheck:
-      test: ["CMD", "service", "nginx", "status", "||", " exit 1"]
+      test: [ "CMD", "service", "nginx", "status", "||", " exit 1" ]
       interval: 1m30s
       timeout: 5s
       start_period: 5s
@@ -90,7 +90,7 @@ services:
     image: registry.gitlab.com/megazordpobeda/datarush/backend:${VERSION:-latest}
     build:
       context: ./services/backend
-    command: celery -A config worker -l INFO
+    command: [ "celery", "-A", "config", "worker", "-l", "INFO" ]
     depends_on:
       redis:
         restart: false
@@ -102,12 +102,14 @@ services:
       - path: ./infrastructure/backend/.env
         required: false
     healthcheck:
-      test: ["CMD", "celery", "-A", "config", "inspect", "ping"]
+      test: [ "CMD", "celery", "-A", "config", "inspect", "ping" ]
       interval: 30s
-      timeout: 10s
+      timeout: 30s
       retries: 3
       start_period: 10s
       start_interval: 2s
+    profiles:
+      - celery
     restart: unless-stopped
 
   celery-exporter:
@@ -122,6 +124,8 @@ services:
         required: true
       - path: ./infrastructure/celery-exporter/.env
         required: false
+    profiles:
+      - monitoring
     restart: unless-stopped
 
   frontend:
@@ -131,13 +135,6 @@ services:
         required: true
       - path: ./infrastructure/frontend/.env
         required: false
-    healthcheck:
-      test: ["CMD", "service", "nginx", "status", "||", " exit 1"]
-      interval: 1m30s
-      timeout: 5s
-      start_period: 5s
-      start_interval: 2s
-      retries: 5
     ports:
       - name: web
         target: 80
@@ -159,7 +156,7 @@ services:
       - path: ./infrastructure/redis/.env
         required: false
     healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
+      test: [ "CMD", "redis-cli", "ping" ]
       interval: 1m30s
       timeout: 5s
       start_period: 5s
@@ -184,6 +181,8 @@ services:
         required: true
       - path: ./infrastructure/redis-exporter/.env
         required: false
+    profiles:
+      - monitoring
     restart: unless-stopped
     shm_size: 4mb
 
@@ -198,7 +197,7 @@ services:
       - path: ./infrastructure/postgres/.env
         required: false
     healthcheck:
-      test: ["CMD", "pg_isready"]
+      test: [ "CMD", "pg_isready", "--dbname=$POSTGRES_DB" ]
       interval: 1m30s
       timeout: 5s
       start_period: 5s
@@ -224,6 +223,8 @@ services:
         required: true
       - path: ./infrastructure/postgres-exporter/.env
         required: false
+    profiles:
+      - monitoring
     restart: unless-stopped
     shm_size: 4mb
 
@@ -243,7 +244,7 @@ services:
       - path: ./infrastructure/pgadmin/.env
         required: false
     healthcheck:
-      test: ["CMD", "wget", "-O", "-", "http://localhost:80/misc/ping"]
+      test: [ "CMD", "wget", "-O", "-", "http://localhost:80/misc/ping" ]
       interval: 1m30s
       timeout: 5s
       start_period: 5s
@@ -256,6 +257,8 @@ services:
         host_ip: 127.0.0.1
         protocol: tcp
         app_protocol: http
+    profiles:
+      - administrative
     restart: unless-stopped
     secrets:
       - source: pgadmin_password
@@ -276,7 +279,7 @@ services:
       - path: ./infrastructure/grafana/.env
         required: false
     healthcheck:
-      test: ["CMD", "wget", "-O", "-", "http://localhost:3000/api/health"]
+      test: [ "CMD", "wget", "-O", "-", "http://localhost:3000/api/health" ]
       interval: 1m30s
       timeout: 5s
       start_period: 5s
@@ -289,6 +292,8 @@ services:
         host_ip: 127.0.0.1
         protocol: tcp
         app_protocol: http
+    profiles:
+      - monitoring
     restart: unless-stopped
     shm_size: 4mb
     volumes:
@@ -306,7 +311,7 @@ services:
     image: docker.io/minio/minio:RELEASE.2025-02-03T21-03-04Z
     command: server --console-address ":9001"
     healthcheck:
-      test: ["CMD", "mc", "ready", "local"]
+      test: [ "CMD", "mc", "ready", "local" ]
       interval: 1m30s
       timeout: 5s
       start_period: 5s
@@ -344,7 +349,7 @@ services:
       - source: prometheus_config
         target: /etc/prometheus/prometheus.yaml
     healthcheck:
-      test: ["CMD", "wget", "-O", "-", "http://localhost:9090/-/healthy"]
+      test: [ "CMD", "wget", "-O", "-", "http://localhost:9090/-/healthy" ]
       interval: 1m30s
       timeout: 5s
       start_period: 5s
@@ -357,6 +362,8 @@ services:
         host_ip: 127.0.0.1
         protocol: tcp
         app_protocol: http
+    profiles:
+      - monitoring
     restart: unless-stopped
     shm_size: 4mb
     volumes:
@@ -376,11 +383,15 @@ services:
         host_ip: 127.0.0.1
         protocol: tcp
         app_protocol: http
+    profiles:
+      - docs
     restart: unless-stopped
     shm_size: 4mb
 
   custom_python:
     image: registry.gitlab.com/megazordpobeda/datarush/custom-python:${VERSION:-latest}
+    profiles:
+      - celery
 
   checker:
     image: registry.gitlab.com/megazordpobeda/datarush/checker:${VERSION:-latest}
@@ -404,6 +415,8 @@ services:
         host_ip: 127.0.0.1
         protocol: tcp
         app_protocol: http
+    profiles:
+      - celery
     restart: unless-stopped
     volumes:
       - type: bind
